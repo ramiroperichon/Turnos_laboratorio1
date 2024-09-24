@@ -1,0 +1,126 @@
+/**
+ * rome - Customizable date (and time) picker. Opt-in UI, no jQuery!
+ * @version v2.1.22
+ * @link https://github.com/bevacqua/rome
+ * @license MIT
+ */
+.rd-container {
+  display: none;
+  border: 1px solid #495057;
+  background-color: #12151e;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 5px 10px 0 rgba(0,0,0,.2);
+  border-radius: 3%;
+
+}
+.rd-container-attachment {
+  position: absolute;
+}
+.rd-month {
+  display: inline-block;
+  margin-right: 25px;
+  color: #7e84ab
+}
+.rd-month:last-child {
+  margin-right: 0;
+}
+.rd-back,
+.rd-next {
+  cursor: pointer;
+  border: none;
+  color: #69737d;
+  outline: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: 25px;
+}
+.rd-back[disabled],
+.rd-next[disabled] {
+  cursor: default;
+}
+.rd-back {
+  float: left;
+  margin-left: 10px;
+}
+.rd-next {
+  float: right;
+  margin-right: 10px;
+}
+.rd-back:before {
+  display: block;
+  content: '\2190';
+}
+.rd-next:before {
+  display: block;
+  content: '\2192';
+}
+.rd-day-body {
+  cursor: pointer;
+  text-align: center;
+  /* new */
+  line-height: 0;
+  width: 55px!important;
+  height: 55px!important;
+  color: #ccc;
+}
+.rd-day-selected,
+.rd-time-selected,
+.rd-time-option:hover {
+  cursor: pointer;
+  background-color: #084298;
+  color: #fff;
+  /* new */
+}
+
+.rd-day-body:hover{
+    border: 2px solid #0070b3;
+}
+
+
+.rd-day-prev-month,
+.rd-day-next-month {
+  color: #69737d;
+}
+.rd-day-disabled {
+  cursor: default;
+  color: #272933;
+  border-radius: 10px;
+}
+
+.rd-day-disabled:hover{
+	cursor: not-allowed;
+	border: none;
+}
+
+.rd-time {
+  position: relative;
+  display: inline-block;
+  margin-top: 5px;
+  min-width: 80px;
+}
+.rd-time-list {
+  display: none;
+  position: absolute;
+  overflow-y: scroll;
+  max-height: 160px;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+}
+.rd-time-selected {
+  padding: 5px;
+}
+.rd-time-option {
+  padding: 5px;
+}
+.rd-day-concealed {
+  visibility: hidden;
+}
+
+.rd-days {
+  margin-top: 20px;
+  color:#fff;
+}
