@@ -100,8 +100,8 @@ class ReservaController extends Controller
      */
     public function destroy(Reserva $reserva)
     {
-        $reserva->delete();
         $this->servicioService->updateFranjaStateOnDelete($reserva->horario_id);
+        $reserva->delete();
         return redirect()->route('reserva.index')->with('status', 'Reserva borrada correctamente!');
     }
 }
