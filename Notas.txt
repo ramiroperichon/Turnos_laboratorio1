@@ -1,0 +1,7 @@
+Preguntar al editar turnos:
+Se cancelaran todas las reservas hechas a este servicio, Esta seguro que quiere continuar?
+Si, no, ver reservas;
+
+Checkear que no existan servicios con el mismo horario los mismos dias
+
+Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles
