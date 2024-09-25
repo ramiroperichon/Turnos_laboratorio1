@@ -54,6 +54,15 @@
                                         name="password_confirmation" required autocomplete="new-password" />
                                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-danger" />
                                 </div>
+                                <!-- Rol -->
+                                <div class="mt-4">
+                                    <x-input-label for="role" :value="__('Role')" />
+                                    <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                        <option value="proveedor">Proveedor</option>
+                                        <option value="cliente">Cliente</option> <!-- Si quieres permitir este rol -->
+                                    </select>
+                                    <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                                </div>
                                 <div class="text-center">
                                     <x-primary-button class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
                                 </div>

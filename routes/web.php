@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('/reserva', ReservaController::class);
 Route::resource('/servicio', ServicioController::class);
+Route::get('/horario', HorarioController::class);
 Route::post('/servicios/horarios/{id}', [HorarioController::class, 'returnSelected'])->name('horario.selected');
 
 require __DIR__ . '/auth.php';
