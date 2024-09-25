@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Reserva;
 use App\Services\ServicioService;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 class ReservaController extends Controller
 {
@@ -22,6 +22,23 @@ class ReservaController extends Controller
     public function index()
     {
         $reservas = Reserva::get();
+        return view ('reserva.todas', [
+            'reservas' => $reservas
+        ]);
+    }
+
+    public function reservaUsuario()
+    {
+        $user = auth()->user();
+        $reservas = Reserva::where('cliente_id',$user->id)->get();
+        return view ('cliente.todas', [
+            'reservas' => $reservas
+        ]);
+    }
+
+    public function reservaServicio(int $idservicio)
+    {
+        $reservas = Reserva::where('servicio_id',$idservicio)->get();
         return view ('reserva.todas', [
             'reservas' => $reservas
         ]);
@@ -61,7 +78,7 @@ class ReservaController extends Controller
             $this->servicioService->updateHorarioState($validated['horario_id']);
 
             // Redirect to the home page with success message
-            return redirect()->route('servicio.index')->with('status', 'Se creo la reserva correctamente!');
+            return redirect()->route('dashboard')->with('status', 'Se creo la reserva correctamente!');
 
 
         }

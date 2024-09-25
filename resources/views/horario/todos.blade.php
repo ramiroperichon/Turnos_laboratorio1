@@ -4,6 +4,15 @@
             {{ __('Horario') }}
         </h2>
     </x-slot>
+    <div class="page-header">
+        <h3 class="page-title"> Crear reserva </h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Reservar</li>
+            </ol>
+        </nav>
+    </div>
 
     <div class="container d-flex justify-content-center">
         <form action="{{ route('reserva.store') }}" method="POST">
@@ -19,16 +28,23 @@
                             <div class="p-1" id="inline_cal"></div>
                             <label hidden id="inl" required>{{ $servicio->dias_disponible }}</label>
                         </div>
-                        <div class="col flex-wrap">
-                            <h6 class="text-muted fw-bold font-weight-normal border-bottom m-2 mb-2 py-1">Horarios
-                                disponibles</h6>
-                            @foreach ($horarios as $horario)
-                                <input type="radio" required id="option{{ $horario->id }}" name="horario_id"
-                                    value="{{ $horario->id }}" class="btn-check form-control"
-                                    @if ($horario->disponibilidad == 'Reservado') disabled @endif></input>
-                                <label class="btn btn-primary btn-rounded mb-2 mx-1 mt-1"
-                                    for="option{{ $horario->id }}">{{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }}</label>
-                            @endforeach
+                        <div class="col-md-6">
+                            <h6 class="text-muted fw-bold font-weight-normal border-bottom py-1">Horarios disponibles
+                            </h6>
+                            <div class="row g-2">
+                                @foreach ($horarios as $horario)
+                                    <div class="col-lg-2">
+                                        <input type="radio" required id="option{{ $horario->id }}" name="horario_id"
+                                            value="{{ $horario->id }}" class="btn-check"
+                                            @if ($horario->disponibilidad == 'Reservado') disabled @endif>
+                                        <label class="btn btn-primary btn-rounded w-100"
+                                            for="option{{ $horario->id }}">
+                                            {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+
                             <x-input-error :messages="$errors->get('horario_id')" class="mt-2" />
                         </div>
                     </div>
@@ -50,6 +66,5 @@
             </div>
         </form>
     </div>
-    <script>
-    </script>
+    <script></script>
 </x-app-layout>

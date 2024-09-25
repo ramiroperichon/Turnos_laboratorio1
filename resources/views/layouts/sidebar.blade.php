@@ -10,7 +10,7 @@
           </li>
           @if(auth()->user()->hasRole('proveedor'))
             <li class="nav-item menu-items">
-              <a class="nav-link" href='/'>
+              <a class="nav-link" href={{ route('dashboard') }}>
                 <span class="menu-icon">
                   <i class="mdi mdi-laptop"></i>
                 </span>
@@ -25,7 +25,41 @@
                     <span class="menu-title">Reservas</span>
                 </a>
             </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" href={{ route('servicio.userServices') }}>
+                    <span class="menu-icon">
+                      <i class="mdi mdi-table-large"></i>
+                    </span>
+                    <span class="menu-title">Mis servicios</span>
+                </a>
+            </li>
           @endif
+          @if(auth()->user()->hasRole('cliente'))
+          <li class="nav-item menu-items">
+            <a class="nav-link" href='/'>
+              <span class="menu-icon">
+                <i class="mdi mdi-laptop"></i>
+              </span>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+              <a class="nav-link" href={{ route('reserva.user')}}>
+                  <span class="menu-icon">
+                    <i class="mdi mdi-playlist-play"></i>
+                  </span>
+                  <span class="menu-title">Mis turnos</span>
+              </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href={{ route('servicio.index') }}>
+                <span class="menu-icon">
+                  <i class="mdi mdi-table-large"></i>
+                </span>
+                <span class="menu-title">Servicios</span>
+            </a>
+        </li>
+        @endif
 
           {{-- <li class="nav-item menu-items">
               <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">

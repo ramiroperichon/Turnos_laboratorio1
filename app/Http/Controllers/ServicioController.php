@@ -23,6 +23,14 @@ class ServicioController extends Controller
         ]);
     }
 
+    public function userServices()//implementar seleccion por usuario
+    {
+        $servicios = Servicio::get();
+        return view('proveedor.servicios', [
+            'servicios' => $servicios
+        ]);
+    }
+
     public function create()
     {
 

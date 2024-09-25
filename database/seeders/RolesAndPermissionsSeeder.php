@@ -13,7 +13,6 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Crear roles
         $proveedorRole = Role::create(['name' => 'proveedor']);
-        $clienteRole = Role::create(['name' => 'cliente']);
 
         // Crear permisos
         Permission::create(['name' => 'acceso al dashboard']);

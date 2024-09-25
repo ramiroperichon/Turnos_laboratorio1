@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Dashboard proveedor') }}
         </h2>
     </x-slot>
     <div class="page-header">
         <h3 class="page-title"> Servicios </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Servicios</li>
+                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
             </ol>
         </nav>
     </div>
@@ -33,7 +33,7 @@
         <div class="col grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Todos los servicios</h4>
+                    <h4 class="card-title">Tus servicios</h4>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -45,8 +45,8 @@
                                     <th class="fw-bold text-primary-emphasis">Inicio de turno</th>
                                     <th class="fw-bold text-primary-emphasis">Fin de turno</th>
                                     <th class="fw-bold text-primary-emphasis">Duracion</th>
-                                    <th class="fw-bold text-primary-emphasis">Dias disponible</th>
-                                    <th class="fw-bold text-primary-emphasis">Acciones</th>
+                                    <th class="fw-bold text-primary-emphasis text-center">Dias disponible</th>
+                                    <th class="fw-bold text-primary-emphasis text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -64,31 +64,28 @@
                                             <td>{{ $servicio->dias_disponible }}</td>
                                             <!-- Borrar y editar -->
                                             <td>
-                                                @hasrole('proveedor')
-                                                    <div class="row d-flex-wrap">
-                                                        <div class="col my-1">
-                                                            <button class="btn btn-info" id="myInput{{ $servicio->id }}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#myModal{{ $servicio->id }}">Editar</button>
-                                                        </div>
-                                                        <div class="col my-1">
-                                                            <button type="button" class="btn btn-danger"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#staticBackdrop{{ $servicio->id }}">
-                                                                Borrar
-                                                            </button>
-                                                        </div>
-                                                    @endhasrole
-                                                    @hasrole('cliente')
-                                                        <div class="col my-1">
-                                                            <form action="{{ route('horario.selected', $servicio->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <button class="btn btn-success" type="submit">Pedir
-                                                                    turno</button>
-                                                            </form>
-                                                        </div>
-                                                    @endhasrole
+                                                <div class="row gap-2 flex-wrap">
+                                                    <div class="col">
+                                                        <button class="btn btn-info w-100"
+                                                            id="myInput{{ $servicio->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#myModal{{ $servicio->id }}">Editar</button>
+                                                    </div>
+                                                    <div class="col">
+                                                        <button type="button" class="btn btn-danger w-100"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#staticBackdrop{{ $servicio->id }}">
+                                                            Borrar
+                                                        </button>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form
+                                                            action="{{ route('reserva.selected', $servicio->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <button class="btn btn-success w-100"
+                                                                type="submit">Ver reservas</button>
+                                                        </form>
+                                                    </div>
                                                     <!-- Modal Editar -->
                                                     <form action="{{ route('servicio.update', $servicio->id) }}"
                                                         method="POST" class="flex-nowrap">
@@ -305,6 +302,7 @@
                 </div>
             </div>
         </div>
+
         <script>
             document.querySelector(".number-input").addEventListener("keypress", function(
                 evt) { //evita poder colocar la e y los signos en los input de numeros
