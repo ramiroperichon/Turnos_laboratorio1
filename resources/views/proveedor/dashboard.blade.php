@@ -30,299 +30,81 @@
         </div>
     @endif
     <div class="row">
-        <div class="col grid-margin stretch-card">
+        <div class="col-md-8 grid-margin stretch-card justify-content-center">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Tus servicios</h4>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="fw-bold text-primary-emphasis">#</th>
-                                    <th class="fw-bold text-primary-emphasis">Nombre</th>
-                                    <th class="fw-bold text-primary-emphasis">Descripcion</th>
-                                    <th class="fw-bold text-primary-emphasis">Precio</th>
-                                    <th class="fw-bold text-primary-emphasis">Inicio de turno</th>
-                                    <th class="fw-bold text-primary-emphasis">Fin de turno</th>
-                                    <th class="fw-bold text-primary-emphasis">Duracion</th>
-                                    <th class="fw-bold text-primary-emphasis text-center">Dias disponible</th>
-                                    <th class="fw-bold text-primary-emphasis text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                @if ($servicios->count() != 0)
-                                    @foreach ($servicios as $servicio)
-                                        <tr>
-                                            <td>{{ $servicio->id }}</td>
-                                            <td>{{ $servicio->nombre }}</td>
-                                            <td class="text-truncate text-wrap" style="max-width: 30px;">
-                                                {{ $servicio->descripcion }}</td>
-                                            <td>${{ $servicio->precio }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($servicio->incio_turno)->format('H:i') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($servicio->fin_turno)->format('H:i') }}</td>
-                                            <td>{{ $servicio->duracion }} Min.</td>
-                                            <td>{{ $servicio->dias_disponible }}</td>
-                                            <!-- Borrar y editar -->
-                                            <td>
-                                                <div class="row gap-2 flex-wrap">
-                                                    <div class="col">
-                                                        <button class="btn btn-info w-100"
-                                                            id="myInput{{ $servicio->id }}" data-bs-toggle="modal"
-                                                            data-bs-target="#myModal{{ $servicio->id }}">Editar</button>
-                                                    </div>
-                                                    <div class="col">
-                                                        <button type="button" class="btn btn-danger w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#staticBackdrop{{ $servicio->id }}">
-                                                            Borrar
-                                                        </button>
-                                                    </div>
-                                                    <div class="col">
-                                                        <form
-                                                            action="{{ route('reserva.selected', $servicio->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <button class="btn btn-success w-100"
-                                                                type="submit">Ver reservas</button>
-                                                        </form>
-                                                    </div>
-                                                    <!-- Modal Editar -->
-                                                    <form action="{{ route('servicio.update', $servicio->id) }}"
-                                                        method="POST" class="flex-nowrap">
-                                                        @csrf
-                                                        @method('patch')
-                                                        <div class="modal fade" id="myModal{{ $servicio->id }}">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h1 class="modal-title fs-5"
-                                                                            id="exampleModalLabel">
-                                                                            Editar servicio
-                                                                        </h1>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group row gx-5">
-                                                                            <div class="col mt-3">
-                                                                                <label>Nombre del servicio</label>
-                                                                                <input type="text" id="nombre"
-                                                                                    name="nombre"
-                                                                                    placeholder="Ingrese un nombre"
-                                                                                    value="{{ $servicio->nombre }}"
-                                                                                    required class="form-control" />
-                                                                                <x-input-error :messages="$errors->get('nombre')"
-                                                                                    class="mt-2" />
-                                                                            </div>
-                                                                            <div class="col mt-3">
-                                                                                <label>Precio</label>
-                                                                                <div class="input-group">
-                                                                                    <div class="input-group-prepend">
-                                                                                        <span
-                                                                                            class="input-group-text bg-success text-white">$</span>
-                                                                                    </div>
-                                                                                    <input type="number" id="precio"
-                                                                                        name="precio"
-                                                                                        placeholder="Ej: 20000" required
-                                                                                        value="{{ $servicio->precio }}"
-                                                                                        class="form-control number-input col-sm-5" />
-                                                                                    <div class="input-group-append">
-                                                                                        <span
-                                                                                            class="input-group-text">.00</span>
-                                                                                    </div>
-                                                                                    <x-input-error :messages="$errors->get('precio')"
-                                                                                        class="mt-2" />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label for="descripcion">Descripcion</label>
-                                                                            <textarea class="form-control" id="descripcion" placeholder="Ingrese la descripcion del servicio..." required
-                                                                                name="descripcion" rows="2">{{ $servicio->descripcion }}</textarea>
-                                                                            <x-input-error :messages="$errors->get('descripcion')"
-                                                                                class="mt-2" />
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label>Inicio</label>
-                                                                            <input type="time"
-                                                                                id="shift_start_modal"
-                                                                                name="incio_turno" min="05:00"
-                                                                                value="{{ \Carbon\Carbon::parse($servicio->incio_turno)->format('H:i') }}"
-                                                                                max="00:00" required
-                                                                                class="form-control" />
-                                                                            <x-input-error :messages="$errors->get('incio_turno')"
-                                                                                class="mt-2" />
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label>Fin</label>
-                                                                            <input type="time" id="shift_end_modal"
-                                                                                name="fin_turno" min="05:00"
-                                                                                value="{{ \Carbon\Carbon::parse($servicio->fin_turno)->format('H:i') }}"
-                                                                                max="00:00" required
-                                                                                class="form-control" />
-                                                                            <x-input-error :messages="$errors->get('fin_turno')"
-                                                                                class="mt-2" />
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label>Duracion minutos</label>
-                                                                            <div class="input-group">
-                                                                                <input type="number" min="0"
-                                                                                    value="{{ $servicio->duracion }}"
-                                                                                    max="240" maxlength="2"
-                                                                                    placeholder="Ej: 30"
-                                                                                    id="duracion" name="duracion"
-                                                                                    required
-                                                                                    class="form-control number-input1 col-sm-5" />
-                                                                                <div class="input-group-append">
-                                                                                    <span
-                                                                                        class="input-group-text">Minutos</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <x-input-error :messages="$errors->get('duracion')" />
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <div>
-                                                                                <label>Dias</label>
-                                                                            </div>
-                                                                            <div class="btn-group btn-group-sm flex-wrap mt-2"
-                                                                                role="group"
-                                                                                aria-label="Basic checkbox toggle button group">
-                                                                                @foreach (['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'] as $day)
-                                                                                    <input type="checkbox"
-                                                                                        class="btn-check"
-                                                                                        value="{{ $day }}"
-                                                                                        name="dias_disponible[]"
-                                                                                        id="btncheck{{ $servicio->id }}{{ $day }}"
-                                                                                        @if (in_array($day, explode(',', $servicio->dias_disponible))) checked @else @endif>
-                                                                                    <label class="btn btn-outline-info"
-                                                                                        for="btncheck{{ $servicio->id }}{{ $day }}">{{ $day }}</label>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <button type="button"
-                                                                                    class="btn btn-outline-secondary"
-                                                                                    data-bs-dismiss="modal">Cerrar</button>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <button class="btn btn-warning"
-                                                                                    type="button"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#modalconfirmar{{ $servicio->id }}">Guardar
-                                                                                    cambios</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--Modal de confirmar edicion-->
-                                                        <div class="modal fade"
-                                                            id="modalconfirmar{{ $servicio->id }}" tabindex="-1">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h1 class="modal-title fs-5 text-danger"
-                                                                            id="exampleModalToggleLabel2">Alerta!</h1>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal"></button>
-                                                                    </div>
-                                                                    <div class="modal-body p-2 text-wrap text-center">
-                                                                        <div class="text-warning d-flex"
-                                                                            role="alert">
-                                                                            Al realizar estos cambios se cancelaran
-                                                                            todos
-                                                                            las
-                                                                            reservas de este servicio!
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button"
-                                                                            class="btn btn-outline-secondary"
-                                                                            data-bs-dismiss="modal">Cancelar</button>
-                                                                        <button class="btn btn-outline-success"
-                                                                            type="submit"
-                                                                            data-bs-target="#modalconfirmar{{ $servicio->id }}"
-                                                                            data-bs-toggle="modal">Confirmar</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                    <!-- Fin Modal Editar -->
-                                                </div>
-                                                <!-- Modal Borrar -->
-                                                <div class="modal fade" id="staticBackdrop{{ $servicio->id }}"
-                                                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                                                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                                                                    Borrar servicio</h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Esta seguro que quiere borrar este servicio?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cerrar</button>
-                                                                <form
-                                                                    action="{{ route('servicio.destroy', $servicio->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('delete')
-                                                                    <button class="btn btn-danger"
-                                                                        type="submit">Borrar</button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- Fin Modal Borrar -->
-                                            </td>
-                                            <!-- Fin de borrar/editar-->
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <td colspan="8" class="text-center">
-                                        <h4 class="text-muted">No hay servicios</h4>
-                                    </td>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                    <h4 class="card-title">Turnos pendientes</h4>
+                    <div id='calendar'></div>
                 </div>
             </div>
         </div>
+        <div class="col-md-4 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h4 class="card-title mb-1">Reservas a confirmar</h4>
+                        <p class="text-muted mb-1">Estado</p>
+                    </div>
+                    @foreach($reservas as $reserva)
+                    <div class="row">
+                        <div class="col">
+                            <div class="preview-list">
+                                <div class="preview-item border-bottom">
+                                    <div class="preview-thumbnail">
+                                            <span class="btn btn-success m-1">V</span>
+                                            <span class="btn btn-danger m-1">X</span>
+                                    </div>
+                                    <div class="preview-item-content d-sm-flex flex-grow">
+                                        <div class="flex-grow">
+                                            <h6 class="preview-subject">{{$reserva->user->name}}</h6>
+                                            <p class="text-muted mb-0">{{$reserva->servicio->nombre}}</p>
+                                        </div>
+                                        <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                                            @if($reserva->estado == "Pendiente")
+                                            <span class="badge badge-outline-info">{{$reserva->estado}}</span>
+                                            @elseif($reserva->estado == "Cancelado")
+                                            <span class="badge badge-outline-danger">{{$reserva->estado}}</span>
+                                            @elseif ($reserva->estado == "Confirmado")
+                                            <span class="badge badge-outline-success">{{$reserva->estado}}</span>
+                                            @else
+                                            <span class="badge badge-success">{{$reserva->estado}}</span>
+                                            @endif
+                                            <p class="text-muted mt-2 mb-1">{{$reserva->fecha_reserva}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var eventsj = @json($events);
+            var calendarEl = document.getElementById('calendar');
 
-        <script>
-            document.querySelector(".number-input").addEventListener("keypress", function(
-                evt) { //evita poder colocar la e y los signos en los input de numeros
-                if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
-                    evt.preventDefault();
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+
+                locale: 'es',
+                slotEventOverlap: false,
+                allDaySlot: false,
+                aspectRatio: 2,
+                initialView: 'timeGridWeek',
+                expandRows: false,
+
+                events: eventsj,
+                slotDuration: '00:10:00',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'timeGridWeek,timeGridDay' // user can switch between the two
                 }
             });
-
-            document.querySelector(".number-input1").addEventListener("keypress", function(evt) {
-                if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
-                    evt.preventDefault();
-                }
-            });
-
-            const shiftStart = document.getElementById('incio_turno');
-            const shiftEnd = document.getElementById('fin_turno');
-
-            shiftStart.addEventListener('change', function() {
-                shiftEnd.min = shiftStart.value;
-            });
-        </script>
+            calendar.render();
+        });
+    </script>
 
 </x-app-layout>
