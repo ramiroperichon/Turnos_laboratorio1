@@ -115,6 +115,9 @@
             </div>
         </div>
     </div>
+
+    <a href="https://wa.me/543777000000?text=hola esto es una prueba desde la web, del proyecto de turnos" target="_blank"> <img src="/assets/images/prueba/whatsapp-fill.svg" style="width: 50px; height: 50px;"> </a>
+
     <script>
         document.querySelector(".number-input").addEventListener("keypress", function(
             evt) { //evita poder colocar la e y los signos en los input de numeros

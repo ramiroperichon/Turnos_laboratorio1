@@ -63,6 +63,7 @@
                                     </select>
                                     <x-input-error :messages="$errors->get('role')" class="mt-2" />
                                 </div>
+                                
                                 <div class="text-center">
                                     <x-primary-button class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
                                 </div>
