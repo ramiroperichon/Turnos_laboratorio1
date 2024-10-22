@@ -4,6 +4,7 @@ use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\DetalleNegocioController;
 use App\Models\Horario;
 use App\Models\Reserva;
 use App\Models\Servicio;
@@ -43,7 +44,7 @@ Route::get('/', function () {
         $eventData[] = [
             'title' => $event->user->name . ' ' . $event->servicio->nombre,
             'start' => $event->fecha_reserva . ' ' . $event->franjaHoraria->hora_inicio,
-            'end'   => $event->fecha_reserva . ' ' . $event->franjaHoraria->hora_fin,
+            'end' => $event->fecha_reserva . ' ' . $event->franjaHoraria->hora_fin,
             'eventColor' => $eventColor
         ];
     }
@@ -77,5 +78,6 @@ Route::resource('/reserva', ReservaController::class);
 Route::resource('/servicio', ServicioController::class);
 Route::resource('/horario', HorarioController::class);
 Route::post('/horario/{id}', [HorarioController::class, 'returnSelected'])->name('horario.selected');
+Route::resource('/detalleNegocio', DetalleNegocioController::class);
 
 require __DIR__ . '/auth.php';
