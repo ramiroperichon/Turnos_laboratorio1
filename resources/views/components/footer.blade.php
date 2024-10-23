@@ -1,7 +1,7 @@
 <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
     <div class="col mb-3">
         <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-            <img src="{{ asset('assets/images/bigger_logo.png') }}" alt="logo" class="size-[80px]">
+            <img src="{{ asset('assets/images/bigger_logo.png') }}" alt="logo" class="size-8">
         </a>
         <p class="text-body-secondary">{{ $detallenegocioProviders->nombre }}© 2024</p>
 
@@ -68,7 +68,9 @@
         </ul>
     </div>
 
-    <div class="col mb-3">
+    <div class="col mb-3" style="height: 200px;
+            width: 100%;" id="map"">
+
         <h5>Section</h5>
         <ul class="nav flex-column">
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
@@ -79,14 +81,35 @@
         </ul>
     </div>
 
-    <div class="col mb-3">
-        <h5>Section</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-        </ul>
-    </div>
+
+
 </footer>
+
+<script>
+    let map;
+    let marker;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: -29.14383470536903,
+                lng: -59.26513140291266
+            },
+            zoom: 16,
+            mapId: 'map'
+        });
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            const clickedLocation = event.latLng;
+
+            if (marker) {
+                marker.position = clickedLocation;
+            } else {
+                marker = new google.maps.marker.AdvancedMarkerElement({
+                    position: clickedLocation,
+                    map: map
+                });
+            }
+        });
+    }
+</script>

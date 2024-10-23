@@ -3,7 +3,7 @@
 
 
 <head>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,12 +21,13 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.theme.default.min.css') }}">
+
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
 
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -69,6 +70,9 @@
     <script src="{{ asset('assets/js/rome.js') }}"></script>
     <script src="{{ asset('assets/js/calendario.js') }}"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ env('VITE_MAP_KEY') }}&callback=initMap&language=es&libraries=marker"
+        async defer></script>
 </body>
 
 </html>
