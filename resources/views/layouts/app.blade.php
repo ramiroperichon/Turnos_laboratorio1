@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html data-bs-theme="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
+
 <head>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <title>{{ config('app.name', 'Laravel') }}</title>
+
+
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
@@ -21,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 
 <body>
@@ -38,7 +43,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     <x-footer />
     <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js') }}"></script>

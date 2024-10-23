@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DetalleNegocio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class DetalleNegocioController extends Controller
 {
@@ -70,14 +71,15 @@ class DetalleNegocioController extends Controller
                 'telefono' => 'required|numeric',
                 'latitud' => 'required|numeric',
                 'logitud' => 'required|numeric',
-                'Iurl' => 'required|url',
-                'Furl' => 'required|url',
-                'Turl' => 'required|url',
-                'Xurl' => 'required|url',
+                'Iurl' => 'nullable|url',
+                'Furl' => 'nullable|url',
+                'Turl' => 'nullable|url',
+                'Xurl' => 'nullable|url',
             ]
         );
 
         $detalleNegocioActualizado->update($validated);
+        View::share('detallenegocioProviders', $detalleNegocioActualizado);
         return redirect('/')->with('status', 'se actualizo correctamente los datos del negocio!');
 
 

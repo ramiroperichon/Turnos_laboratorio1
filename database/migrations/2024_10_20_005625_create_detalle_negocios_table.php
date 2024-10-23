@@ -17,10 +17,10 @@ return new class extends Migration {
             $table->string('telefono', length: 15);
             $table->decimal('latitud', total: 18, places: 16);
             $table->decimal('logitud', total: 18, places: 16);
-            $table->mediumText('Iurl');
-            $table->mediumText('Furl');
-            $table->mediumText('Turl');
-            $table->mediumText('Xurl');
+            $table->mediumText('Iurl')->nullable();
+            $table->mediumText('Furl')->nullable();
+            $table->mediumText('Turl')->nullable();
+            $table->mediumText('Xurl')->nullable();
             $table->timestamps();
         });
     }
