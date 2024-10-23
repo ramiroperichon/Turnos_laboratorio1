@@ -68,17 +68,11 @@
         </ul>
     </div>
 
-    <div class="col mb-3" style="height: 200px;
-            width: 100%;" id="map"">
-
-        <h5>Section</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-        </ul>
+    <div class="space-y-2">
+        <h5>UBICACION</h5>
+        <div class="col mb-3" style="height: 200px;
+            width: 100%;" id="map">
+        </div>
     </div>
 
 
@@ -88,28 +82,27 @@
 <script>
     let map;
     let marker;
+    let lati = "<?php echo $detallenegocioProviders->latitud; ?>";
+    let lngi = "<?php echo $detallenegocioProviders->logitud; ?>";
+
+    console.log(lat, lng)
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
-                lat: -29.14383470536903,
-                lng: -59.26513140291266
+                lat: parseFloat(lati),
+                lng: parseFloat(lngi)
             },
             zoom: 16,
             mapId: 'map'
         });
 
-        google.maps.event.addListener(map, 'click', function(event) {
-            const clickedLocation = event.latLng;
-
-            if (marker) {
-                marker.position = clickedLocation;
-            } else {
-                marker = new google.maps.marker.AdvancedMarkerElement({
-                    position: clickedLocation,
-                    map: map
-                });
-            }
+        marker = new google.maps.marker.AdvancedMarkerElement({
+            position: {
+                lat: parseFloat(lati),
+                lng: parseFloat(lngi)
+            },
+            map: map
         });
     }
 </script>

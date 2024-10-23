@@ -17,7 +17,7 @@
              @hasrole('proveedor')
             <li class="nav-item dropdown d-none d-lg-block">
                 <a class="nav-link btn btn-success create-new-button" href="{{ route('detalleNegocio.index') }}" id="createbuttonDropdown"
-                    aria-expanded="false">+ Detalles de negocios</a>
+                    aria-expanded="false">Editar detalles de negocio</a>
             </li>
             @endhasrole
             <li class="nav-item dropdown border-left">

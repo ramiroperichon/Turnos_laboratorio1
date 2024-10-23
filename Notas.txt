@@ -5,3 +5,8 @@ Si, no, ver reservas;
 Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor
 
 Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles
+
+Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
+
+Datos de la empresa/servicios
+Footers
