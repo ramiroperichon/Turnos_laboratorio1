@@ -43,8 +43,8 @@ Route::get('/', function () {
 
         $eventData[] = [
             'title' => $event->user->name . ' ' . $event->servicio->nombre,
-            'start' => $event->fecha_reserva . ' ' . $event->franjaHoraria->hora_inicio,
-            'end' => $event->fecha_reserva . ' ' . $event->franjaHoraria->hora_fin,
+            'start' => $event->fecha_reserva . ' ' . $event->hora_inicio,
+            'end' => $event->fecha_reserva . ' ' . $event->hora_fin,
             'eventColor' => $eventColor
         ];
     }
