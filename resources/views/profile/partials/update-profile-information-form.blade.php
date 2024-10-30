@@ -47,6 +47,32 @@
             @endif
         </div>
 
+        @if ($user->proveedor && $user->proveedor->profesion != null)
+            <div>
+                <x-input-label for="profesion" :value="__('Profesion')" />
+                <x-text-input id="profesion" name="profesion" type="text" class="mt-1 block w-full" :value="old('profesion', $user->proveedor->profesion)" required autocomplete="profesion" />
+                <x-input-error class="mt-2" :messages="$errors->get('profesion')" />
+            </div>
+        
+            <div>
+                <x-input-label for="horario_inicio" :value="__('Horario Inicio')" />
+                <x-text-input id="horario_inicio" name="horario_inicio" type="time" class="mt-1 block w-full" :value="old('horario_inicio', $user->proveedor->horario_inicio)" required autocomplete="horario_inicio" />
+                <x-input-error class="mt-2" :messages="$errors->get('horario_inicio')" />
+            </div>
+        
+            <div>
+                <x-input-label for="horario_fin" :value="__('Horario Fin')" />
+                <x-text-input id="horario_fin" name="horario_fin" type="time" class="mt-1 block w-full" :value="old('horario_fin', $user->proveedor->horario_fin)" required autocomplete="horario_fin" />
+                <x-input-error class="mt-2" :messages="$errors->get('horario_fin')" />
+            </div>
+        @elseif ($user->cliente && $user->cliente->documento != null)
+            <div>
+                <x-input-label for="documento" :value="__('Documento')" />
+                <x-text-input id="documento" name="documento" type="text" class="mt-1 block w-full" :value="old('documento', $user->cliente->documento)" required autocomplete="documento" />
+                <x-input-error class="mt-2" :messages="$errors->get('documento')" />
+            </div>
+        @endif
+        
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

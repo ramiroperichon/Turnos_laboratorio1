@@ -56,7 +56,7 @@
                                 </div>
                                 <!-- Rol -->
                                 <div class="mt-4">
-                                    <x-input-label for="role" :value="__('Role')" />
+                                    <x-input-label for="role" :value="__('Que usuario desea crear?')" />
                                     <select id="role"
                                             name="role"
                                             onchange="toggleComponents(this.value)"
@@ -68,22 +68,29 @@
 
                                     <!-- Components -->
                                     <div id="proveedor-component" class="mt-4">
-                                        <div>
+                                        <div class="form-group">
+                                            <label>Profesion</label>
                                             <x-text-input id="profesion" type="text" class="form-control p_input" name="profesion" :value="old('profesion')" />
                                             <x-input-error :messages="$errors->get('profesion')" class="mt-2" />
                                         </div>
-                                         <div>
+                                         <div class="form-group">
+                                             <label>Horario de inicio</label>
                                             <x-text-input id="horario_inicio" type="time" class="form-control p_input" name="horario_inicio" :value="old('horario_inicio')" />
                                             <x-input-error :messages="$errors->get('horario_inicio')" class="mt-2" />
                                         </div>
-                                        <div>
+                                        <div class="form-group">
+                                             <label>Horario de fin</label>
                                             <x-text-input id="horario_fin" type="time" class="form-control p_input" name="horario_fin" :value="old('horario_fin')" />
                                             <x-input-error :messages="$errors->get('horario_fin')" class="mt-2" />
                                         </div>
                                     </div>
 
                                     <div id="cliente-component" class="mt-4" style="display: none;">
-                                        <div>casdasd</div> {{-- agregar componente de datos de cliente --}}
+                                        <div class="form-group">
+                                            <label>Documento</label>
+                                            <x-text-input id="documento" type="text" class="form-control p_input" name="documento" :value="old('documento')" />
+                                            <x-input-error :messages="$errors->get('documento')" class="mt-2" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="text-center">

@@ -4,28 +4,6 @@
             {{ __('Dashboard proveedor') }}
         </h2>
     </x-slot>
-    <div class="page-header">
-        <h3 class="page-title"> Servicios </h3>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-            </ol>
-            <li>
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h4 class="card-title">Detalles del Proveedor</h4>
-                        <p><strong>Nombre:</strong>{{ Auth::user()->name }}</p>
-                        <p><strong>Email:</strong>{{ Auth::user()->email }}</p>
-                        <p><strong>Teléfono:</strong></p>
-                        <p><strong>Horario de Trabajo:</strong>{{ Auth::user()->proveedor->horario_inicio }} a
-                            {{ Auth::user()->proveedor->horario_fin }} </p>
-                        <p><strong>Profesión:</strong>{{ Auth::user()->proveedor->profesion }}</p>
-                    </div>
-                </div>
-            </li>
-        </nav>
-
-    </div>
     @session('status')
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
             class="alert alert-success alert-dismissible fade show">

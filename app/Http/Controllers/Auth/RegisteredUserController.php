@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Proveedor;
+use App\Models\Cliente;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,9 +35,6 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'profesion' => [ 'required','string','max:50'],
-            'horario_inicio' => 'required|date_format:H:i',
-            'horario_fin' => 'required|date_format:H:i|after:horario_inicio',
         ]);
 
         $user = User::create([
@@ -45,15 +43,36 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $proveedor = Proveedor::create([
+        if ($request->role == "proveedor") {
+
+            $request->validate([
+                'profesion' => ['required', 'string', 'max:50'],
+                'horario_inicio' => ['required', 'date',''],
+                'horario_fin' => ['required', 'date',''],
+            ]);
+
+            Proveedor::create([
             'usuario_id' => $user->id,
             'profesion' => $request->profesion,
             'horario_inicio' => $request->horario_inicio,
             'horario_fin' => $request->horario_fin
-        ]);
+            ]);
+        }
+
+        if ($request->role == "cliente") {
+
+            $request->validate([
+                'documento' => ['required', 'string', 'max:8'],
+            ]);
+
+            Cliente::create([
+            'usuario_id' => $user->id,
+            'documento' => $request->documento,
+            ]);
+
+        }
 
 
-        
         $user->assignRole($request->role);
 
         event(new Registered($user));
