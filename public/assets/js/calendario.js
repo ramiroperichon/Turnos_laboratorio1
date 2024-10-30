@@ -23,6 +23,7 @@ console.log(daysArray);
     return daysNumbers.includes(moment(d).day());
   }}).on('data', function (value) {
 	  result.value = value;
+      result.dispatchEvent(new Event('change'));
 	});
 
 });

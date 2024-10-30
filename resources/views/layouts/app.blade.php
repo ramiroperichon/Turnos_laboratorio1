@@ -26,6 +26,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
+    @livewireStyles
 </head>
 
 <body>
@@ -71,6 +72,7 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ env('VITE_MAP_KEY') }}&callback=initMap&language=es&libraries=marker"
         async defer></script>
+    @livewireScripts
 </body>
 
 </html>

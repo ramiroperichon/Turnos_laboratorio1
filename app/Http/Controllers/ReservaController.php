@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reserva;
 use App\Services\ServicioService;
+use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,7 @@ class ReservaController extends Controller
     public function index()
     {
         $reservas = Reserva::get();
-        return view ('reserva.todas', [
+        return view('reserva.todas', [
             'reservas' => $reservas
         ]);
     }
@@ -30,16 +31,16 @@ class ReservaController extends Controller
     public function reservaUsuario()
     {
         $user = auth()->user();
-        $reservas = Reserva::where('cliente_id',$user->id)->get();
-        return view ('cliente.todas', [
+        $reservas = Reserva::where('cliente_id', $user->id)->get();
+        return view('cliente.todas', [
             'reservas' => $reservas
         ]);
     }
 
     public function reservaServicio(int $idservicio)
     {
-        $reservas = Reserva::where('servicio_id',$idservicio)->get();
-        return view ('reserva.todas', [
+        $reservas = Reserva::where('servicio_id', $idservicio)->get();
+        return view('reserva.todas', [
             'reservas' => $reservas
         ]);
     }
@@ -57,31 +58,33 @@ class ReservaController extends Controller
      */
     public function store(Request $request)
     {
-            $validated = $request->validate([
-                'servicio_id' => 'required|integer',
-                'horario_id' => 'required|integer',
-                'fecha_reserva' => 'required|date|after_or_equal:today',
-                'cliente_id' => 'required|integer',
-            ], [
-                'fecha_reserva.after_or_equal' => 'La hora de fin no puede ser menor a la de inicio!',
-            ]);
+        $horarioId = explode(',', $request->input('horario_id'));
+        $validated = $request->validate([
+            'servicio_id' => 'required|integer',
+            'fecha_reserva' => 'required|date|after_or_equal:today',
+            'cliente_id' => 'required|integer',
+        ], [
+            'fecha_reserva.after_or_equal' => 'La hora de fin no puede ser menor a la de inicio!',
+        ]);
 
-            // Create the Reserva after validation passes
+        try {
             Reserva::create([
                 'servicio_id' => $validated['servicio_id'],
-                'horario_id' => $validated['horario_id'],
                 'fecha_reserva' => $validated['fecha_reserva'],
-                'cliente_id' => $validated['cliente_id']
+                'cliente_id' => $validated['cliente_id'],
+                'hora_inicio' => $horarioId[0],
+                'hora_fin' => $horarioId[1]
             ]);
-
-            // Update the horario state
-            //$this->servicioService->updateHorarioState($validated['horario_id']);
-
-            // Redirect to the home page with success message
-            return redirect()->route('dashboard')->with('status', 'Se creo la reserva correctamente!');
-
-
+        } catch (Exception $e) {
+            return redirect('/')->with('error', 'Error al crear la reserva');
         }
+
+        // Update the horario state
+        //$this->servicioService->updateHorarioState($validated['horario_id']);
+
+        // Redirect to the home page with success message
+        return redirect()->route('dashboard')->with('status', 'Se creo la reserva correctamente!');
+    }
 
     /**
      * Display the specified resource.

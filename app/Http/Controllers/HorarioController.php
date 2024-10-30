@@ -80,12 +80,12 @@ class HorarioController extends Controller
     {
         $selected = Servicio::firstWhere('id', $id);
         // Fetch time slots for the selected service
-        $horarios = $this->servicioService->generateFranjasForServicio($selected->incio_turno, $selected->fin_turno, $selected->duracion);
+        //$horarios = $this->servicioService->generateFranjasForServicio($selected->incio_turno, $selected->fin_turno, $selected->duracion);
 
         $reservas = Reserva::where('servicio_id', $id)->get();
 
         // Fetch all services
 
-        return view('horario.todos', ['horarios' => $horarios, 'servicio' => $selected, 'reservas' => $reservas ]);
+        return view('horario.todos', ['servicio' => $selected, 'reservas' => $reservas ]);
     }
 }

@@ -22,3 +22,5 @@ arreglar migraciones de usuarios, falta telefono, apellido
 Manejar el caso en el que no exista ningun detale de empresa
 
 Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad
+Cambiar los borrados de: Servicios y Usuarios a desabilitaciones (observaciones y habilitado = false)
+Traer solo servicios habilidatos y authenticar solamente usuarios habilitados
