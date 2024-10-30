@@ -57,13 +57,35 @@
                                 <!-- Rol -->
                                 <div class="mt-4">
                                     <x-input-label for="role" :value="__('Role')" />
-                                    <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                    <select id="role"
+                                            name="role"
+                                            onchange="toggleComponents(this.value)"
+                                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                         <option value="proveedor">Proveedor</option>
-                                        <option value="cliente">Cliente</option> <!-- Si quieres permitir este rol -->
+                                        <option value="cliente">Cliente</option>
                                     </select>
                                     <x-input-error :messages="$errors->get('role')" class="mt-2" />
+
+                                    <!-- Components -->
+                                    <div id="proveedor-component" class="mt-4">
+                                        <div>
+                                            <x-text-input id="profesion" type="text" class="form-control p_input" name="profesion" :value="old('profesion')" />
+                                            <x-input-error :messages="$errors->get('profesion')" class="mt-2" />
+                                        </div>
+                                         <div>
+                                            <x-text-input id="horario_inicio" type="time" class="form-control p_input" name="horario_inicio" :value="old('horario_inicio')" />
+                                            <x-input-error :messages="$errors->get('horario_inicio')" class="mt-2" />
+                                        </div>
+                                        <div>
+                                            <x-text-input id="horario_fin" type="time" class="form-control p_input" name="horario_fin" :value="old('horario_fin')" />
+                                            <x-input-error :messages="$errors->get('horario_fin')" class="mt-2" />
+                                        </div>
+                                    </div>
+
+                                    <div id="cliente-component" class="mt-4" style="display: none;">
+                                        <div>casdasd</div> {{-- agregar componente de datos de cliente --}}
+                                    </div>
                                 </div>
-                                
                                 <div class="text-center">
                                     <x-primary-button class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
                                 </div>
@@ -90,6 +112,19 @@
     <script src="../../assets/js/misc.js"></script>
     <script src="../../assets/js/settings.js"></script>
     <script src="../../assets/js/todolist.js"></script>
-    <!-- endinject -->
+    <script>
+        function toggleComponents(value) {
+            const proveedorComponent = document.getElementById('proveedor-component');
+            const clienteComponent = document.getElementById('cliente-component');
+
+            if (value === 'proveedor') {
+                proveedorComponent.style.display = 'block';
+                clienteComponent.style.display = 'none';
+            } else {
+                proveedorComponent.style.display = 'none';
+                clienteComponent.style.display = 'block';
+            }
+        }
+        </script>
 </body>
 </html>

@@ -11,6 +11,17 @@
                 <li class="breadcrumb-item active" aria-current="page">Inicio</li>
             </ol>
         </nav>
+           <!-- Muestra los atributos del proveedor logueado -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Detalles del Proveedor</h4>
+            <p><strong>Nombre:</strong> {{ $proveedor->nombre }}</p>
+            <p><strong>Email:</strong> {{ $proveedor->email }}</p>
+            <p><strong>Teléfono:</strong> {{ $proveedor->telefono }}</p>
+            <p><strong>Horario de Trabajo:</strong> {{ $proveedor->horario_inicio }} - {{ $proveedor->horario_fin }}</p>
+            <p><strong>Profesión:</strong> {{ $proveedor->profesion }}</p>
+        </div>
+    </div>
     </div>
     @session('status')
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
