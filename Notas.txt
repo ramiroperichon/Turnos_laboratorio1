@@ -10,3 +10,10 @@ Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
 
 Datos de la empresa/servicios
 Footers
+
+dashboard de administrador, ver reservas, ver servicios, crear nuevos servicios, editar detalles de negocio, crear nuevos usuarios(proveedores), modificar datos de usuarios
+formularios independientes para cada tipo de usuario(usuario, proveedor).
+
+listado de todos los servicios. con detalles de cada servicio, ver reservas, aceptar,rechazar turno 
+
+arreglar migraciones de usuarios, falta telefono, apellido 

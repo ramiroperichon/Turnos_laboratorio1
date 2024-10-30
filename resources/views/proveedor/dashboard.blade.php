@@ -10,18 +10,21 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">Inicio</li>
             </ol>
+            <li>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Detalles del Proveedor</h4>
+                        <p><strong>Nombre:</strong>{{ Auth::user()->name }}</p>
+                        <p><strong>Email:</strong>{{ Auth::user()->email }}</p>
+                        <p><strong>Teléfono:</strong></p>
+                        <p><strong>Horario de Trabajo:</strong>{{ Auth::user()->proveedor->horario_inicio }} a
+                            {{ Auth::user()->proveedor->horario_fin }} </p>
+                        <p><strong>Profesión:</strong>{{ Auth::user()->proveedor->profesion }}</p>
+                    </div>
+                </div>
+            </li>
         </nav>
-           <!-- Muestra los atributos del proveedor logueado -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <h4 class="card-title">Detalles del Proveedor</h4>
-            <p><strong>Nombre:</strong> {{ $proveedor->nombre }}</p>
-            <p><strong>Email:</strong> {{ $proveedor->email }}</p>
-            <p><strong>Teléfono:</strong> {{ $proveedor->telefono }}</p>
-            <p><strong>Horario de Trabajo:</strong> {{ $proveedor->horario_inicio }} - {{ $proveedor->horario_fin }}</p>
-            <p><strong>Profesión:</strong> {{ $proveedor->profesion }}</p>
-        </div>
-    </div>
+
     </div>
     @session('status')
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
@@ -56,37 +59,40 @@
                         <h4 class="card-title mb-1">Reservas a confirmar</h4>
                         <p class="text-muted mb-1">Estado</p>
                     </div>
-                    @foreach($reservas as $reserva)
-                    <div class="row">
-                        <div class="col">
-                            <div class="preview-list">
-                                <div class="preview-item border-bottom">
-                                    <div class="preview-thumbnail">
+                    @foreach ($reservas as $reserva)
+                        <div class="row">
+                            <div class="col">
+                                <div class="preview-list">
+                                    <div class="preview-item border-bottom">
+                                        <div class="preview-thumbnail">
                                             <span class="btn btn-success m-1">V</span>
                                             <span class="btn btn-danger m-1">X</span>
-                                    </div>
-                                    <div class="preview-item-content d-sm-flex flex-grow">
-                                        <div class="flex-grow">
-                                            <h6 class="preview-subject">{{$reserva->user->name}}</h6>
-                                            <p class="text-muted mb-0">{{$reserva->servicio->nombre}}</p>
                                         </div>
-                                        <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                                            @if($reserva->estado == "Pendiente")
-                                            <span class="badge badge-outline-info">{{$reserva->estado}}</span>
-                                            @elseif($reserva->estado == "Cancelado")
-                                            <span class="badge badge-outline-danger">{{$reserva->estado}}</span>
-                                            @elseif ($reserva->estado == "Confirmado")
-                                            <span class="badge badge-outline-success">{{$reserva->estado}}</span>
-                                            @else
-                                            <span class="badge badge-success">{{$reserva->estado}}</span>
-                                            @endif
-                                            <p class="text-muted mt-2 mb-1">{{$reserva->fecha_reserva}}</p>
+                                        <div class="preview-item-content d-sm-flex flex-grow">
+                                            <div class="flex-grow">
+                                                <h6 class="preview-subject">{{ $reserva->user->name }}</h6>
+                                                <p class="text-muted mb-0">{{ $reserva->servicio->nombre }}</p>
+                                            </div>
+                                            <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                                                @if ($reserva->estado == 'Pendiente')
+                                                    <span
+                                                        class="badge badge-outline-info">{{ $reserva->estado }}</span>
+                                                @elseif($reserva->estado == 'Cancelado')
+                                                    <span
+                                                        class="badge badge-outline-danger">{{ $reserva->estado }}</span>
+                                                @elseif ($reserva->estado == 'Confirmado')
+                                                    <span
+                                                        class="badge badge-outline-success">{{ $reserva->estado }}</span>
+                                                @else
+                                                    <span class="badge badge-success">{{ $reserva->estado }}</span>
+                                                @endif
+                                                <p class="text-muted mt-2 mb-1">{{ $reserva->fecha_reserva }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
