@@ -75,7 +75,7 @@ class ReservaController extends Controller
             ]);
 
             // Update the horario state
-            $this->servicioService->updateHorarioState($validated['horario_id']);
+            //$this->servicioService->updateHorarioState($validated['horario_id']);
 
             // Redirect to the home page with success message
             return redirect()->route('dashboard')->with('status', 'Se creo la reserva correctamente!');

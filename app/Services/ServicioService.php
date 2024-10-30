@@ -21,14 +21,14 @@ class ServicioService
             'dias_disponible' => $data['dias_disponible']
         ]);
 
-        $this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
+        //$this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
 
         return $servicio; //devuelve el servicio creado
     }
 
     public function removeOldServicioHorariosAndUpdate($data, Servicio $servicio) //elimina y vuelve a generar horarios al actualizar el servicio las reservas del servicio son borradas
     {
-        Horario::where('servicio_id', '=', $servicio->id)->delete();
+        //Horario::where('servicio_id', '=', $servicio->id)->delete();
 
         $servicio->update([
             'nombre' => $data['nombre'],
@@ -39,7 +39,7 @@ class ServicioService
             'duracion' => $data['duracion'],
             'dias_disponible' => $data['dias_disponible']
         ]);
-        $this->generateFranjasForServicio($servicio);
+        //$this->generateFranjasForServicio($servicio);
     }
 
     private function generateFranjasForServicio(Servicio $servicio) //Generador de horarios por servicio
