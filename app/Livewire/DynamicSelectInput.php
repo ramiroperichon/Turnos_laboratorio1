@@ -20,7 +20,6 @@ class DynamicSelectInput extends Component
     public function mount($servicio)
     {
         $this->servicio = $servicio;
-        $this->horarios = $this->generateFranjasForServicio($servicio->incio_turno, $servicio->fin_turno, $servicio->duracion);
     }
 
     public function updateHorarios($date)

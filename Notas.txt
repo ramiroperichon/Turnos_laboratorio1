@@ -12,7 +12,7 @@ Datos de la empresa/servicios
 Footers
 
 
-dashboard de administrador, ver reservas, ver servicios, crear nuevos servicios, editar detalles de negocio, crear nuevos usuarios(proveedores), modificar datos de usuarios
+dashboard de administrador, ver reservas, ver servicios, editar detalles de negocio, crear nuevos usuarios(proveedores), modificar datos de usuarios
 formularios independientes para cada tipo de usuario(usuario, proveedor).
 
 listado de todos los servicios. con detalles de cada servicio, ver reservas, aceptar,rechazar turno
@@ -24,3 +24,14 @@ Manejar el caso en el que no exista ningun detale de empresa
 Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad
 Cambiar los borrados de: Servicios y Usuarios a desabilitaciones (observaciones y habilitado = false)
 Traer solo servicios habilidatos y authenticar solamente usuarios habilitados
+
+
+module.exports = {
+    content: [
+        // ....
+        './app/Livewire/**/*Table.php',
+        './vendor/power-components/livewire-powergrid/resources/views/**/*.php',
+        './vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php'
+    ]
+    // ....
+  };

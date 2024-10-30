@@ -140,5 +140,6 @@
             </div>
         </div>
         @endforeach
+        <livewire:reservas-table/>
     </div>
 </x-app-layout>
