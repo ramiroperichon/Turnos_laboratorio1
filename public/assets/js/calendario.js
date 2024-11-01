@@ -12,7 +12,7 @@ var daysOfWeek = {
   "Miercoles": 3,
   "Jueves": 4,
   "Viernes": 5,
-  "Domingo": 6
+  "Sabado": 6
 };
 
 var daysArray = inl.innerText.split(",");

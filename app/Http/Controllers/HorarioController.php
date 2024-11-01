@@ -85,7 +85,6 @@ class HorarioController extends Controller
         $reservas = Reserva::where('servicio_id', $id)->get();
 
         // Fetch all services
-
         return view('horario.todos', ['servicio' => $selected, 'reservas' => $reservas ]);
     }
 }
