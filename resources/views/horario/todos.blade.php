@@ -31,8 +31,8 @@
                         <div class="col-md-6">
                             <h6 class="text-muted fw-bold font-weight-normal border-bottom py-1">Horarios disponibles
                             </h6>
-                            <div class="row g-2">
-                                @foreach ($horarios as $horario)
+                                <livewire:dynamicselectinput :servicio="$servicio" :reservas="$reservas" />
+                               {{--  @foreach ($horarios as $horario)
                                     <div class="col-lg-2">
                                         <input type="radio" required id="option{{ $horario->id }}" name="horario_id"
                                             value="{{ $horario->id }}" class="btn-check"
@@ -42,8 +42,7 @@
                                             {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }}
                                         </label>
                                     </div>
-                                @endforeach
-                            </div>
+                                @endforeach --}}
 
                             <x-input-error :messages="$errors->get('horario_id')" class="mt-2" />
                         </div>
@@ -53,7 +52,6 @@
                     <input type="number" hidden id="servicio_id" name="servicio_id" value="{{ $servicio->id }}"
                         required class="form-control" />
                     <x-input-error :messages="$errors->get('servicio_id')" class="mt-2" />
-                    <input type="date" id="result" hidden name="fecha_reserva" required class="form-control" />
                     <x-input-error :messages="$errors->get('fecha_reserva')" class="mt-2" />
                     <input type="number" id="cliente_id" hidden name="cliente_id" value="{{ Auth::user()->id }}"
                         required class="form-control" />

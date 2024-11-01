@@ -6,16 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reserva extends Model
 {
-    protected $fillable = ['cliente_id', 'servicio_id', 'horario_id', 'estado', 'fecha_reserva'];
+    protected $fillable = [
+        'cliente_id',
+        'servicio_id',
+        'estado',
+        'fecha_reserva',
+        'hora_inicio',
+        'hora_fin',
+        'observaciones',
+        'habilitado'
+    ];
 
     public function servicio()
     {
         return $this->belongsTo(Servicio::class, 'servicio_id');
-    }
-
-    public function franjaHoraria()
-    {
-        return $this->belongsTo(Horario::class, 'horario_id');
     }
 
     public function user()
@@ -25,5 +29,6 @@ class Reserva extends Model
 
     protected $attributes = [
         'estado' => 'Pendiente',
+        'habilitado' => true,
     ];
-};
+}

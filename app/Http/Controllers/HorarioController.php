@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Horario;
+use App\Models\Reserva;
 use App\Models\Servicio;
+use App\Services\ServicioService;
 use Illuminate\Http\Request;
 
 class HorarioController extends Controller
 {
+
+    protected $servicioService;
+
+    public function __construct(ServicioService $servicioService)
+    {
+        $this->servicioService = $servicioService;
+    }
+
     public function index()
     {
         $horarios = Horario::get();
@@ -68,13 +78,14 @@ class HorarioController extends Controller
 
     public function returnSelected(int $id)
     {
-
+        $selected = Servicio::firstWhere('id', $id);
         // Fetch time slots for the selected service
-        $horarios = Horario::where('servicio_id', $id)->get();
+        //$horarios = $this->servicioService->generateFranjasForServicio($selected->incio_turno, $selected->fin_turno, $selected->duracion);
+
+        $reservas = Reserva::where('servicio_id', $id)->get();
 
         // Fetch all services
-        $selected = Servicio::firstWhere('id', $id);
 
-        return view('horario.todos', ['horarios' => $horarios, 'servicio' => $selected ]);
+        return view('horario.todos', ['servicio' => $selected, 'reservas' => $reservas ]);
     }
 }

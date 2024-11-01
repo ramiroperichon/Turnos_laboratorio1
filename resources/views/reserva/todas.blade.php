@@ -66,8 +66,8 @@
                         <h6 class="text-muted font-weight-normal">{{$reserva->servicio->nombre}}</h6>
             </div>
             <div class="col">
-                        <h6 class="text-muted font-weight-normal">{{\Carbon\Carbon::parse($reserva->franjaHoraria->hora_inicio)->format('H:i')}} a</h6>
-                        <h6 class="text-muted font-weight-normal">{{\Carbon\Carbon::parse($reserva->franjaHoraria->hora_fin)->format('H:i')}}</h6>
+                        <h6 class="text-muted font-weight-normal">{{\Carbon\Carbon::parse($reserva->hora_inicio)->format('H:i')}} a</h6>
+                        <h6 class="text-muted font-weight-normal">{{\Carbon\Carbon::parse($reserva->hora_fin)->format('H:i')}}</h6>
             </div>
             <div class="col">
                         <h6 class="text-muted font-weight-normal">{{$reserva->fecha_reserva}}</h6>

@@ -15,8 +15,8 @@
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Nombre del servicio</label>
-                                <input type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre"
-                                    required class="form-control" />
+                                <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre"
+                                    required />
                                 <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                             </div>
                             <div class="col mt-3">

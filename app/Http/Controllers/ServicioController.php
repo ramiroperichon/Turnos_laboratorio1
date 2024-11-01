@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servicio;
+use App\Models\User;
 use App\Services\ServicioService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ServicioController extends Controller
@@ -56,14 +58,33 @@ class ServicioController extends Controller
                 'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
             ],
             [
-                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!', //error si el usuario puso una horario de fin menor o igual al de inicio
+                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!',
             ]
         );
 
+        $user = new User();
+        if($request-> userId == null){
+            $user = auth()->user();
+        }
+        else{
+            try{
+            $user = User::findOrFail($request->userId);
+            }catch(ModelNotFoundException $e){
+                return redirect('/')->with('status', 'Usuario no encontrado');
+            }
+        }
+
+        if($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false){
+            return redirect('/servicio/create')->with('status', 'El turno no esta dentro de los horarios disponibles');//agregar status a formulario
+        }
+
+        if($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno']) == false){
+            return redirect('/servicio/create')->with('status', 'No hay horarios disponibles para este servicio');//agregar status a formulario
+        }
+
         $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
 
-        // Llama al servicio y genera los horarios
-        $servicio = $this->servicioService->storeServicioWithHorarios($validated);
+        $servicio = $this->servicioService->storeServicioWithHorarios($validated, $user->id);
 
         return redirect('/')->with('status', 'Servicio se creo correctamente!');
     }
@@ -100,17 +121,37 @@ class ServicioController extends Controller
             ]
         );
 
+        $user = new User();
+        if($request-> userId == null){
+            $user = auth()->user();
+        }
+        else{
+            try{
+            $user = User::findOrFail($request->userId);
+            }catch(ModelNotFoundException $e){
+                return redirect('/')->with('error', 'Usuario no encontrado');
+            }
+        }
+
+        if($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false){
+            return redirect('/servicio/user')->with('error', 'Horario invalido, esta fuera de los horarios de trabajo');//agregar status a formulario
+        }
+
+        if($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno'], $servicio->id) == false){
+            return redirect('/servicio/user')->with('error', 'Horario utilizado por otro servicio');//agregar status a formulario
+        }
+
 
         $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
 
         $servicio = $this->servicioService->removeOldServicioHorariosAndUpdate($validated, $servicio);
 
-        return redirect('/')->with('status', 'Servicio actualizado correctamente!');
+        return redirect('/servicio/user')->with('status', 'Servicio actualizado correctamente!');
     }
 
     public function destroy(Servicio $servicio)
     {
         $servicio->delete();
-        return redirect('/')->with('status', 'Servicio borrado correctamente!');
+        return redirect('/servicio/user')->with('status', 'Servicio borrado correctamente!');
     }
 }

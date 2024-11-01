@@ -20,6 +20,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endsession
+    @session('error')
+        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+            class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endsession
     @if ($errors->any())
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
             class="alert alert-danger alert-dismissible fade show">
@@ -79,12 +86,11 @@
                                                         </button>
                                                     </div>
                                                     <div class="col">
-                                                        <form
-                                                            action="{{ route('reserva.selected', $servicio->id) }}"
+                                                        <form action="{{ route('reserva.selected', $servicio->id) }}"
                                                             method="POST">
                                                             @csrf
-                                                            <button class="btn btn-success w-100"
-                                                                type="submit">Ver reservas</button>
+                                                            <button class="btn btn-success w-100" type="submit">Ver
+                                                                reservas</button>
                                                         </form>
                                                     </div>
                                                     <!-- Modal Editar -->
@@ -138,7 +144,8 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label for="descripcion">Descripcion</label>
+                                                                            <label
+                                                                                for="descripcion">Descripcion</label>
                                                                             <textarea class="form-control" id="descripcion" placeholder="Ingrese la descripcion del servicio..." required
                                                                                 name="descripcion" rows="2">{{ $servicio->descripcion }}</textarea>
                                                                             <x-input-error :messages="$errors->get('descripcion')"
@@ -318,8 +325,8 @@
                 }
             });
 
-            const shiftStart = document.getElementById('incio_turno');
-            const shiftEnd = document.getElementById('fin_turno');
+            const shiftStart = document.getElementById('shift_start_modal');
+            const shiftEnd = document.getElementById('shitf_end_modal');
 
             shiftStart.addEventListener('change', function() {
                 shiftEnd.min = shiftStart.value;

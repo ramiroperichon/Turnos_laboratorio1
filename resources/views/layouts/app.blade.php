@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-bs-theme="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-bs-theme="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 
 <head>
@@ -10,8 +10,6 @@
 
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
@@ -21,13 +19,13 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.theme.default.min.css') }}">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
+    @livewireStyles
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -73,6 +71,7 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ env('VITE_MAP_KEY') }}&callback=initMap&language=es&libraries=marker"
         async defer></script>
+    @livewireScripts
 </body>
 
 </html>
