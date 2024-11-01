@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-bs-theme="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-bs-theme="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 
 <head>
@@ -10,8 +10,6 @@
 
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
@@ -26,8 +24,8 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
-
     @livewireStyles
+
 </head>
 
 <body>
