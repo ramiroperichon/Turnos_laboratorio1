@@ -30,19 +30,13 @@
                     <x-input-error :messages="$errors->get('telefono')" />
                 </div>
 
-                <div class="form-group">
-                    <label for="latitud">Latitud:</label>
-                    <input type="text" id="latitud" name="latitud" class="form-control bg-body-secondary"
+                    <input type="text" id="latitud" name="latitud" hidden class="form-control bg-body-secondary"
                         value="{{ $old->latitud }}" required>
                     <x-input-error :messages="$errors->get('latitud')" />
-                </div>
 
-                <div class="form-group">
-                    <label for="longitud">Longitud:</label>
-                    <input type="text" id="logitud" name="logitud" class="form-control bg-body-secondary"
+                    <input type="text" id="logitud" name="logitud" hidden class="form-control bg-body-secondary"
                         value="{{ $old->logitud }}" required>
                     <x-input-error :messages="$errors->get('logitud')" />
-                </div>
 
                 <div class="form-group">
                     <label for="map">Ubicacion:</label>
@@ -78,9 +72,9 @@
                         value="{{ $old->Xurl }}">
                     <x-input-error :messages="$errors->get('Xurl')" />
                 </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary mt-3" onclick="location.href='{{ route('dashboard') }}'">Cancelar</button>
             </div>
-
-            <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
     </div>
 

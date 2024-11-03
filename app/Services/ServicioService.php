@@ -5,12 +5,13 @@ namespace App\Services;
 use App\Models\Servicio;
 use App\Models\Horario;
 use App\Models\Reserva;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 
 class ServicioService
 {
-    public function storeServicioWithHorarios($data) //Crea el servicio y llama el metodo para generar horarios
+    public function storeServicioWithHorarios($data, $userId) //Crea el servicio y llama el metodo para generar horarios
     {
         $servicio = Servicio::create([
             'nombre' => $data['nombre'],
@@ -19,17 +20,18 @@ class ServicioService
             'incio_turno' => $data['incio_turno'],
             'fin_turno' => $data['fin_turno'],
             'duracion' => $data['duracion'],
-            'dias_disponible' => $data['dias_disponible']
+            'dias_disponible' => $data['dias_disponible'],
+            'proveedor_id' => $userId
         ]);
 
-        $this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
+        //$this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
 
-        return $servicio; //devuelve el servicio creado
+        return $servicio;
     }
 
     public function removeOldServicioHorariosAndUpdate($data, Servicio $servicio) //elimina y vuelve a generar horarios al actualizar el servicio las reservas del servicio son borradas
     {
-        Horario::where('servicio_id', '=', $servicio->id)->delete();
+        //Horario::where('servicio_id', '=', $servicio->id)->delete();
 
         $servicio->update([
             'nombre' => $data['nombre'],
@@ -40,15 +42,15 @@ class ServicioService
             'duracion' => $data['duracion'],
             'dias_disponible' => $data['dias_disponible']
         ]);
-        $this->generateFranjasForServicio($servicio);
+        //$this->generateFranjasForServicio($servicio);
     }
 
-    private function generateFranjasForServicio(Servicio $servicio) //Generador de horarios por servicio
+    public function generateFranjasForServicio($shiftStart, $shiftEnd, $duration) //Generador de horarios por servicio
     {
-        $shiftStart = Carbon::createFromTimeString($servicio->incio_turno);
-        $shiftEnd = Carbon::createFromTimeString($servicio->fin_turno);
-        $duration = $servicio->duracion;
+        $shiftStart = Carbon::createFromTimeString($shiftStart);
+        $shiftEnd = Carbon::createFromTimeString($shiftEnd);
 
+        $horarios = [];
 
         while ($shiftStart->lt($shiftEnd)) { //mientras el turno de inicio es menor al final del turno
             $startTime = $shiftStart->toTimeString();
@@ -58,12 +60,14 @@ class ServicioService
                 break;
             }
 
-            Horario::create([
-                'servicio_id' => $servicio->id,
+            $horarios[] = new Horario([
                 'hora_inicio' => $startTime,
                 'hora_fin' => $endTime,
             ]);
         }
+
+        dd($horarios);
+        return $horarios;
     }
 
     public function updateHorarioState(int $id) //Actualiza el horario al ser reservado
@@ -87,41 +91,84 @@ class ServicioService
     }
 
     //cargar calendario
-    // In your controller method
     public function showCalendar()
     {
-        // Assuming you have an Event model
         $events = Reserva::all();
 
         $eventData = [];
 
         foreach ($events as $event) {
             $eventData[] = [
-                'title' => $event->user->name. '' . $event->servicio->nombre,
-                'start' => $event->fecha_reserva.''.$event->franjaHoraria->hora_inicio,
-                'end'   => $event->fecha_reserva.''.$event->franjaHoraria->hora_fin,
+                'title' => $event->user->name . '' . $event->servicio->nombre,
+                'start' => $event->fecha_reserva . '' . $event->hora_inicio,
+                'end'   => $event->fecha_reserva . '' . $event->hora_fin,
             ];
         }
 
         dd($event);
 
-        // Pass the JSON data to the view
         return view('calendar', ['events' => json_encode($eventData)]);
     }
 
-    // public function UpdateReserva($reserva, $estado)
-    // {
-    //     try {
+    public function getAvialableHours($userId, $days, $inicio, $fin, $idServicio = null)
+    {
+        $inicio = \Carbon\Carbon::createFromFormat('H:i', $inicio);
+        $fin = \Carbon\Carbon::createFromFormat('H:i', $fin);
 
-    //         $reserva->update([
-    //             'estado' => $estado
-    //         ]);
+        $service = Servicio::where(function ($query) use ($days) {
+            foreach ($days as $day) {
+                $query->orWhere('dias_disponible', 'LIKE', '%' . $day . '%');
+            }
+        })
+            ->whereIn('proveedor_id', [$userId])
+            ->get();
 
-    //         if ($estado == 'Confirmado') {
-    //             Mail::to()
-    //         }
-    //     } catch (Exception $e) {
-    //         return redirect('/')->withErrors($e)->withInput();
-    //     }
-    // }
+        if ($service->count() == 0) {
+            return true;
+        }
+        foreach ($service as $s) {
+            if ($idServicio != $s->id) {
+                $hora_inicio = \Carbon\Carbon::createFromFormat('H:i:s', $s->incio_turno);
+                $hora_fin = \Carbon\Carbon::createFromFormat('H:i:s', $s->fin_turno);
+                if (
+                    $inicio->between($hora_inicio, $hora_fin) ||
+                    $fin->between($hora_inicio, $s->$hora_fin) ||
+                    ($inicio->lessThanOrEqualTo($hora_inicio) && $fin->greaterThanOrEqualTo($hora_fin))
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function IsInRange($usuario_inicio, $usuario_fin, $hora_inicio, $hora_fin)
+    {
+        $usuario_inicio = \Carbon\Carbon::createFromFormat('H:i:s', $usuario_inicio);
+        $usuario_fin = \Carbon\Carbon::createFromFormat('H:i:s', $usuario_fin);
+        $hora_inicio = \Carbon\Carbon::createFromFormat('H:i', $hora_inicio);
+        $hora_fin = \Carbon\Carbon::createFromFormat('H:i', $hora_fin);
+
+
+        return $hora_inicio->between($usuario_inicio, $usuario_fin) &&
+            $hora_fin->between($usuario_inicio, $usuario_fin);
+    }
+
+
+    public function UpdateReserva($reserva, $estado)
+    {
+        try {
+
+            $reserva->update([
+                'estado' => $estado
+            ]);
+
+            if ($estado == 'Confirmado') {
+
+            }
+        } catch (Exception $e) {
+            return redirect('/')->withErrors($e)->withInput();
+        }
+    }
+
 }

@@ -95,7 +95,7 @@
                                     @foreach ($reservas as $reserva)
                                     <td class="text-secondary">{{$reserva->servicio->nombre}}</td>
                                     <td>{{$reserva->fecha_reserva}}</td>
-                                    <td class="text-secondary">{{\Carbon\Carbon::parse($reserva->franjaHoraria->hora_inicio)->format('H:i')}} a {{\Carbon\Carbon::parse($reserva->franjaHoraria->hora_fin)->format('H:i')}}</td>
+                                    <td class="text-secondary">{{\Carbon\Carbon::parse($reserva->hora_inicio)->format('H:i')}} a {{\Carbon\Carbon::parse($reserva->hora_fin)->format('H:i')}}</td>
                                     <td class="text-success-emphasis fw-bold">${{$reserva->servicio->precio}}</td>
                                     <td> @if($reserva->estado == "Pendiente")
                                         <span class="badge badge-outline-info">{{$reserva->estado}}</span>
