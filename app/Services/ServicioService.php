@@ -6,6 +6,7 @@ use App\Models\Servicio;
 use App\Models\Horario;
 use App\Models\Reserva;
 use Carbon\Carbon;
+use Exception;
 
 class ServicioService
 {
@@ -107,4 +108,20 @@ class ServicioService
         // Pass the JSON data to the view
         return view('calendar', ['events' => json_encode($eventData)]);
     }
+
+    // public function UpdateReserva($reserva, $estado)
+    // {
+    //     try {
+
+    //         $reserva->update([
+    //             'estado' => $estado
+    //         ]);
+
+    //         if ($estado == 'Confirmado') {
+    //             Mail::to()
+    //         }
+    //     } catch (Exception $e) {
+    //         return redirect('/')->withErrors($e)->withInput();
+    //     }
+    // }
 }

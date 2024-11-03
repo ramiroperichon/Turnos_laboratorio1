@@ -5,11 +5,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\DetalleNegocioController;
+use App\Mail\SolicitudMaileable;
 use App\Models\Horario;
 use App\Models\Reserva;
 use App\Models\Servicio;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     $user = auth()->user(); //no le des bola si sale error parece que no reconoce el metodo
@@ -68,7 +69,6 @@ Route::middleware('auth')->group(function () {
 Route::post('/servicio/all', [ServicioController::class, 'index'])->name('servicio.index');
 
 Route::get('/servicio/user', [ServicioController::class, 'userServices'])->name('servicio.userServices');
-
 
 Route::get('/reservas/user', [ReservaController::class, 'reservaUsuario'])->name('reserva.user');
 
