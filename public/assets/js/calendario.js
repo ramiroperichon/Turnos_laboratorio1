@@ -18,8 +18,6 @@ var daysOfWeek = {
 var daysArray = inl.innerText.split(",");
 var daysNumbers = daysArray.map(day => daysOfWeek[day.trim()]);
 
-console.log(daysArray);
-
     return daysNumbers.includes(moment(d).day());
   }}).on('data', function (value) {
 	  result.value = value;

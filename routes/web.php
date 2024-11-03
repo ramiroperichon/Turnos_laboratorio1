@@ -65,14 +65,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/servicio/all', [ServicioController::class, 'index'])->name('servicio.index');
+Route::get('/servicio/all', [ServicioController::class, 'index'])->name('servicio.all');
 
 Route::get('/servicio/user', [ServicioController::class, 'userServices'])->name('servicio.userServices');
 
 
 Route::get('/reservas/user', [ReservaController::class, 'reservaUsuario'])->name('reserva.user');
 
-Route::post('servicio/reservas/{idservicio}', [ReservaController::class, 'reservaServicio'])->name('reserva.selected');
+Route::get('servicio/reservas/{idservicio}', [ReservaController::class, 'reservaServicio'])->name('reserva.selected');
 
 Route::resource('/reserva', ReservaController::class);
 Route::resource('/servicio', ServicioController::class);

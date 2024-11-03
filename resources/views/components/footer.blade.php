@@ -1,7 +1,7 @@
 <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
     <div class="col mb-3">
         <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-            <img src="{{ asset('assets/images/bigger_logo.png') }}" alt="logo" class="size-13">
+            <img src="{{ asset('assets/images/bigger_logo.png') }}" alt="logo" class="object-fit-contain" style="width: 150px">
         </a>
         <p class="text-body-secondary">{{ $detallenegocioProviders->nombre }}© 2024</p>
 

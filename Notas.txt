@@ -11,7 +11,6 @@ Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
 Datos de la empresa/servicios
 Footers
 
-
 dashboard de administrador, ver reservas, ver servicios, editar detalles de negocio, crear nuevos usuarios(proveedores), modificar datos de usuarios
 formularios independientes para cada tipo de usuario(usuario, proveedor).
 
@@ -26,12 +25,13 @@ Cambiar los borrados de: Servicios y Usuarios a desabilitaciones (observaciones 
 Traer solo servicios habilidatos y authenticar solamente usuarios habilitados
 
 
-module.exports = {
-    content: [
-        // ....
-        './app/Livewire/**/*Table.php',
-        './vendor/power-components/livewire-powergrid/resources/views/**/*.php',
-        './vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php'
-    ]
-    // ....
-  };
+SI TIENEN PROBLEMAS AL INSTALAR COMPOSER, AGREGAR EN PHP:
+extension=zip
+extension=intl
+
+
+IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
+SIN ROL
+SIN ROL CLIENTE
+SIN ROL PROVEEDOR
+SIN ROL ADMINISTRADOR

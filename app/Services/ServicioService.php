@@ -7,6 +7,7 @@ use App\Models\Horario;
 use App\Models\Reserva;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 
 class ServicioService
 {
@@ -59,7 +60,7 @@ class ServicioService
                 break;
             }
 
-           $horarios[] = new Horario([
+            $horarios[] = new Horario([
                 'hora_inicio' => $startTime,
                 'hora_fin' => $endTime,
             ]);
@@ -151,5 +152,22 @@ class ServicioService
 
         return $hora_inicio->between($usuario_inicio, $usuario_fin) &&
             $hora_fin->between($usuario_inicio, $usuario_fin);
+    }
+
+
+    public function UpdateReserva($reserva, $estado)
+    {
+        try {
+
+            $reserva->update([
+                'estado' => $estado
+            ]);
+
+            if ($estado == 'Confirmado') {
+
+            }
+        } catch (Exception $e) {
+            return redirect('/')->withErrors($e)->withInput();
+        }
     }
 }
