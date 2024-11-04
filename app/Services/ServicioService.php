@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Mail\SolicitudMaileable;
 use App\Models\Servicio;
 use App\Models\Horario;
 use App\Models\Reserva;
@@ -164,7 +165,7 @@ class ServicioService
             ]);
 
             if ($estado == 'Confirmado') {
-
+                Mail::to('hello@example.com')->send(new SolicitudMaileable());
             }
         } catch (Exception $e) {
             return redirect('/')->withErrors($e)->withInput();

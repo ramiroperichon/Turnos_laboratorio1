@@ -32,7 +32,7 @@ class SolicitudMaileable extends Mailable
 
         return new Envelope(
             from: new Address($user->email, $user->name),
-            subject: 'Solicitud Maileable',
+            subject: 'Solicitudes',
         );
     }
 
