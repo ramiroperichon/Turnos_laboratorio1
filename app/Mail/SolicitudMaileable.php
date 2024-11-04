@@ -15,13 +15,25 @@ class SolicitudMaileable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    protected $hora_inicio;
+    protected $hora_fin;
+    protected $fecha;
+    protected $estado;
+    protected $name;
+    protected $precio;
+
+    public function __construct($hora_inicio, $hora_fin, $fecha, $estado, $name, $precio)
     {
-        //
+        $this->hora_inicio = $hora_inicio;
+        $this->hora_fin = $hora_fin;
+        $this->fecha = $fecha;
+        $this->estado = $estado;
+        $this->name = $name;
+        $this->precio = $precio;
+
     }
+
+
 
     /**
      * Get the message envelope.
@@ -43,6 +55,15 @@ class SolicitudMaileable extends Mailable
     {
         return new Content(
             view: 'emails.respuestaSolicitud',
+            with: [
+                'hora_inicio'=> $this->hora_inicio,
+                'hora_fin'=> $this->hora_fin,
+                'fecha'=> $this->fecha,
+                'estado'=> $this->estado,
+                'name'=> $this->name,
+                'precio'=> $this->precio
+
+            ]
         );
     }
 

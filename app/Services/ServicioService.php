@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Servicio;
 use App\Models\Horario;
 use App\Models\Reserva;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SolicitudMaileable;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -157,15 +159,27 @@ class ServicioService
 
     public function UpdateReserva($reserva, $estado)
     {
+
         try {
 
             $reserva->update([
                 'estado' => $estado
             ]);
 
-            if ($estado == 'Confirmado') {
+            if ($estado != 'Completado') {
+                Mail::to($reserva->user->email)
+                ->send(new SolicitudMaileable(
+                                   $reserva->hora_inicio,
+                                   $reserva->hora_fin,
+                                   $reserva->fecha_reserva,
+                                   $reserva->estado,
+                                   $reserva->user->name,
+                                   $reserva->servicio->precio
+                                   ));
 
             }
+
+
         } catch (Exception $e) {
             return redirect('/')->withErrors($e)->withInput();
         }

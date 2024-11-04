@@ -33,6 +33,7 @@ class ReservaController extends Controller
     {
         $user = auth()->user();
         $reservas = Reserva::where('cliente_id', $user->id)->get();
+        dd($reservas);
         return view('cliente.todas', [
             'reservas' => $reservas
         ]);
