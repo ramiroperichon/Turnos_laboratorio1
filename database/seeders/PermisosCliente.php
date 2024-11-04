@@ -25,7 +25,5 @@ class PermisosCliente extends Seeder
         $clienteRole->givePermissionTo('acceso-a-mis-turnos');
         $clienteRole->givePermissionTo('acceso-a-dashboard-cliente');
 
-        $user = User::find(2);  // Asumiendo que el usuario con ID 1 ya existe
-        $user->assignRole('proveedor');
     }
 }

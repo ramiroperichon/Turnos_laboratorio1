@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test Cliente',
             'email' => 'clientecapo@example.com',
         ]);
+
     }
 }

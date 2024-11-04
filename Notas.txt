@@ -11,8 +11,10 @@ Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
 Datos de la empresa/servicios
 Footers
 
-dashboard de administrador, ver reservas, ver servicios, editar detalles de negocio, crear nuevos usuarios(proveedores), modificar datos de usuarios
-formularios independientes para cada tipo de usuario(usuario, proveedor).
+//----dashboard de administrador, ver todas reservas, ver todos los servicios, ver todos los proveedores
+editar detalles de negocio, crear nuevos (proveedores), modificar datos de PROVEEDORES
+QUE NO SE PUEDA editar LOS HORARIOS DE DISPONIBILIDAD
+formularios para crear (proveedor).
 
 listado de todos los servicios. con detalles de cada servicio, ver reservas, aceptar,rechazar turno
 
@@ -24,6 +26,10 @@ Detalles de la empresa deberia tener horarios de atencion y horarios de inactivi
 Cambiar los borrados de: Servicios y Usuarios a desabilitaciones (observaciones y habilitado = false)
 Traer solo servicios habilidatos y authenticar solamente usuarios habilitados
 
+cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva)
+
+el administrador puede cambiar las reservas, editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
+SI SE DA DE BAJA  O MODIFICA EL SERVICIO BORRAR TODAS LAS RESERVAS (DE ESE SERVICIO) Y AVISAR AL CLIENTE PARA QUE CREE UNA NUEVA RESERVA SI ES POSIBLE
 
 SI TIENEN PROBLEMAS AL INSTALAR COMPOSER, AGREGAR EN PHP:
 extension=zip

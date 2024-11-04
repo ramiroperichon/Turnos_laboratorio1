@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\DetalleNegocioController;
+use App\Http\Controllers\AdministradorController;
 use App\Mail\SolicitudMaileable;
 use App\Models\Horario;
 use App\Models\Reserva;
@@ -16,8 +17,6 @@ Route::get('/', function () {
     $user = auth()->user(); //no le des bola si sale error parece que no reconoce el metodo
     $servicios = Servicio::get();
     $reservas = Reserva::get();
-    $horarios = Horario::get();
-
 
     $events = Reserva::all();
 
@@ -52,10 +51,14 @@ Route::get('/', function () {
 
 
     if ($user->hasRole('proveedor')) {
-        return view('proveedor.dashboard', ['events' => $eventData, 'servicios' => $servicios, 'reservas' => $reservas, 'horarios' => $horarios]);
+        return view('proveedor.dashboard', ['events' => $eventData, 'servicios' => $servicios, 'reservas' => $reservas]);
     } elseif ($user->hasRole('cliente')) {
         $reservas = Reserva::where('cliente_id', '=', $user->id)->get();
-        return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas, 'horarios' => $horarios]);
+        return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas]);
+    } elseif
+    ($user->hasRole('administrador')) {
+        return view('administrador.dashboard');
+
     }
     return redirect()->route('home')->with('error', 'Unauthorized access');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -79,5 +82,11 @@ Route::resource('/servicio', ServicioController::class);
 Route::resource('/horario', HorarioController::class);
 Route::post('/horario/{id}', [HorarioController::class, 'returnSelected'])->name('horario.selected');
 Route::resource('/detalleNegocio', DetalleNegocioController::class);
+
+
+Route::get('/administrador/reservas', [AdministradorController::class, 'reservas'])->name('administrador.reservas');
+Route::get('/administrador/servicios', [AdministradorController::class, 'servicios'])->name('administrador.servicios');
+Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio');
+Route::get('/administrador/usuarios', [AdministradorController::class, 'usuariosall'])->name('administrador.usuarios');
 
 require __DIR__ . '/auth.php';
