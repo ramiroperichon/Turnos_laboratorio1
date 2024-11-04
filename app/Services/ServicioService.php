@@ -8,6 +8,7 @@ use App\Models\Reserva;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Masmerise\Toaster\Toaster;
 
 class ServicioService
 {
@@ -162,11 +163,12 @@ class ServicioService
             $reserva->update([
                 'estado' => $estado
             ]);
-
             if ($estado == 'Confirmado') {
-
             }
+            Toaster::success('Reserva actualizada correctamente');
+
         } catch (Exception $e) {
+            Toaster::error('Error al editar la reserva');
             return redirect('/')->withErrors($e)->withInput();
         }
     }

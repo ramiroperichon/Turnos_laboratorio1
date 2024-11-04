@@ -13,7 +13,7 @@
             </ol>
         </nav>
     </div>
-    <div class="container px-3 text-center">
+    <div class="content-wrapper px-3 text-center">
         @session('status')
             <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                 class="alert alert-success alert-dismissible fade show">
@@ -31,5 +31,13 @@
                 </ul>
             </div>
         @endif
-        <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-start">Reservas <span class="font-weight-light">de {{ auth()->user()->name }}</span></h4>
+                    </p>
+                    <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+                </div>
+            </div>
+        </div>
 </x-app-layout>
