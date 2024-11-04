@@ -1,67 +1,111 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-          <a class="sidebar-brand brand-logo" href="/"><img src="{{asset('assets/images/logo.svg')}}" alt="logo" /></a>
-          <a class="sidebar-brand brand-logo-mini" href="/"><img src="{{asset('assets/images/logo-mini.svg')}}" alt="logo" /></a>
-        </div>
-        <ul class="nav">
-          <li class="nav-item nav-category">
-            <span class="nav-link">Navigation</span>
-          </li>
-          @if(auth()->user()->hasRole('proveedor'))
-            <li class="nav-item menu-items">
-              <a class="nav-link" href={{ route('dashboard') }}>
-                <span class="menu-icon">
-                  <i class="mdi mdi-laptop"></i>
-                </span>
-                <span class="menu-title">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item menu-items">
-                <a class="nav-link" href={{ route('reserva.index') }}>
-                    <span class="menu-icon">
-                      <i class="mdi mdi-playlist-play"></i>
-                    </span>
-                    <span class="menu-title">Reservas</span>
-                </a>
-            </li>
-            <li class="nav-item menu-items">
-                <a class="nav-link" href={{ route('servicio.userServices') }}>
-                    <span class="menu-icon">
-                      <i class="mdi mdi-table-large"></i>
-                    </span>
-                    <span class="menu-title">Mis servicios</span>
-                </a>
-            </li>
-          @endif
-          @if(auth()->user()->hasRole('cliente'))
-          <li class="nav-item menu-items">
-            <a class="nav-link" href='/'>
-              <span class="menu-icon">
-                <i class="mdi mdi-laptop"></i>
-              </span>
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-              <a class="nav-link" href={{ route('reserva.user')}}>
-                  <span class="menu-icon">
-                    <i class="mdi mdi-playlist-play"></i>
-                  </span>
-                  <span class="menu-title">Mis turnos</span>
-              </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href={{ route('servicio.index') }}>
-                <span class="menu-icon">
-                  <i class="mdi mdi-table-large"></i>
-                </span>
-                <span class="menu-title">Servicios</span>
-            </a>
-        </li>
-        @endif
+            <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+                <a class="sidebar-brand brand-logo" href="/"><img src="{{ asset('assets/images/logo.svg') }}"
+                        alt="logo" /></a>
+                <a class="sidebar-brand brand-logo-mini" href="/"><img
+                        src="{{ asset('assets/images/logo-mini.svg') }}" alt="logo" /></a>
+            </div>
+            <ul class="nav">
+                <li class="nav-item nav-category">
+                    <span class="nav-link">Navigation</span>
+                </li>
+                @if (auth()->user()->hasRole('proveedor'))
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('dashboard') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-laptop"></i>
+                            </span>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('reserva.index') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-playlist-play"></i>
+                            </span>
+                            <span class="menu-title">Reservas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('servicio.userServices') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-table-large"></i>
+                            </span>
+                            <span class="menu-title">Mis servicios</span>
+                        </a>
+                    </li>
+                @endif
+                @if (auth()->user()->hasRole('cliente'))
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href='/'>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-laptop"></i>
+                            </span>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('reserva.user') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-playlist-play"></i>
+                            </span>
+                            <span class="menu-title">Mis turnos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('servicio.index') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-table-large"></i>
+                            </span>
+                            <span class="menu-title">Servicios</span>
+                        </a>
+                    </li>
+                @endif
+                @if (auth()->user()->hasRole('administrador'))
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('dashboard') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-laptop"></i>
+                            </span>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('reserva.index') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-playlist-play"></i>
+                            </span>
+                            <span class="menu-title">Reservas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('administrador.servicios') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-table-large"></i>
+                            </span>
+                            <span class="menu-title">Servicios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('administrador.proveedores') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-account-multiple-outline"></i>
+                            </span>
+                            <span class="menu-title">Proveedores</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-items">
+                        <a class="nav-link" href={{ route('administrador.detallenegocio') }}>
+                            <span class="menu-icon">
+                                <i class="mdi mdi-store "></i>
+                            </span>
+                            <span class="menu-title">Detalles del negocio</span>
+                        </a>
+                    </li>
+                @endif
 
-          {{-- <li class="nav-item menu-items">
+                {{-- <li class="nav-item menu-items">
               <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                 <span class="menu-icon">
                   <i class="mdi mdi-laptop"></i>
@@ -77,7 +121,7 @@
                 </ul>
               </div>
           </li> --}}
-          {{--<li class="nav-item menu-items">
+                {{-- <li class="nav-item menu-items">
             <a class="nav-link" href="pages/tables/basic-table.html">
               <span class="menu-icon">
                 <i class="mdi mdi-table-large"></i>
@@ -127,6 +171,7 @@
               <span class="menu-title">Documentation</span>
             </a>
           </li> --}}
-        </ul>
-      </nav>
-</html>
+            </ul>
+        </nav>
+
+        </html>

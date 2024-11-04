@@ -36,7 +36,7 @@ class AdministradorController extends Controller
 
         $usuarios = User::role('proveedor')->get();
 
-        return view('administrador.usuarios', data: [
+        return view('administrador.proveedores', data: [
             'usuarios' => $usuarios
         ]);
     }
@@ -58,23 +58,23 @@ class AdministradorController extends Controller
 
         $user->assignRole('proveedor');
 
-        return redirect()->route('administrador.usuarios')->with('success', 'Proveedor creado exitosamente');
+        return redirect()->route('administrador.proveedores')->with('success', 'Proveedor creado exitosamente');
     }
 
-    public function modificarUsuario(Request $request, $id)
+    public function modificarProveedor(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
         $user->update($request->only(['name', 'email']));
 
-        return redirect()->route('administrador.usuarios')->with('success', 'Datos del proveedor actualizados');
+        return redirect()->route('administrador.proveedores')->with('success', 'Datos del proveedor actualizados');
     }
 
     public function usuarios()
     {
         $usuarios = User::role('proveedor')->get();
-
-        return view('administrador.usuarios', data: ['usuarios' => $usuarios]);
+        
+        return view('administrador.proveedores  ', data: ['usuarios' => $usuarios]);
     }
 
     public function detallesnegocio()
@@ -84,5 +84,14 @@ class AdministradorController extends Controller
 
         return view('negocio.create', data: ['old' => $detallenegocio]);
 
+    }
+
+    public function editarServicios($idUsuario)
+    {
+
+        //$servicio = Servicio::where('proveedor_id', $idUsuario)->get();
+        $servicio = Servicio::where('proveedor_id', $idUsuario)->get();
+
+        return view('administrador.editarServicios', data: ['usuario' => $idUsuario, 'servicios' => $servicio]);
     }
 }

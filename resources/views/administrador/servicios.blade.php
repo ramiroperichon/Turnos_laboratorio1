@@ -4,5 +4,7 @@
             {{ __('Ingresar datos de negocio') }}
         </h2>
     </x-slot>
-
+    <div>
+        <livewire:servicios />
+    </div>
 </x-app-layout>

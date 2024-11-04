@@ -49,7 +49,6 @@ Route::get('/', function () {
         ];
     }
 
-
     if ($user->hasRole('proveedor')) {
         return view('proveedor.dashboard', ['events' => $eventData, 'servicios' => $servicios, 'reservas' => $reservas]);
     } elseif ($user->hasRole('cliente')) {
@@ -57,7 +56,8 @@ Route::get('/', function () {
         return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas]);
     } elseif
     ($user->hasRole('administrador')) {
-        return view('administrador.dashboard');
+        return view('administrador.dashboard', ['events' => $eventData, 'servicios' => $servicios, 'reservas' => $reservas]);
+        //return view('administrador.dashboard');
 
     }
     return redirect()->route('home')->with('error', 'Unauthorized access');
@@ -87,6 +87,10 @@ Route::resource('/detalleNegocio', DetalleNegocioController::class);
 Route::get('/administrador/reservas', [AdministradorController::class, 'reservas'])->name('administrador.reservas');
 Route::get('/administrador/servicios', [AdministradorController::class, 'servicios'])->name('administrador.servicios');
 Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio');
-Route::get('/administrador/usuarios', [AdministradorController::class, 'usuariosall'])->name('administrador.usuarios');
+Route::get('/administrador/proveedores', [AdministradorController::class, 'usuariosall'])->name('administrador.proveedores');
+Route::put('/administrador/modificarProveedor/{id}', [AdministradorController::class, 'modificarProveedor'])->name('administrador.modificarProveedor');
+Route::post('/administrador/crearProveedor', [AdministradorController::class, 'crearProveedor'])->name('administrador.crearProveedor');
+Route::get('/administrador/editarServicios/{id}', [AdministradorController::class, 'editarServicios'])->name('administrador.editarServicios');
+
 
 require __DIR__ . '/auth.php';

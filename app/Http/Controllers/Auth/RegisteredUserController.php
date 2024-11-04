@@ -33,29 +33,31 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
 
         if ($request->role == "proveedor") {
 
+
             $request->validate([
                 'profesion' => ['required', 'string', 'max:50'],
-                'horario_inicio' => ['required', 'date',''],
-                'horario_fin' => ['required', 'date',''],
+                'horario_inicio' => ['required'],
+                'horario_fin' => ['required'],
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
             ]);
 
             Proveedor::create([
-            'usuario_id' => $user->id,
-            'profesion' => $request->profesion,
-            'horario_inicio' => $request->horario_inicio,
-            'horario_fin' => $request->horario_fin
+                'usuario_id' => $user->id,
+                'profesion' => $request->profesion,
+                'horario_inicio' => $request->horario_inicio,
+                'horario_fin' => $request->horario_fin
             ]);
         }
 
@@ -64,10 +66,15 @@ class RegisteredUserController extends Controller
             $request->validate([
                 'documento' => ['required', 'string', 'max:8'],
             ]);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
             Cliente::create([
-            'usuario_id' => $user->id,
-            'documento' => $request->documento,
+                'usuario_id' => $user->id,
+                'documento' => $request->documento,
             ]);
 
         }
