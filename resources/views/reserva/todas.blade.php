@@ -13,7 +13,7 @@
             </ol>
         </nav>
     </div>
-    <div class="container-fluid px-3 text-center">
+    <div class="container px-3 text-center">
         @session('status')
             <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                 class="alert alert-success alert-dismissible fade show">

@@ -47,8 +47,8 @@ class RegisteredUserController extends Controller
 
             $request->validate([
                 'profesion' => ['required', 'string', 'max:50'],
-                'horario_inicio' => ['required', 'date',''],
-                'horario_fin' => ['required', 'date',''],
+                'horario_inicio' => ['required'],
+                'horario_fin' => ['required'],
             ]);
 
             Proveedor::create([
