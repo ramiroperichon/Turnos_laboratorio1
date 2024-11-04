@@ -19,17 +19,18 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/owl-carousel-2/owl.theme.default.min.css') }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/rome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fullcalendar.css') }}">
     @livewireStyles
+    @filamentStyles
 
 </head>
 
 <body>
-    <div class="container-scroller">
+    <div class="container-scroller ">
         @include('layouts.sidebar')
         <div class="container-fluid page-body-wrapper">
             @include('layouts.navbar')
@@ -44,7 +45,11 @@
         </div>
 
     </div>
+    <x-toaster-hub />
     <x-footer />
+    @livewireScripts
+    @filamentScripts
+    @vite('resources/js/app.js')
     <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js') }}"></script>
     <script src="{{ asset('assets/vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('assets/vendors/progressbar.js/progressbar.min.js') }}"></script>
@@ -71,7 +76,6 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ env('VITE_MAP_KEY') }}&callback=initMap&language=es&libraries=marker"
         async defer></script>
-    @livewireScripts
 </body>
 
 </html>

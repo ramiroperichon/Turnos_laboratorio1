@@ -7,6 +7,7 @@ use App\Services\ServicioService;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReservaController extends Controller
 {
@@ -39,9 +40,8 @@ class ReservaController extends Controller
 
     public function reservaServicio(int $idservicio)
     {
-        $reservas = Reserva::where('servicio_id', $idservicio)->get();
         return view('reserva.todas', [
-            'reservas' => $reservas
+            'idServicio' => $idservicio
         ]);
     }
 
@@ -59,19 +59,25 @@ class ReservaController extends Controller
     public function store(Request $request)
     {
         $horarioId = explode(',', $request->input('horario_id'));
-        $validated = $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'servicio_id' => 'required|integer',
             'fecha_reserva' => 'required|date|after_or_equal:today',
             'cliente_id' => 'required|integer',
+            'horario_id' => 'required',
         ], [
             'fecha_reserva.after_or_equal' => 'La hora de fin no puede ser menor a la de inicio!',
         ]);
 
+        if ($validator->fails()) {
+            return redirect('/servicio')->withErrors($validator)->withInput();
+        }
+
         try {
             Reserva::create([
-                'servicio_id' => $validated['servicio_id'],
-                'fecha_reserva' => $validated['fecha_reserva'],
-                'cliente_id' => $validated['cliente_id'],
+                'servicio_id' => $request->input('servicio_id'),
+                'fecha_reserva' => $request->input('fecha_reserva'),
+                'cliente_id' => $request->input('cliente_id'),
                 'hora_inicio' => $horarioId[0],
                 'hora_fin' => $horarioId[1]
             ]);
@@ -109,9 +115,8 @@ class ReservaController extends Controller
     {
         $reservaN = Reserva::firstWhere('id', $reserva->id);
 
-        $reservaN->update([
-            'estado' => $request->estado
-        ]);
+        $this->servicioService->UpdateReserva($reservaN, $request->estado);
+
         return redirect()->route('reserva.index')->with('status', 'Reserva se actualizo correctamente!');
     }
 

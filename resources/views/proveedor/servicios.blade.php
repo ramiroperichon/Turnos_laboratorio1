@@ -87,7 +87,7 @@
                                                     </div>
                                                     <div class="col">
                                                         <form action="{{ route('reserva.selected', $servicio->id) }}"
-                                                            method="POST">
+                                                            method="GET">
                                                             @csrf
                                                             <button class="btn btn-success w-100" type="submit">Ver
                                                                 reservas</button>
