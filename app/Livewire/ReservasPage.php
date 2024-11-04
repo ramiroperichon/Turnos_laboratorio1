@@ -41,6 +41,13 @@ class ReservasPage extends Component implements HasTable, HasForms
     public function table(TablesTable $table): TablesTable
     {
         $query = Reserva::query();
+
+        if (auth()->user()->hasRole('proveedor')) {
+            $query->whereHas('servicio', function ($q) {
+                $q->where('proveedor_id', auth()->user()->id);
+            });
+        }
+
         if ($this->idServicio) {
             $query->where('servicio_id', $this->idServicio);
         }
@@ -51,6 +58,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                 TextColumn::make('id')->label('#')->sortable(),
                 TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
                 TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable(),
+                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable(),
                 TextColumn::make('hora_inicio')
                     ->label('Horario')
                     ->getStateUsing(fn($record) =>
@@ -70,7 +78,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                 TextColumn::make('fecha_reserva')->label('Fecha de reserva')->date()->sortable()->toggleable(),
             ])
             ->headerActions(static::getHeaderActions())
-            ->description(static::getHeading($this->idServicio))
+            ->heading(static::getHeading($this->idServicio))
             ->bulkActions(static::getBulkActions())
             ->filters(static::getTableFilters())
             ->filtersLayout(static::getTableFiltersLayout())
@@ -296,7 +304,7 @@ class ReservasPage extends Component implements HasTable, HasForms
             $servicio = Servicio::find($idServicio);
             return 'Reservas del servicio ' . $servicio->nombre;
         } else {
-            return 'Reservas';
+            return 'Mostrando todas las reservas';
         }
     }
 

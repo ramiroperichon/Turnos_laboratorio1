@@ -19,3 +19,24 @@
 .fi-ta-ctn {
     @apply dark:custom-bg-table rounded-sm !important;
 }
+
+
+.fc .fc-timegrid-slot-minor {
+    @apply border-indigo-200/25 border-solid
+}
+
+.fc .fc-view-harness {
+    @apply bg-[#212529];
+}
+
+.fc-timegrid-slot-label{
+    @apply bg-primary-800 antialiased font-medium
+}
+
+.fc-col-header{
+    @apply bg-primary-800 capitalize
+}
+
+.fc-v-event{
+    @apply subpixel-antialiased hover:brightness-105 hover:scale-105 ease-in-out duration-100 transition-all
+}
