@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Reserva;
+use App\Models\Servicio;
 use Carbon\Carbon;
 use Exception;
 use Filament\Forms\Components\DatePicker;
@@ -43,37 +44,38 @@ class ReservasPage extends Component implements HasTable, HasForms
         if ($this->idServicio) {
             $query->where('servicio_id', $this->idServicio);
         }
-            return $table
-                ->selectable()
-                ->actions(static::getActions())
-                ->columns([
-                    TextColumn::make('id')->label('#')->sortable(),
-                    TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
-                    TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable(),
-                    TextColumn::make('hora_inicio')
-                        ->label('Horario')
-                        ->getStateUsing(fn($record) =>
-                        Carbon::parse($record->hora_inicio)->format('H:i') .
-                            " a " .
-                            Carbon::parse($record->hora_fin)->format('H:i'))->sortable()->toggleable(),
-                    TextColumn::make('estado')->label('Estado')
-                        ->badge()
-                        ->color(fn($record) => match ($record->estado) {
-                            'Pendiente' => 'secondary',
-                            'Confirmado' => 'info',
-                            'Cancelado' => 'danger',
-                            'Completado' => 'success',
-                            default => 'success',
-                        })
-                        ->sortable()->searchable()->toggleable(),
-                    TextColumn::make('fecha_reserva')->label('Fecha de reserva')->date()->sortable()->toggleable(),
-                ])
-                ->headerActions(static::getHeaderActions())
-                ->bulkActions(static::getBulkActions())
-                ->filters(static::getTableFilters())
-                ->filtersLayout(static::getTableFiltersLayout())
-                ->query($query);
-        }
+        return $table
+            ->selectable()
+            ->actions(static::getActions())
+            ->columns([
+                TextColumn::make('id')->label('#')->sortable(),
+                TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
+                TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable(),
+                TextColumn::make('hora_inicio')
+                    ->label('Horario')
+                    ->getStateUsing(fn($record) =>
+                    Carbon::parse($record->hora_inicio)->format('H:i') .
+                        " a " .
+                        Carbon::parse($record->hora_fin)->format('H:i'))->sortable()->toggleable(),
+                TextColumn::make('estado')->label('Estado')
+                    ->badge()
+                    ->color(fn($record) => match ($record->estado) {
+                        'Pendiente' => 'secondary',
+                        'Confirmado' => 'info',
+                        'Cancelado' => 'danger',
+                        'Completado' => 'success',
+                        default => 'success',
+                    })
+                    ->sortable()->searchable()->toggleable(),
+                TextColumn::make('fecha_reserva')->label('Fecha de reserva')->date()->sortable()->toggleable(),
+            ])
+            ->headerActions(static::getHeaderActions())
+            ->description(static::getHeading($this->idServicio))
+            ->bulkActions(static::getBulkActions())
+            ->filters(static::getTableFilters())
+            ->filtersLayout(static::getTableFiltersLayout())
+            ->query($query);
+    }
 
     public function render()
     {
@@ -103,36 +105,36 @@ class ReservasPage extends Component implements HasTable, HasForms
 
     protected static function DeleteCompletados()
     {
-        try{
-        $reservas = Reserva::where('estado', 'Completado')->where('fecha_reserva', '<=', now())->get();
-        if($reservas->count() <= 0){
-            Toaster::warning('No hay elementos a eliminar asd
+        try {
+            $reservas = Reserva::where('estado', 'Completado')->where('fecha_reserva', '<=', now())->get();
+            if ($reservas->count() <= 0) {
+                Toaster::warning('No hay elementos a eliminar asd
             asdasdad
             asdsadad
             asdadadad
             asdasdadasd
             ASdasdadadad
             asdasdadad');
-            return;
-        }
-        $reservas->each(fn($record) => $record->delete());
-        Toaster::info('Reservas completadas eliminadas correctamente');
-        }catch(Exception $e){
+                return;
+            }
+            $reservas->each(fn($record) => $record->delete());
+            Toaster::info('Reservas completadas eliminadas correctamente');
+        } catch (Exception $e) {
             Toaster::error('Error al eliminar reservas' . $e->getMessage());
         }
     }
 
     protected static function DeleteRechazados()
     {
-        try{
-        $reservas = Reserva::where('estado', 'Cancelado')->get();
-        if($reservas->count() <= 0){
-            Toaster::warning('No hay elementos a eliminar');
-            return;
-        }
-        $reservas->each(fn($record) => $record->delete());
-        Toaster::info('Se eliminaron ' . $reservas->count() . ' reservas');
-        }catch(Exception $e){
+        try {
+            $reservas = Reserva::where('estado', 'Cancelado')->get();
+            if ($reservas->count() <= 0) {
+                Toaster::warning('No hay elementos a eliminar');
+                return;
+            }
+            $reservas->each(fn($record) => $record->delete());
+            Toaster::info('Se eliminaron ' . $reservas->count() . ' reservas');
+        } catch (Exception $e) {
             Toaster::error('Error al eliminar reservas' . $e->getMessage());
         }
     }
@@ -286,6 +288,16 @@ class ReservasPage extends Component implements HasTable, HasForms
     public static function getTableFiltersLayout(): FiltersLayout
     {
         return FiltersLayout::Modal;
+    }
+
+    public static function getHeading($idServicio): string
+    {
+        if ($idServicio) {
+            $servicio = Servicio::find($idServicio);
+            return 'Reservas del servicio ' . $servicio->nombre;
+        } else {
+            return 'Reservas';
+        }
     }
 
     public static function getActions(): array
