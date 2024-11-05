@@ -13,7 +13,7 @@
             </ol>
         </nav>
     </div>
-    <div class="content-wrapper px-3 text-center">
+    <div class="content-wrapper py-2 px-3 text-center">
         @session('status')
             <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                 class="alert alert-success alert-dismissible fade show">
@@ -34,13 +34,24 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="flex flex-row items-center py-3 space-x-3">
-                        <div class="icon icon-box-success size-12">
+                    <div class="flex flex-row items-center pb-3">
+                        <div class="flex-col item-center">
+                        <div class="icon icon-box-success size-11 me-2">
                             <span class="mdi mdi-calendar-multiple icon-item"></span>
                         </div>
-                        <h4 class="card-title text-start m-0">Reservas <span class="font-weight-light">de
-                                {{ auth()->user()->name }}</span></h4>
-                        </p>
+                    </div>
+                        <div class="flex-col">
+                            @hasrole('proveedor')
+                                <h4 class="card-title text-start m-0"> Reservas
+                                    <span class="font-weight-light">de {{ auth()->user()->name }}</span>
+                                </h4>
+                            @else
+                                <h4 class="card-title text-start m-0"> Todas las reservas</h4>
+                            @endhasrole
+                            @if (isset($idServicio) && $idServicio)
+                                <p class="text-muted text-start m-0">del servicio N° {{ $idServicio }}</p>
+                            @endif
+                        </div>
                     </div>
                     <livewire:reservas-page :id-servicio="$idServicio ?? null" />
                 </div>

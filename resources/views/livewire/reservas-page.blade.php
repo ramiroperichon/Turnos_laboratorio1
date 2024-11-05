@@ -1,3 +1,3 @@
-<div class="m-0 p-0 border border-gray-100">
+<div class="m-0 px-1">
     {{ $this->table }}
 </div>

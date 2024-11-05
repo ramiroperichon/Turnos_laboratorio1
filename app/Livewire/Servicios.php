@@ -16,6 +16,9 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Columns\Layout\Grid;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table as TablesTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -42,15 +45,35 @@ class Servicios extends Component implements HasTable, HasForms
         $query = Servicio::query();
 
         return $table
-            ->selectable()
             ->columns([
-                TextColumn::make('nombre')->label('Nombre')->sortable()->searchable()->toggleable(),
-                TextColumn::make('descripcion')->label('Descripcion')->sortable()->toggleable(),
-                TextColumn::make('precio')->label('Precio')->sortable()->toggleable(),
-                TextColumn::make('incio_turno')->label('Incio Turno')->sortable()->searchable()->toggleable(),
-                TextColumn::make('fin_turno')->label('Fin Turno')->sortable()->searchable()->toggleable(),
+                Grid::make()
+                    ->columns(1)
+                    ->schema([
+                        Split::make([
+                            Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    TextColumn::make('nombre')->label('Nombre')->sortable()->searchable(),
+                                ])->grow(false),
+
+
+                            Grid::make()
+                                ->columns(2)
+                                ->schema([
+                                    TextColumn::make('descripcion')->label('Descripcion')->sortable(),
+                                    Stack::make([
+                                        TextColumn::make('precio')->label('Precio')->sortable(),
+                                        TextColumn::make('incio_turno')->label('Incio Turno')->sortable()->searchable(),
+                                        TextColumn::make('fin_turno')->label('Fin Turno')->sortable()->searchable()
+                                    ])->grow(false)
+                                ])->grow(),
+
+                        ])
+                    ])
+            ])->contentGrid([
+                'md' => 1,
+                'xl' => 3,
             ])
-            ->description('Servicios')
             ->query($query);
     }
 }

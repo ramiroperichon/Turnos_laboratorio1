@@ -12,6 +12,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\Action;
@@ -60,10 +61,10 @@ class ReservasPage extends Component implements HasTable, HasForms
             ->filters(static::getTableFilters())
             ->filtersLayout(static::getTableFiltersLayout())
             ->columns([
-                TextColumn::make('id')->label('#')->sortable(),
+                TextColumn::make('id')->label('#')->sortable()->extraHeaderAttributes(['class' => 'dark:text-blue-500' ]),
                 TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
                 TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable()->weight(FontWeight::Bold),
-                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable()->width('5%'),
+                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable()->width('5%')->color(Color::hex('#6c7293')),
                 TextColumn::make('hora_inicio')
                     ->label('Horario')
                     ->getStateUsing(fn($record) =>
