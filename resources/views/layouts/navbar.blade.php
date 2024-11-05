@@ -14,12 +14,6 @@
                         id="createbuttonDropdown" aria-expanded="false">+ Crear un nuevo servicio</a>
                 </li>
             @endhasrole
-            @hasrole('proveedor')
-                <li class="nav-item dropdown d-none d-lg-block">
-                    <a class="nav-link btn btn-success create-new-button" href="{{ route('detalleNegocio.index') }}"
-                        id="createbuttonDropdown" aria-expanded="false">Editar detalles de negocio</a>
-                </li>
-            @endhasrole
             <li class="nav-item dropdown border-left">
                 <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
                     data-toggle="dropdown" aria-expanded="false">

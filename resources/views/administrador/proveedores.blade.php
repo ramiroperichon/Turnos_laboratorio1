@@ -62,7 +62,7 @@
                     <td>{{ $usuario->id }}</td>
                     <td>{{ $usuario->name }}</td>
                     <td>{{ $usuario->email }}</td>
-                    <td>{{ $usuario->servicio ? $usuario->servicio->count() : 'no hay servicio'}}</td>
+                    <td>{{ $usuario->servicios->count() > 0 ? $usuario->servicios->count() : "No hay servicios" }}</td>
                     <td>
                         <button type="button"
                             onclick="abrirModal({{ $usuario->id }}, '{{ $usuario->name }}', '{{ $usuario->email }}')"

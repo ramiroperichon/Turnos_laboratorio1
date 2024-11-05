@@ -34,8 +34,14 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-start">Reservas <span class="font-weight-light">de {{ auth()->user()->name }}</span></h4>
-                    </p>
+                    <div class="flex flex-row items-center py-3 space-x-3">
+                        <div class="icon icon-box-success size-12">
+                            <span class="mdi mdi-calendar-multiple icon-item"></span>
+                        </div>
+                        <h4 class="card-title text-start m-0">Reservas <span class="font-weight-light">de
+                                {{ auth()->user()->name }}</span></h4>
+                        </p>
+                    </div>
                     <livewire:reservas-page :id-servicio="$idServicio ?? null" />
                 </div>
             </div>

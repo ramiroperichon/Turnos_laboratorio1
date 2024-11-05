@@ -36,6 +36,10 @@ class AdministradorController extends Controller
     {
 
         $usuarios = User::role('proveedor')->get();
+        foreach ($usuarios as $usuario) {
+            $servicios = Servicio::where('proveedor_id', $usuario->id)->get();
+            $usuario->servicios = $servicios;
+        }
 
         return view('administrador.proveedores', data: [
             'usuarios' => $usuarios
@@ -74,7 +78,7 @@ class AdministradorController extends Controller
     public function usuarios()
     {
         $usuarios = User::role('proveedor')->get();
-        
+
         return view('administrador.proveedores  ', data: ['usuarios' => $usuarios]);
     }
 
@@ -89,8 +93,6 @@ class AdministradorController extends Controller
 
     public function editarServicios($idUsuario)
     {
-
-        //$servicio = Servicio::where('proveedor_id', $idUsuario)->get();
         $servicio = Servicio::where('proveedor_id', $idUsuario)->get();
 
         return view('administrador.editarServicios', data: ['usuario' => $idUsuario, 'servicios' => $servicio]);
