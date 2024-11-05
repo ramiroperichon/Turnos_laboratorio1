@@ -47,12 +47,6 @@ class RegisteredUserController extends Controller
                 'horario_fin' => ['required'],
             ]);
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
             Proveedor::create([
                 'usuario_id' => $user->id,
                 'profesion' => $request->profesion,

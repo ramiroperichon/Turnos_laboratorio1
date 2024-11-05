@@ -120,9 +120,21 @@ class ReservaController extends Controller
         return redirect()->route('reserva.index')->with('status', 'Reserva se actualizo correctamente!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function confirmReject($reserva, $estado)
+    {
+        try{
+        $reservaN = Reserva::firstWhere('id', $reserva);
+        if($reservaN->estado != 'Pendiente'){
+            return redirect()->route('dashboard')->with('error', 'La reserva ya fue modificada');
+        }
+        $this->servicioService->UpdateReserva($reservaN, $estado);
+        return redirect()->route('dashboard')->with('status', 'Reserva se actualizo correctamente!');
+        }catch (Exception $e){
+            return redirect()->route('dashboard')->with('error', 'Error al actualizar la reserva' . $e->getMessage());
+        }
+    }
+
+
     public function destroy(Reserva $reserva)
     {
         $this->servicioService->updateFranjaStateOnDelete($reserva->horario_id);

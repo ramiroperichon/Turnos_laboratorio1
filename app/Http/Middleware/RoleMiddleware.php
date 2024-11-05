@@ -12,7 +12,7 @@ class RoleMiddleware
         $user = Auth::user();
 
         if (!$user || !$user->hasRole($role)) {
-            return redirect()->route('/')->with('error', 'No tienes permiso para acceder a esta página');
+            return redirect()->route('/login')->with('error', 'No tienes permiso para acceder a esta página');
         }
 
         return $next($request);

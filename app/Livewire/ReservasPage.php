@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Reserva;
 use App\Models\Servicio;
+use App\Services\ServicioService;
 use Carbon\Carbon;
 use Exception;
 use Filament\Forms\Components\DatePicker;
@@ -11,6 +12,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
@@ -41,16 +44,26 @@ class ReservasPage extends Component implements HasTable, HasForms
     public function table(TablesTable $table): TablesTable
     {
         $query = Reserva::query();
+
+        if (auth()->user()->hasRole('proveedor')) {
+            $query->whereHas('servicio', function ($q) {
+                $q->where('proveedor_id', auth()->user()->id);
+            });
+        }
+
         if ($this->idServicio) {
             $query->where('servicio_id', $this->idServicio);
         }
         return $table
             ->selectable()
-            ->actions(static::getActions())
+            ->bulkActions(static::getBulkActions())
+            ->filters(static::getTableFilters())
+            ->filtersLayout(static::getTableFiltersLayout())
             ->columns([
                 TextColumn::make('id')->label('#')->sortable(),
                 TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
-                TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable(),
+                TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable()->weight(FontWeight::Bold),
+                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable()->width('5%'),
                 TextColumn::make('hora_inicio')
                     ->label('Horario')
                     ->getStateUsing(fn($record) =>
@@ -67,13 +80,9 @@ class ReservasPage extends Component implements HasTable, HasForms
                         default => 'success',
                     })
                     ->sortable()->searchable()->toggleable(),
-                TextColumn::make('fecha_reserva')->label('Fecha de reserva')->date()->sortable()->toggleable(),
+                TextColumn::make('fecha_reserva')->label('Fecha de reserva')->date()->sortable()->toggleable()->extraAttributes(['class' => 'text-green-500']),
             ])
-            ->headerActions(static::getHeaderActions())
-            ->description(static::getHeading($this->idServicio))
-            ->bulkActions(static::getBulkActions())
-            ->filters(static::getTableFilters())
-            ->filtersLayout(static::getTableFiltersLayout())
+            ->actions(static::getActions())->actionsColumnLabel("Acciones")
             ->query($query);
     }
 
@@ -82,18 +91,11 @@ class ReservasPage extends Component implements HasTable, HasForms
         return view('livewire.reservas-page');
     }
 
-    protected static function ConfirmReservas($reserva)
+    protected static function ConfirmReject($reserva, $estado)
     {
-        $reserva->update([
-            'estado' => 'Confirmado'
-        ]);
-        Toaster::success('Reserva confirmada correctamente');
-    }
-    protected static function RejectReservas($reserva)
-    {
-        $reserva->update([
-            'estado' => 'Cancelado'
-        ]);
+        $servicioService = app(ServicioService::class);
+
+        $servicioService->UpdateReserva($reserva, $estado);
     }
 
     protected static function CompleteReservas($reserva)
@@ -108,13 +110,7 @@ class ReservasPage extends Component implements HasTable, HasForms
         try {
             $reservas = Reserva::where('estado', 'Completado')->where('fecha_reserva', '<=', now())->get();
             if ($reservas->count() <= 0) {
-                Toaster::warning('No hay elementos a eliminar asd
-            asdasdad
-            asdsadad
-            asdadadad
-            asdasdadasd
-            ASdasdadadad
-            asdasdadad');
+                Toaster::warning('No hay elementos a eliminar');
                 return;
             }
             $reservas->each(fn($record) => $record->delete());
@@ -148,7 +144,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->icon('heroicon-o-check')
                     ->color('info')
                     ->deselectRecordsAfterCompletion(),
-                BulkAction::make('Rechazar')
+                BulkAction::make('Cancelar')
                     ->action(fn(EloquentCollection $records) => $records->each(fn($record) => static::RejectReservas($record)))
                     ->icon('heroicon-o-x-mark')
                     ->color('warning')
@@ -169,13 +165,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->deselectRecordsAfterCompletion(),
             ])
                 ->label('Seleccion')
-                ->color('secondary')
-        ];
-    }
-
-    protected static function getHeaderActions(): array
-    {
-        return [
+                ->color('secondary'),
             ActionGroup::make([
                 Action::make('Borrar completados')
                     ->action(fn() => static::DeleteCompletados())
@@ -184,7 +174,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->requiresConfirmation()
                     ->modalHeading('Borrar reservas completadas')
                     ->modalDescription('Esta seguro que quiere borrar todas las reservas completadas?
-                     Esta accion no se puede deshacer')
+                         Esta accion no se puede deshacer')
                     ->modalSubmitActionLabel('Borrar'),
                 Action::make('Borrar cancelados')
                     ->action(fn() => static::DeleteRechazados())
@@ -193,10 +183,10 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->requiresConfirmation()
                     ->modalHeading('Borrar reservas canceladas')
                     ->modalDescription('Esta seguro que quiere borrar todas las reservas canceladas?
-                     Esta accion no se puede deshacer')
+                         Esta accion no se puede deshacer')
                     ->modalSubmitActionLabel('Borrar'),
-            ])->icon('heroicon-o-list-bullet')
-                ->color('info')
+            ])->color('primary')
+                ->button()
         ];
     }
 
@@ -296,38 +286,43 @@ class ReservasPage extends Component implements HasTable, HasForms
             $servicio = Servicio::find($idServicio);
             return 'Reservas del servicio ' . $servicio->nombre;
         } else {
-            return 'Reservas';
+            return 'Mostrando todas las reservas';
         }
     }
 
     public static function getActions(): array
     {
         return [
-            Action::make('Confirmar')
-                ->visible(fn($record) => $record->estado == 'Pendiente')
-                ->action(fn($record) => static::ConfirmReservas($record))
-                ->icon('heroicon-o-exclamation-circle')
-                ->iconButton()
-                ->color('info'),
-            Action::make('Completada')
-                ->visible(fn($record) => $record->estado == 'Confirmado' && Carbon::Parse($record->fecha_reserva)->lte(Carbon::now()))
-                ->action(fn($record) => static::CompleteReservas($record))
-                ->icon('heroicon-o-check-circle')
-                ->iconButton()
-                ->color('success'),
-            Action::make('Cancelar')
-                ->visible(fn($record) => $record->estado == 'Pendiente')
-                ->action(fn($record) => static::RejectReservas($record))
-                ->icon('heroicon-o-x-mark')
-                ->iconButton()
-                ->color('warning'),
-            Action::make('Borrar')
-                ->requiresConfirmation()
-                ->visible(fn($record) => $record->estado == 'Completado' || $record->estado == 'Rechazado')
-                ->action(fn($record) => $record->delete())
-                ->icon('heroicon-o-trash')
-                ->iconButton()
-                ->color('danger')
+            ActionGroup::make([
+                Action::make('Confirmar')
+                    ->visible(fn($record) => $record->estado == 'Pendiente')
+                    ->action(fn($record) => static::ConfirmReservas($record))
+                    ->icon('heroicon-o-check')
+                    ->label('Confirmar')
+                    ->color('info'),
+                Action::make('Completada')
+                    ->visible(fn($record) => $record->estado == 'Confirmado' && Carbon::Parse($record->fecha_reserva)->lte(Carbon::now()))
+                    ->action(fn($record) => static::CompleteReservas($record))
+                    ->icon('heroicon-o-check-circle')
+                    ->label('Completada')
+                    ->color('success'),
+                Action::make('Cancelar')
+                    ->visible(fn($record) => $record->estado == 'Pendiente')
+                    ->action(fn($record) => static::RejectReservas($record))
+                    ->icon('heroicon-o-x-mark')
+                    ->label('Cancelar')
+                    ->color('warning'),
+                Action::make('Borrar')
+                    ->requiresConfirmation()
+                    ->visible(fn($record) => $record->estado == 'Completado' || $record->estado == 'Rechazado')
+                    ->action(fn($record) => $record->delete())
+                    ->icon('heroicon-o-trash')
+                    ->label('Borrar')
+                    ->color('danger'),
+            ])->button()
+                ->label('Editar')
+                ->icon('heroicon-m-pencil-square')
+                ->iconPosition(IconPosition::After)
         ];
     }
 }
