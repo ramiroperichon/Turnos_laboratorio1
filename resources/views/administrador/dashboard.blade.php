@@ -7,8 +7,10 @@
     </x-slot>
     <h1>Panel de Administrador</h1>
 
-    <livewire:reservas-page :id-servicio="$idServicio ?? null" />
-    <div class = "container mt-5">
+    <div class ="content-wrapper py-2 px-3 mt-4 text-center">
+        <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+    </div>
+    <div class ="content-wrapper py-2 px-3 mt-4 text-center">
         <livewire:servicios />
     </div>
 

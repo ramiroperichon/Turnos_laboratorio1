@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Services\ServicioService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Masmerise\Toaster\Toast;
+use Masmerise\Toaster\Toaster;
 
 class ServicioController extends Controller
 {
@@ -113,7 +115,7 @@ class ServicioController extends Controller
                 'incio_turno' => 'required|date_format:H:i',
                 'fin_turno' => 'required|date_format:H:i|after:incio_turno',
                 'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
-                'dias_disponible' => 'required|array|min:1',
+                'dias_disponible' => 'required|array|min:1', 
                 'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
             ],
             [
@@ -134,10 +136,14 @@ class ServicioController extends Controller
         }
 
         if($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false){
-            return redirect('/servicio/user')->with('error', 'Horario invalido, esta fuera de los horarios de trabajo');//agregar status a formulario
+            Toaster::error('Error al eliminar reservas');
+            return redirect('/servicio/user')->with('error', 'Horario invalido, esta fuera de los horarios de trabajo');
+
+            //agregar status a formulario
         }
 
         if($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno'], $servicio->id) == false){
+            Toaster::error('Error al eliminar reservas');
             return redirect('/servicio/user')->with('error', 'Horario utilizado por otro servicio');//agregar status a formulario
         }
 

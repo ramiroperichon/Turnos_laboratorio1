@@ -36,7 +36,7 @@
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">
                         <div class="flex-col item-center">
-                        <div class="icon icon-box-success size-11 me-2">
+                        <div class="icon icon-box-info size-11 me-2">
                             <span class="mdi mdi-calendar-multiple icon-item"></span>
                         </div>
                     </div>
