@@ -8,10 +8,11 @@ use App\Services\ServicioService;
 use Carbon\Carbon;
 use Exception;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\Action;
@@ -26,7 +27,6 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Component;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
-use Masmerise\Toaster\Toast;
 use Masmerise\Toaster\Toaster;
 
 class ReservasPage extends Component implements HasTable, HasForms
@@ -60,10 +60,10 @@ class ReservasPage extends Component implements HasTable, HasForms
             ->filters(static::getTableFilters())
             ->filtersLayout(static::getTableFiltersLayout())
             ->columns([
-                TextColumn::make('id')->label('#')->sortable(),
+                TextColumn::make('id')->label('#')->sortable()->extraHeaderAttributes(['class' => 'dark:text-blue-500']),
                 TextColumn::make('user.name')->label('Cliente')->sortable()->searchable()->toggleable(),
                 TextColumn::make('servicio.nombre')->label('Servicio')->sortable()->searchable()->toggleable()->weight(FontWeight::Bold),
-                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable()->width('5%'),
+                TextColumn::make('servicio.proveedor.name')->label('Proveedor')->sortable()->searchable()->toggleable()->width('5%')->color(Color::hex('#6c7293')),
                 TextColumn::make('hora_inicio')
                     ->label('Horario')
                     ->getStateUsing(fn($record) =>
@@ -195,42 +195,30 @@ class ReservasPage extends Component implements HasTable, HasForms
         return [
             Filter::make('estado')
                 ->form([
-                    Toggle::make('pendiente')
-                        ->label('Pendiente'),
-                    Toggle::make('confirmado')
-                        ->label('Confirmado'),
-                    Toggle::make('rechazado')
-                        ->label('Cancelado'),
-                    Toggle::make('completado')
-                        ->label('Completado'),
+                    Select::make('estado')
+                        ->label('Estado')
+                        ->options([
+                            'pendiente' => 'Pendiente',
+                            'confirmado' => 'Confirmado',
+                            'rechazado' => 'Cancelado',
+                            'completado' => 'Completado',
+                        ]),
                 ])
                 ->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when(
-                            $data['pendiente'] ?? false,
-                            fn(Builder $query): Builder => $query->where('estado', 'Pendiente')
-                        )
-                        ->when(
-                            $data['confirmado'] ?? false,
-                            fn(Builder $query): Builder => $query->where('estado', 'Confirmado')
-                        )
-                        ->when(
-                            $data['rechazado'] ?? false,
-                            fn(Builder $query): Builder => $query->where('estado', 'Rechazado')
-                        )->when(
-                            $data['completado'] ?? false,
-                            fn(Builder $query): Builder => $query->where('estado', 'Completado')
-                        );
+                    return $query->when(
+                        $data['estado'] ?? false,
+                        fn(Builder $query, $estado): Builder => $query->where('estado', ucfirst($estado))
+                    );
                 })
                 ->indicateUsing(function (array $data): ?string {
-                    $states = collect([
+                    $states = [
                         'pendiente' => 'Pendiente',
                         'confirmado' => 'Confirmado',
-                        'rechazado' => 'Rechazado',
-                        'completado' => 'Completado'
-                    ]);
+                        'rechazado' => 'Cancelado',
+                        'completado' => 'Completado',
+                    ];
 
-                    return $states->first(fn($label, $key) => $data[$key] ?? false);
+                    return $states[$data['estado']] ?? null;
                 }),
 
             Filter::make('fecha_reserva')
