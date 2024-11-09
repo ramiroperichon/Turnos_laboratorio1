@@ -15,7 +15,7 @@
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Nombre del servicio</label>
-                                <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre"
+                                <input class="form-control" type="text" value{{$old->nombre ?? ''}} id="nombre" name="nombre" placeholder="Ingrese un nombre"
                                     required />
                                 <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                             </div>
@@ -102,13 +102,6 @@
             if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
-        });
-
-        const shiftStart = document.getElementById('incio_turno');
-        const shiftEnd = document.getElementById('fin_turno');
-
-        shiftStart.addEventListener('change', function() {
-            shiftEnd.min = shiftStart.value;
         });
     </script>
 

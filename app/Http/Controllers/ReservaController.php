@@ -40,7 +40,7 @@ class ReservaController extends Controller
 
     public function reservaServicio(int $idservicio)
     {
-        return view('reserva.todas', [
+        return view('reserva.selected', [
             'idServicio' => $idservicio
         ]);
     }

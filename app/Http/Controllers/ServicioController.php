@@ -43,10 +43,13 @@ class ServicioController extends Controller
 
     public function store(Request $request)
     {
-
         $inicio = \Carbon\Carbon::createFromFormat('H:i', $request->incio_turno);
         $fin = \Carbon\Carbon::createFromFormat('H:i', $request->fin_turno);
         $differenceInMinutes = $inicio->diffInMinutes($fin);
+        if($differenceInMinutes < 0){
+            Toaster::error('La hora de inicio no puede ser mayor a la de fin');
+            return redirect('/servicio/create')->with('error', 'La hora de inicio no puede ser mayor a la de fin')->withInput();
+        }
 
         $validated = $request->validate(
             [ //valida los datos ingresados
@@ -77,11 +80,13 @@ class ServicioController extends Controller
         }
 
         if($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false){
-            return redirect('/servicio/create')->with('status', 'El turno no esta dentro de los horarios disponibles');//agregar status a formulario
+            Toaster::error('El turno no esta dentro de los horarios disponibles');
+            return redirect('/servicio/create')->with('error', 'El turno no esta dentro de los horarios disponibles');//agregar status a formulario
         }
 
         if($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno']) == false){
-            return redirect('/servicio/create')->with('status', 'No hay horarios disponibles para este servicio');//agregar status a formulario
+            Toaster::error('No hay horarios disponibles para este servicio en los dias seleccionados');
+            return redirect('/servicio/create')->with(['error', 'No hay horarios disponibles para este servicio'])->withInput();//agregar status a formulario
         }
 
         $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
@@ -115,7 +120,7 @@ class ServicioController extends Controller
                 'incio_turno' => 'required|date_format:H:i',
                 'fin_turno' => 'required|date_format:H:i|after:incio_turno',
                 'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
-                'dias_disponible' => 'required|array|min:1', 
+                'dias_disponible' => 'required|array|min:1',
                 'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
             ],
             [

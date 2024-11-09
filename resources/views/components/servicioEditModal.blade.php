@@ -27,8 +27,7 @@
     </div>
     </div>
     <div class="flex-row group/algo">
-        <form action="{{ route('reserva.selected', $getRecord()->id) }}" method="GET">
-            @csrf
+        <a href="{{ route('reserva.selected', $getRecord()->id) }}">
             <button class="btn btn-success w-100 py-1" type="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5">
@@ -40,7 +39,7 @@
             class="absolute scale-0 invisible z-50 whitespace-normal break-words rounded-lg bg-gray-700 py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none transition-all duration-200 group-hover/algo:visible group-hover/algo:opacity-100 group-hover/algo:scale-100">
             Ver reservas
         </div>
-        </form>
+        </a>
     </div>
     <!-- Modal Editar -->
     <form action="{{ route('servicio.update', $getRecord()->id) }}" method="POST" class="flex-nowrap">

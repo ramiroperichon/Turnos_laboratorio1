@@ -186,6 +186,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                          Esta accion no se puede deshacer')
                     ->modalSubmitActionLabel('Borrar'),
             ])->color('primary')
+            ->label('Borrar')
                 ->button()
         ];
     }

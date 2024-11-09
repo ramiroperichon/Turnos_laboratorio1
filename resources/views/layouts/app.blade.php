@@ -68,7 +68,6 @@
     <script src="{{ asset('assets/js/rome.js') }}"></script>
     <script src="{{ asset('assets/js/calendario.js') }}"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script src='fullcalendar/lang/es.js'></script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ env('VITE_MAP_KEY') }}&callback=initMap&language=es&libraries=marker"
         async defer></script>

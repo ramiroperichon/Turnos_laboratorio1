@@ -5,9 +5,9 @@
         </h2>
     </x-slot>
     <div class="m-2">
-        <form action="{{ route('detalleNegocio.update', $old->id) }}" method="POST">
+        <form action="{{ route('administrador.detallenegocio.update', $old->id) }}" method="POST">
             @csrf
-            @method('PATCH')
+            @method('PUT')
             <div class="card ml-25 mr-25 px-3 py-3">
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>

@@ -16,20 +16,24 @@ class ServicioService
 {
     public function storeServicioWithHorarios($data, $userId) //Crea el servicio y llama el metodo para generar horarios
     {
-        $servicio = Servicio::create([
-            'nombre' => $data['nombre'],
-            'descripcion' => $data['descripcion'],
-            'precio' => $data['precio'],
-            'incio_turno' => $data['incio_turno'],
-            'fin_turno' => $data['fin_turno'],
-            'duracion' => $data['duracion'],
-            'dias_disponible' => $data['dias_disponible'],
-            'proveedor_id' => $userId
-        ]);
+        try {
+            $servicio = Servicio::create([
+                'nombre' => $data['nombre'],
+                'descripcion' => $data['descripcion'],
+                'precio' => $data['precio'],
+                'incio_turno' => $data['incio_turno'],
+                'fin_turno' => $data['fin_turno'],
+                'duracion' => $data['duracion'],
+                'dias_disponible' => $data['dias_disponible'],
+                'proveedor_id' => $userId
+            ]);
 
-        //$this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
+            //$this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
 
-        return $servicio;
+            return $servicio;
+        } catch (\Exception $e) {
+            Toaster::error('Error al crear el servicio' . $e->getMessage());
+        }
     }
 
     public function removeOldServicioHorariosAndUpdate($data, Servicio $servicio) //elimina y vuelve a generar horarios al actualizar el servicio las reservas del servicio son borradas
@@ -135,7 +139,7 @@ class ServicioService
                 $hora_fin = \Carbon\Carbon::createFromFormat('H:i:s', $s->fin_turno);
                 if (
                     $inicio->between($hora_inicio, $hora_fin) ||
-                    $fin->between($hora_inicio, $s->$hora_fin) ||
+                    $fin->between($hora_inicio, $hora_fin) ||
                     ($inicio->lessThanOrEqualTo($hora_inicio) && $fin->greaterThanOrEqualTo($hora_fin))
                 ) {
                     return false;
@@ -169,22 +173,18 @@ class ServicioService
 
             if ($estado != 'Completado') {
                 Mail::to($reserva->user->email)
-                ->send(new SolicitudMaileable(
-                                   $reserva->hora_inicio,
-                                   $reserva->hora_fin,
-                                   $reserva->fecha_reserva,
-                                   $reserva->estado,
-                                   $reserva->user->name,
-                                   $reserva->servicio->precio
-                                   ));
-
+                    ->send(new SolicitudMaileable(
+                        $reserva->hora_inicio,
+                        $reserva->hora_fin,
+                        $reserva->fecha_reserva,
+                        $reserva->estado,
+                        $reserva->user->name,
+                        $reserva->servicio->precio
+                    ));
             }
-
-
         } catch (Exception $e) {
             Toaster::error('Error al editar la reserva');
             return redirect('/')->withErrors($e)->withInput();
         }
     }
-
 }

@@ -58,14 +58,6 @@ class Servicios extends Component implements HasTable, HasForms
         };
 
         return $table
-            ->headerActions([
-                Action::make('Crear')
-                    ->icon('heroicon-o-plus-circle')
-                    ->iconButton()
-                    ->iconSize(IconSize::Large)
-                    ->color('info')
-                    ->tooltip('Crear nuevo servicio')
-            ])->headerActionsPosition(HeaderActionsPosition::Bottom)
             ->filters(static::getFilters())
             ->query($query)
             ->actions(static::getActions())
@@ -129,6 +121,7 @@ class Servicios extends Component implements HasTable, HasForms
                             ->sortable(),
                         TextColumn::make('duracion')
                             ->label('Duración')
+                            ->tooltip('Duración del turno')
                             ->color(Color::hex('#6c7293'))
                             ->icon('heroicon-o-clock')
                             ->iconColor(Color::Neutral)
@@ -146,7 +139,8 @@ class Servicios extends Component implements HasTable, HasForms
                 ])->from('sm'),
                 Panel::make([
                     ViewColumn::make('status')->view('components.dayscolumn'),
-                ])->collapsible()->collapsed(true)
+                ])->collapsible()
+                ->collapsed(true)
             ])
             ->contentGrid([
                 'md' => 2,
@@ -195,8 +189,8 @@ class Servicios extends Component implements HasTable, HasForms
             ])
             ->query(function (Builder $query, array $data): Builder {
                 return $query->when(
-                    $data['habilitado'] ?? false,
-                    fn(Builder $query, $habilitado): Builder => $query->where('habilitado', $habilitado)
+                    isset($data['habilitado']),
+                    fn(Builder $query): Builder => $query->where('habilitado', (bool) $data['habilitado'])
                 );
             })
             ->indicateUsing(function (array $data): ?string {

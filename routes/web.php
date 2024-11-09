@@ -94,7 +94,8 @@ Route::post('/horario/{id}', [HorarioController::class, 'returnSelected'])->name
 Route::group(['middleware' => ['role:administrador']], function () {
     Route::get('/administrador/reservas', [AdministradorController::class, 'reservas'])->name('administrador.reservas');
     Route::get('/administrador/servicios', [AdministradorController::class, 'servicios'])->name('administrador.servicios');
-    Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio');
+    Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio');//llamar al detalle de negocio controller
+    Route::put('/administrador/detallenegocio/{id}', [DetalleNegocioController::class, 'update'])->name('administrador.detallenegocio.update');
     Route::get('/administrador/proveedores', [AdministradorController::class, 'usuariosall'])->name('administrador.proveedores');
     Route::put('/administrador/modificarProveedor/{id}', [AdministradorController::class, 'modificarProveedor'])->name('administrador.modificarProveedor');
     Route::post('/administrador/crearProveedor', [AdministradorController::class, 'crearProveedor'])->name('administrador.crearProveedor');
