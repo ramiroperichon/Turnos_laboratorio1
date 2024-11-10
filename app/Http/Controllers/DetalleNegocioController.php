@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleNegocio;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Masmerise\Toaster\Toast;
 
 class DetalleNegocioController extends Controller
 {
@@ -64,11 +66,17 @@ class DetalleNegocioController extends Controller
                 'Xurl' => 'nullable|url',
             ]
         );
+        try{
 
         $detalleNegocioActualizado->update($validated);
         View::share('detallenegocioProviders', $detalleNegocioActualizado);
-        return redirect('/')->with('status', 'se actualizo correctamente los datos del negocio!');
-
+        Toast::success('Se actualizo correctamente los datos del negocio!');
+        return redirect('/');
+        }
+        catch (Exception $e){
+            Toast::error('Error al actualizar los datos del negocio');
+            return redirect(route('negocio.create'))->withErrors($e)->withInput();
+        }
 
     }
 

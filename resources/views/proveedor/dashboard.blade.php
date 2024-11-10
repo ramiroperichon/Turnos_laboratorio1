@@ -4,29 +4,13 @@
             {{ __('Dashboard proveedor') }}
         </h2>
     </x-slot>
-    @session('status')
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-            class="alert alert-success alert-dismissible fade show">
-            {{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endsession
-    @if ($errors->any())
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-            class="alert alert-danger alert-dismissible fade show">
-            <ul class="p-2">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <div class="row" style="min-height: calc(100vh - 100px);">
         <div class="col-md-8 grid-margin stretch-card justify-content-center">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Turnos pendientes</h4>
-                    <div class="flex justify-start">
+                    <div id='calendar'></div>
+                    <div class="flex justify-start mt-3">
                         <span class="text-muted text-sm me-2"><span
                                 class="rounded-full bg-success px-2 me-1"></span>Confirmado</span>
                         <span class="text-muted text-sm me-2"><span
@@ -34,7 +18,6 @@
                         <span class="text-muted text-sm me-2"><span
                                 class="rounded-full bg-danger px-2 me-1"></span>Cancelado</span>
                     </div>
-                    <div id='calendar'></div>
                 </div>
             </div>
         </div>
@@ -97,7 +80,8 @@
                                                     @else
                                                         <span class="badge badge-success">{{ $reserva->estado }}</span>
                                                     @endif
-                                                    <p class="text-muted mt-2 mb-1">{{ $reserva->fecha_reserva }}</p>
+                                                    <p class="text-muted mt-2 mb-1">{{ $reserva->fecha_reserva }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,7 +93,7 @@
                     <div class="d-flex flex-row justify-content-between items-center my-2">
                         <p class="text-muted mb-1">Reservas restantes: <span
                                 class="font-weight-bold text-info">{{ $reservas->count() }}</span></span></p>
-                        <a class="btn btn-info" href="{{ route('reserva.user') }}">Ver todas las reservas</a>
+                        <a class="btn btn-info" href="{{ route('reserva.index') }}">Ver todas las reservas</a>
                     </div>
                 </div>
             </div>

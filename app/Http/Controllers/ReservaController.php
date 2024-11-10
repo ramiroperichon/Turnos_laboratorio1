@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Masmerise\Toaster\Toast;
 
 class ReservaController extends Controller
 {
@@ -88,8 +89,8 @@ class ReservaController extends Controller
         // Update the horario state
         //$this->servicioService->updateHorarioState($validated['horario_id']);
 
-        // Redirect to the home page with success message
-        return redirect()->route('dashboard')->with('status', 'Se creo la reserva correctamente!');
+        Toast::success('Se creo correctamente la reserva');
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -113,32 +114,47 @@ class ReservaController extends Controller
      */
     public function update(Request $request, Reserva $reserva)
     {
-        $reservaN = Reserva::firstWhere('id', $reserva->id);
+        try {
+            $reservaN = Reserva::firstWhere('id', $reserva->id);
 
-        $this->servicioService->UpdateReserva($reservaN, $request->estado);
+            $this->servicioService->UpdateReserva($reservaN, $request->estado);
 
-        return redirect()->route('reserva.index')->with('status', 'Reserva se actualizo correctamente!');
+            Toast::success('Se actualizo correctamente la reserva');
+            return redirect()->route('reserva.index');
+        } catch (Exception $e) {
+            Toast::error('Error al actualizar la reserva' . $e->getMessage());
+            return redirect()->route('reserva.index');
+        }
     }
 
     public function confirmReject($reserva, $estado)
     {
-        try{
-        $reservaN = Reserva::firstWhere('id', $reserva);
-        if($reservaN->estado != 'Pendiente'){
-            return redirect()->route('dashboard')->with('error', 'La reserva ya fue modificada');
-        }
-        $this->servicioService->UpdateReserva($reservaN, $estado);
-        return redirect()->route('dashboard')->with('status', 'Reserva se actualizo correctamente!');
-        }catch (Exception $e){
-            return redirect()->route('dashboard')->with('error', 'Error al actualizar la reserva' . $e->getMessage());
+        try {
+            $reservaN = Reserva::firstWhere('id', $reserva);
+            if ($reservaN->estado != 'Pendiente') {
+                Toast::error('No se puede cambiar el estado de la reserva');
+                return redirect()->route('dashboard');
+            }
+            $this->servicioService->UpdateReserva($reservaN, $estado);
+            Toast::success('Se actualizo correctamente la reserva');
+            return redirect()->route('dashboard');
+        } catch (Exception $e) {
+            Toast::error('Error al actualizar la reserva' . $e->getMessage());
+            return redirect()->route('dashboard');
         }
     }
 
 
     public function destroy(Reserva $reserva)
     {
-        $this->servicioService->updateFranjaStateOnDelete($reserva->horario_id);
-        $reserva->delete();
-        return redirect()->route('reserva.index')->with('status', 'Reserva borrada correctamente!');
+        //$this->servicioService->updateFranjaStateOnDelete($reserva->horario_id);
+        try {
+            $reserva->delete();
+            Toast::success('Se borro correctamente la reserva');
+            return redirect()->route('reserva.index');
+        } catch (Exception $e) {
+            Toast::error('Error al borrar la reserva');
+            return redirect()->route('reserva.index');
+        }
     }
 }
