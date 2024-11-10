@@ -92,8 +92,8 @@
                     @endforeach
                     <div class="d-flex flex-row justify-content-between items-center my-2">
                         <p class="text-muted mb-1">Reservas restantes: <span
-                                class="font-weight-bold text-info">{{ $reservas->count() }}</span></span></p>
-                        <a class="btn btn-info" href="{{ route('reserva.index') }}">Ver todas las reservas</a>
+                            class="font-weight-bold text-info">{{ $reservas->where('estado', '=', 'Pendiente')->count() }}</span></p>
+                        <a class="btn btn-info" href="{{ route('reserva.user') }}">Ver todas las reservas</a>
                     </div>
                 </div>
             </div>
