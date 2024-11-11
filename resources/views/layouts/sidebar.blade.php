@@ -72,7 +72,7 @@
                         </a>
                     </li>
                     <li class="nav-item menu-items">
-                        <a class="nav-link" href={{ route('reserva.index') }}>
+                        <a class="nav-link" href={{ route('administrador.reservas') }}>
                             <span class="menu-icon">
                                 <i class="mdi mdi-playlist-play"></i>
                             </span>
@@ -98,7 +98,7 @@
                     <li class="nav-item menu-items">
                         <a class="nav-link" href={{ route('administrador.detallenegocio') }}>
                             <span class="menu-icon">
-                                <i class="mdi mdi-store "></i>
+                                <i class="mdi mdi-store"></i>
                             </span>
                             <span class="menu-title">Detalles del negocio</span>
                         </a>

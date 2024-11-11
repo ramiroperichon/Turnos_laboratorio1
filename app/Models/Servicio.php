@@ -27,4 +27,9 @@ class Servicio extends Model
     {
         return $this->belongsTo(User::class, 'proveedor_id');
     }
+
+    public function reservas()
+    {
+        return $this->hasMany(Reserva::class);
+    }
 }

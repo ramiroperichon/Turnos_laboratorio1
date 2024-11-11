@@ -4,29 +4,30 @@
             {{ __('Dashboard proveedor') }}
         </h2>
     </x-slot>
-    @session('status')
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-            class="alert alert-success alert-dismissible fade show">
-            {{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endsession
-    @if ($errors->any())
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-            class="alert alert-danger alert-dismissible fade show">
-            <ul class="p-2">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div class="page-header">
+        <h3 class="page-title"> Bienvenido {{ Auth::user()->name }} </h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a href="/">Inicio</a></li>
+            </ol>
+        </nav>
+    </div>
     <div class="row" style="min-height: calc(100vh - 100px);">
         <div class="col-md-8 grid-margin stretch-card justify-content-center">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Turnos pendientes</h4>
-                    <div class="flex justify-start">
+                    <div class="flex flex-row items-center pb-3">
+                        <div class="flex-col item-center">
+                            <div class="icon icon-box-success size-11 me-2">
+                                <span class="mdi mdi mdi-calendar-multiple icon-item"></span>
+                            </div>
+                        </div>
+                        <div class="flex-col">
+                            <h4 class="card-title text-start m-0">Turnos pendientes</h4>
+                        </div>
+                    </div>
+                    <div id='calendar'></div>
+                    <div class="flex justify-start mt-3">
                         <span class="text-muted text-sm me-2"><span
                                 class="rounded-full bg-success px-2 me-1"></span>Confirmado</span>
                         <span class="text-muted text-sm me-2"><span
@@ -34,18 +35,26 @@
                         <span class="text-muted text-sm me-2"><span
                                 class="rounded-full bg-danger px-2 me-1"></span>Cancelado</span>
                     </div>
-                    <div id='calendar'></div>
                 </div>
             </div>
         </div>
         <div class="col-md-4 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between">
-                        <h4 class="card-title mb-1">Reservas a confirmar</h4>
-                        <p class="text-muted mb-1">Estado</p>
+                    <div class="flex flex-row items-center pb-3">
+                        <div class="flex-none">
+                            <div class="icon icon-box-primary size-11 me-2">
+                                <span class="mdi mdi mdi mdi-calendar-clock icon-item"></span>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="card-title mb-1 m-0">Reservas a confirmar</h4>
+                        </div>
+                        <div class="flex-none ml-auto">
+                            <p class="text-muted mb-1 m-0">Estado</p>
+                        </div>
                     </div>
-                    @foreach ($reservas->take(5) as $reserva)
+                    @foreach ($reservas->where('estado', '=', 'Pendiente')->take(5) as $reserva)
                         @if ($reserva->estado == 'Pendiente')
                             <div class="row">
                                 <div class="col">
@@ -97,7 +106,8 @@
                                                     @else
                                                         <span class="badge badge-success">{{ $reserva->estado }}</span>
                                                     @endif
-                                                    <p class="text-muted mt-2 mb-1">{{ $reserva->fecha_reserva }}</p>
+                                                    <p class="text-muted mt-2 mb-1">{{ $reserva->fecha_reserva }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,9 +117,10 @@
                         @endif
                     @endforeach
                     <div class="d-flex flex-row justify-content-between items-center my-2">
-                        <p class="text-muted mb-1">Reservas restantes: <span
-                                class="font-weight-bold text-info">{{ $reservas->count() }}</span></span></p>
-                        <a class="btn btn-info" href="{{ route('reserva.user') }}">Ver todas las reservas</a>
+                        <p class="text-muted mb-1">Reservas pendientes: <span
+                                class="font-weight-bold text-info">{{ $reservas->where('estado', '=', 'Pendiente')->count() }}</span>
+                        </p>
+                        <a class="btn btn-info" href="{{ route('reserva.index') }}">Ver todas las reservas</a>
                     </div>
                 </div>
             </div>

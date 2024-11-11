@@ -14,7 +14,7 @@ use Masmerise\Toaster\Toaster;
 
 class ServicioService
 {
-    public function storeServicioWithHorarios($data, $userId) //Crea el servicio y llama el metodo para generar horarios
+    public function storeServicioWithHorarios($data, $userId)
     {
         try {
             $servicio = Servicio::create([
@@ -28,7 +28,7 @@ class ServicioService
                 'proveedor_id' => $userId
             ]);
 
-            //$this->generateFranjasForServicio($servicio); //llama al metodo para generar horarios
+            //$this->generateFranjasForServicio($servicio);
 
             return $servicio;
         } catch (\Exception $e) {
@@ -36,34 +36,37 @@ class ServicioService
         }
     }
 
-    public function removeOldServicioHorariosAndUpdate($data, Servicio $servicio) //elimina y vuelve a generar horarios al actualizar el servicio las reservas del servicio son borradas
+    public function removeOldServicioHorariosAndUpdate($data, Servicio $servicio)
     {
-        //Horario::where('servicio_id', '=', $servicio->id)->delete();
-
-        $servicio->update([
-            'nombre' => $data['nombre'],
-            'descripcion' => $data['descripcion'],
-            'precio' => $data['precio'],
-            'incio_turno' => $data['incio_turno'],
-            'fin_turno' => $data['fin_turno'],
-            'duracion' => $data['duracion'],
-            'dias_disponible' => $data['dias_disponible']
-        ]);
-        //$this->generateFranjasForServicio($servicio);
+        try {
+            $servicio->update(array_filter([
+                'nombre' => $data['nombre'],
+                'descripcion' => $data['descripcion'],
+                'precio' => $data['precio'],
+                'incio_turno' => $data['incio_turno'] ?? null,
+                'fin_turno' => $data['fin_turno'] ?? null,
+                'duracion' => $data['duracion'] ?? null,
+                'dias_disponible' => $data['dias_disponible'] ?? null
+            ], function ($value) {
+                return !is_null($value);
+            }));
+        } catch (Exception $e) {
+            Toaster::error('Error al actualizar el servicio');
+        }
     }
 
-    public function generateFranjasForServicio($shiftStart, $shiftEnd, $duration) //Generador de horarios por servicio
+    public function generateFranjasForServicio($shiftStart, $shiftEnd, $duration)
     {
         $shiftStart = Carbon::createFromTimeString($shiftStart);
         $shiftEnd = Carbon::createFromTimeString($shiftEnd);
 
         $horarios = [];
 
-        while ($shiftStart->lt($shiftEnd)) { //mientras el turno de inicio es menor al final del turno
+        while ($shiftStart->lt($shiftEnd)) {
             $startTime = $shiftStart->toTimeString();
             $endTime = $shiftStart->addMinutes((int)$duration)->toTimeString();
 
-            if ($shiftStart->gt($shiftEnd)) { //si el inicio del turno es mayor al final del turno sale del loop
+            if ($shiftStart->gt($shiftEnd)) {
                 break;
             }
 
@@ -77,7 +80,7 @@ class ServicioService
         return $horarios;
     }
 
-    public function updateHorarioState(int $id) //Actualiza el horario al ser reservado
+    public function updateHorarioState(int $id)
     {
         $horario = Horario::firstWhere('id', $id);
 
@@ -87,7 +90,7 @@ class ServicioService
         ]);
     }
 
-    public function updateFranjaStateOnDelete(int $id) //Actualiza el horario al ser borrado o cancelado el turno
+    public function updateFranjaStateOnDelete(int $id)
     {
         $horario = Horario::firstWhere('id', $id);
 
@@ -97,7 +100,7 @@ class ServicioService
         ]);
     }
 
-    //cargar calendario
+
     public function showCalendar()
     {
         $events = Reserva::all();
@@ -183,8 +186,33 @@ class ServicioService
                     ));
             }
         } catch (Exception $e) {
-            Toaster::error('Error al editar la reserva');
-            return redirect('/')->withErrors($e)->withInput();
+            Toaster::error('Error al editar la reserva' . $e->getMessage());
+            return redirect('/');
+        }
+    }
+
+    public function DestroyServicio($idServicio)
+    {
+        try {
+            $servicio = Servicio::find($idServicio);
+
+            if (!$servicio) {
+                Toaster::error('El servicio no existe o ya fue eliminado');
+                return redirect()->back();
+            }
+
+            if (optional($servicio->reservas)->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0) {
+                Toaster::error('No se puede borrar el servicio porque tiene reservas activas');
+                return redirect()->back();
+            }
+
+            $servicio->delete();
+            Toaster::success('Servicio borrado correctamente');
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            Toaster::error('Error al borrar el servicio: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
 }

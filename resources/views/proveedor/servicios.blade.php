@@ -14,21 +14,21 @@
         </nav>
     </div>
     @session('status')
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)"
             class="alert alert-success alert-dismissible fade show">
             {{ session('status') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endsession
     @session('error')
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)"
             class="alert alert-danger alert-dismissible fade show">
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endsession
     @if ($errors->any())
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)"
             class="alert alert-danger alert-dismissible fade show">
             <ul class="p-2">
                 @foreach ($errors->all() as $error)
@@ -43,10 +43,10 @@
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">
                         <div class="flex-col item-center">
-                        <div class="icon icon-box-warning size-11 me-2">
-                            <span class="mdi mdi-calendar-multiple icon-item"></span>
+                            <div class="icon icon-box-warning size-11 me-2">
+                                <span class="mdi mdi-bulletin-board icon-item"></span>
+                            </div>
                         </div>
-                    </div>
                         <div class="flex-col">
                             @hasrole('proveedor')
                                 <h4 class="card-title text-start m-0"> Servicios
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     <livewire:servicios />
-{{--                     <div class="table-responsive">
+                    {{--                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -330,26 +330,26 @@
             </div>
         </div> --}}
 
-        <script>
-            document.querySelector(".number-input").addEventListener("keypress", function(
-                evt) { //evita poder colocar la e y los signos en los input de numeros
-                if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
-                    evt.preventDefault();
-                }
-            });
+                    <script>
+                        document.querySelector(".number-input").addEventListener("keypress", function(
+                            evt) { //evita poder colocar la e y los signos en los input de numeros
+                            if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                                evt.preventDefault();
+                            }
+                        });
 
-            document.querySelector(".number-input1").addEventListener("keypress", function(evt) {
-                if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
-                    evt.preventDefault();
-                }
-            });
+                        document.querySelector(".number-input1").addEventListener("keypress", function(evt) {
+                            if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                                evt.preventDefault();
+                            }
+                        });
 
-            const shiftStart = document.getElementById('shift_start_modal');
-            const shiftEnd = document.getElementById('shitf_end_modal');
+                        const shiftStart = document.getElementById('shift_start_modal');
+                        const shiftEnd = document.getElementById('shitf_end_modal');
 
-            shiftStart.addEventListener('change', function() {
-                shiftEnd.min = shiftStart.value;
-            });
-        </script>
+                        shiftStart.addEventListener('change', function() {
+                            shiftEnd.min = shiftStart.value;
+                        });
+                    </script>
 
 </x-app-layout>

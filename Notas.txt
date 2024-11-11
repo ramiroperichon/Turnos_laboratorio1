@@ -1,15 +1,16 @@
 Preguntar al editar turnos:
 Se cancelaran todas las reservas hechas a este servicio, Esta seguro que quiere continuar?
-Si, no, ver reservas;
+Si, no, ver reservas;√√
 
-Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor
+Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor √
 
-Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles
+Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles √
 
 Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
 
-Datos de la empresa/servicios
-Footers
+Datos de la empresa/servicios √
+Footers√
+Cambiar formulario de editar perfil
 
 //----dashboard de administrador, ver todas reservas, ver todos los servicios, ver todos los proveedores
 editar detalles de negocio, crear nuevos (proveedores), modificar datos de PROVEEDORES
@@ -17,23 +18,23 @@ QUE NO SE PUEDA editar LOS HORARIOS DE DISPONIBILIDAD
 formularios para crear (proveedor).
 
 listado de todos los servicios. con detalles de cada servicio, ver reservas, aceptar,rechazar turno
+el administrador puede cambiar las reservas, editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
 
-arreglar migraciones de usuarios, falta telefono, apellido
+Vista publica (usuarios sin iniciar sesion)
+
+arreglar migraciones de usuarios, falta telefono, apellido √
+Agregar datos nuevos al formulario de crear usuario
 
 Manejar el caso en el que no exista ningun detale de empresa
 
-Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad
+
+Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad ?
 Cambiar los borrados de: Servicios desabilitaciones (observaciones y habilitado = false)
-Traer solo servicios habilidatos
+Traer solo servicios habilidatos (para clientes)
 
-cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva)
+cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva)  √ PROBAR
 
-el administrador puede cambiar las reservas, editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
-SI SE DA DE BAJA  O MODIFICA EL SERVICIO BORRAR TODAS LAS RESERVAS (DE ESE SERVICIO) Y AVISAR AL CLIENTE PARA QUE CREE UNA NUEVA RESERVA SI ES POSIBLE
-
-SI TIENEN PROBLEMAS AL INSTALAR COMPOSER, AGREGAR EN PHP:
-extension=zip
-extension=intl
+Para dar de baja o borrar un servicio se deben cancelar todas las reservas primero
 
 
 IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
@@ -43,6 +44,12 @@ SIN ROL PROVEEDOR
 SIN ROL ADMINISTRADOR
 
 
+
 AGREGAR NOMBRE DE PROVEEDOR EN TABLA DE RESERVAS
 
 AGREGAR UNA MIGRACION PARA EL ESTADO DE LOS usuarios, PONER observaciones
+
+Mostrar reservas por marcar como completadas en dashboard de administrador y proveedor
+
+PAGINAS 400(Solicitud incorrecta), 403(No autorizado), 404(No encontrado), 500(Error del servidor)
+

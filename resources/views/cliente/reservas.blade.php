@@ -9,28 +9,11 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Reservas</li>
+                <li class="breadcrumb-item active" aria-current="page">Mis reservas</li>
             </ol>
         </nav>
     </div>
     <div class="container text-center">
-        @session('status')
-            <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                class="alert alert-success alert-dismissible fade show">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endsession
-        @if ($errors->any())
-            <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                class="alert alert-danger alert-dismissible fade show">
-                <ul class="p-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="row bg-body-tertiary p-6 p-lg-3 rounded-4 align-items-lg-center">
             <div class="col">
                 <h6 class="text-secondary fw-bold font-weight-normal">#</h6>
@@ -61,7 +44,7 @@
                 </div>
                 <div class="col">
                     <h6 class="text-muted font-weight-normal">Senior proveedor</h6>
-                    {{--<h6 class="text-muted font-weight-normal">{{ $reserva->servicio->user->name }}</h6> Nos olvidamos de poner el id de usuario en servicio --}}
+                    {{-- <h6 class="text-muted font-weight-normal">{{ $reserva->servicio->user->name }}</h6> Nos olvidamos de poner el id de usuario en servicio --}}
                 </div>
                 <div class="col">
                     <h6 class="text-muted font-weight-normal">{{ $reserva->servicio->nombre }}</h6>
@@ -87,17 +70,23 @@
                     @endif
                 </div>
                 <div class="col">
-                <form action="{{ route('reserva.update', $reserva->id) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <input type="text" hidden name="estado" value="Cancelado" id="estado">
-                    <button type="submit" class="btn btn-warning mx-2 my-1">
-                        Cancelar turno
-                    </button>
-                </form>
+                    @if ($reserva->estado == 'Pendiente' || $reserva->estado == 'Confirmado')
+                        <form action="{{ route('reserva.update', $reserva->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-warning mx-2 my-1">
+                                Cancelar turno
+                            </button>
+                        </form>
+                    @else
+                        <x-tooltip-arrow text="Este turno no puede ser cancelado" position="bottom">
+                            <button type="button" disabled class="btn btn-warning mx-2 my-1">
+                                Cancelar turno
+                            </button>
+                        </x-tooltip-arrow>
+                    @endif
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
     </div>
 </x-app-layout>

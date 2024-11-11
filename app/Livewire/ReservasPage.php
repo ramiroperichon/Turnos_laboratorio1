@@ -20,6 +20,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\HeaderActionsPosition;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table as TablesTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -57,6 +58,7 @@ class ReservasPage extends Component implements HasTable, HasForms
         return $table
             ->selectable()
             ->bulkActions(static::getBulkActions())
+            ->headerActions(static::getHeaderActions())
             ->filters(static::getTableFilters())
             ->filtersLayout(static::getTableFiltersLayout())
             ->columns([
@@ -96,25 +98,22 @@ class ReservasPage extends Component implements HasTable, HasForms
         $servicioService = app(ServicioService::class);
 
         $servicioService->UpdateReserva($reserva, $estado);
-    }
-
-    protected static function CompleteReservas($reserva)
-    {
-        $reserva->update([
-            'estado' => 'Completado'
-        ]);
+        Toaster::success('Reserva actualizada correctamente');
     }
 
     protected static function DeleteCompletados()
     {
         try {
-            $reservas = Reserva::where('estado', 'Completado')->where('fecha_reserva', '<=', now())->get();
+            $reservas = Reserva::where('estado', 'Completado')->get();
+            if (auth()->user()->hasRole('proveedor')) {
+                $reservas = $reservas->where('servicio.proveedor_id', auth()->user()->id);
+            }
             if ($reservas->count() <= 0) {
                 Toaster::warning('No hay elementos a eliminar');
-                return;
+            } else {
+                $reservas->each(fn($record) => $record->delete());
+                Toaster::info('Se eliminaron ' . $reservas->count() . ' reservas');
             }
-            $reservas->each(fn($record) => $record->delete());
-            Toaster::info('Reservas completadas eliminadas correctamente');
         } catch (Exception $e) {
             Toaster::error('Error al eliminar reservas' . $e->getMessage());
         }
@@ -124,6 +123,9 @@ class ReservasPage extends Component implements HasTable, HasForms
     {
         try {
             $reservas = Reserva::where('estado', 'Cancelado')->get();
+            if (auth()->user()->hasRole('proveedor')) {
+                $reservas = $reservas->where('servicio.proveedor_id', auth()->user()->id);
+            }
             if ($reservas->count() <= 0) {
                 Toaster::warning('No hay elementos a eliminar');
                 return;
@@ -140,24 +142,24 @@ class ReservasPage extends Component implements HasTable, HasForms
         return [
             BulkActionGroup::make([
                 BulkAction::make('Confirmar')
-                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => static::ConfirmReservas($record)))
+                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => static::ConfirmReject($record, 'Confirmado')))
                     ->icon('heroicon-o-check')
                     ->color('info')
                     ->deselectRecordsAfterCompletion(),
                 BulkAction::make('Cancelar')
-                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => static::RejectReservas($record)))
+                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => static::ConfirmReject($record, 'Cancelado')))
                     ->icon('heroicon-o-x-mark')
                     ->color('warning')
                     ->deselectRecordsAfterCompletion(),
                 BulkAction::make('Completada')
-                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => ($record->fecha_reserva >= now() && in_array($record->estado, ['Confirmado'])) ? $record->delete() : null))
+                    ->action(fn(EloquentCollection $records) => $records->each(fn($record) => ($record->fecha_reserva >= now() && in_array($record->estado, ['Confirmado'])) ? static::ConfirmReject($record, 'Completado') : null))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->deselectRecordsAfterCompletion()
                     ->requiresConfirmation(),
                 BulkAction::make('Borrar')
                     ->action(fn(EloquentCollection $records) => $records->each(
-                        fn($record) => ($record->fecha_reserva <= now() && in_array($record->estado, ['Rechazado', 'Confirmado'])) ? $record->delete() : null
+                        fn($record) => (in_array($record->estado, ['Cancelado', 'Completado'])) ? $record->delete() : null
                     ))
                     ->icon('heroicon-o-trash')
                     ->color('danger')
@@ -166,6 +168,12 @@ class ReservasPage extends Component implements HasTable, HasForms
             ])
                 ->label('Seleccion')
                 ->color('secondary'),
+        ];
+    }
+
+    protected static function getHeaderActions(): array
+    {
+        return [
             ActionGroup::make([
                 Action::make('Borrar completados')
                     ->action(fn() => static::DeleteCompletados())
@@ -186,8 +194,10 @@ class ReservasPage extends Component implements HasTable, HasForms
                          Esta accion no se puede deshacer')
                     ->modalSubmitActionLabel('Borrar'),
             ])->color('primary')
-            ->label('Borrar')
+            ->tooltip('Borrar reservas')
+                ->icon('heroicon-o-trash')
                 ->button()
+                ->iconButton()
         ];
     }
 
@@ -269,7 +279,7 @@ class ReservasPage extends Component implements HasTable, HasForms
         return FiltersLayout::Modal;
     }
 
-    public static function getHeading($idServicio): string
+    /*     public static function getHeading($idServicio): string
     {
         if ($idServicio) {
             $servicio = Servicio::find($idServicio);
@@ -277,7 +287,7 @@ class ReservasPage extends Component implements HasTable, HasForms
         } else {
             return 'Mostrando todas las reservas';
         }
-    }
+    } */
 
     public static function getActions(): array
     {
@@ -285,19 +295,19 @@ class ReservasPage extends Component implements HasTable, HasForms
             ActionGroup::make([
                 Action::make('Confirmar')
                     ->visible(fn($record) => $record->estado == 'Pendiente')
-                    ->action(fn($record) => static::ConfirmReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Confirmado'))
                     ->icon('heroicon-o-check')
                     ->label('Confirmar')
                     ->color('info'),
                 Action::make('Completada')
                     ->visible(fn($record) => $record->estado == 'Confirmado' && Carbon::Parse($record->fecha_reserva)->lte(Carbon::now()))
-                    ->action(fn($record) => static::CompleteReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Completado'))
                     ->icon('heroicon-o-check-circle')
                     ->label('Completada')
                     ->color('success'),
                 Action::make('Cancelar')
                     ->visible(fn($record) => $record->estado == 'Pendiente')
-                    ->action(fn($record) => static::RejectReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Cancelado'))
                     ->icon('heroicon-o-x-mark')
                     ->label('Cancelar')
                     ->color('warning'),

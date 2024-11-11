@@ -2,25 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Models\Reserva;
 use App\Models\Servicio;
 use Carbon\Carbon;
-use Exception;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\IconSize;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\HeaderActionsPosition;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Columns\Layout\Panel;
@@ -33,11 +24,6 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Component;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
-use Filament\Tables\Enums\FiltersLayout;
-use Masmerise\Toaster\Toast;
-use Masmerise\Toaster\Toaster;
-
-use function Laravel\Prompts\text;
 
 class Servicios extends Component implements HasTable, HasForms
 {
@@ -58,7 +44,7 @@ class Servicios extends Component implements HasTable, HasForms
         };
 
         return $table
-            ->filters(static::getFilters())
+            ->filters(static::getFilters())->filtersFormColumns(3)
             ->query($query)
             ->actions(static::getActions())
             ->columns([
@@ -112,7 +98,7 @@ class Servicios extends Component implements HasTable, HasForms
                             ->money('ars')
                             ->color(Color::hex('#77ed28')),
                         TextColumn::make('incio_turno')
-                            ->label('Disponibilidad')
+                            ->label('Horario')
                             ->icon('heroicon-s-bookmark-square')
                                 ->getStateUsing(fn($record) => ('' .
                                     Carbon::parse($record->incio_turno)->format('H:i') .
@@ -125,6 +111,7 @@ class Servicios extends Component implements HasTable, HasForms
                             ->color(Color::hex('#6c7293'))
                             ->icon('heroicon-o-clock')
                             ->iconColor(Color::Neutral)
+                            ->sortable()
                             ->suffix('Min'),
                         TextColumn::make('habilitado')
                             ->icon(function ($record) {
@@ -140,7 +127,7 @@ class Servicios extends Component implements HasTable, HasForms
                 Panel::make([
                     ViewColumn::make('status')->view('components.dayscolumn'),
                 ])->collapsible()
-                ->collapsed(true)
+                    ->collapsed(true)
             ])
             ->contentGrid([
                 'md' => 2,
@@ -179,28 +166,59 @@ class Servicios extends Component implements HasTable, HasForms
     {
         return [
             Filter::make('habilitado')
-            ->form([
-                Select::make('habilitado')
-                    ->label('Habilitado')
-                    ->options([
+                ->form([
+                    Select::make('habilitado')
+                        ->label('Habilitado')
+                        ->options([
+                            true => 'Habilitado',
+                            false => 'Deshabilitado',
+                        ]),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query->when(
+                        isset($data['habilitado']),
+                        fn(Builder $query): Builder => $query->where('habilitado', (bool) $data['habilitado'])
+                    );
+                })
+                ->indicateUsing(function (array $data): ?string {
+                    $states = [
                         true => 'Habilitado',
                         false => 'Deshabilitado',
-                    ]),
-            ])
-            ->query(function (Builder $query, array $data): Builder {
-                return $query->when(
-                    isset($data['habilitado']),
-                    fn(Builder $query): Builder => $query->where('habilitado', (bool) $data['habilitado'])
-                );
-            })
-            ->indicateUsing(function (array $data): ?string {
-                $states = [
-                    true => 'Habilitado',
-                    false => 'Deshabilitado',
-                ];
-
-                return $states[$data['habilitado']] ?? null;
-            }),
+                    ];
+                    return $states[$data['habilitado']] ?? null;
+                }),
+            Filter::make('dias_disponible')
+                ->form([
+                    Select::make('dias_disponible')
+                        ->multiple()
+                        ->label('Dias Disponibles')
+                        ->options([
+                            'Lunes' => 'Lunes',
+                            'Martes' => 'Martes',
+                            'Miercoles' => 'Miercoles',
+                            'Jueves' => 'Jueves',
+                            'Viernes' => 'Viernes',
+                            'Sabado' => 'Sabado',
+                            'Domingo' => 'Domingo',
+                        ]),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query->when(
+                        $data['dias_disponible'] ?? null,
+                        fn (Builder $query, $dias) => $query->where(function ($query) use ($dias) {
+                            foreach ($dias as $dia) {
+                                $query->where('dias_disponible', 'LIKE', "%$dia%");
+                            }
+                        })
+                    );
+                })
+                ->indicateUsing(function (array $data): ?string {
+                    $dias = $data['dias_disponible'] ?? null;
+                    if (is_array($dias)) {
+                        return implode(', ', $dias);
+                    }
+                    return $dias;
+                }),
         ];
     }
 }
