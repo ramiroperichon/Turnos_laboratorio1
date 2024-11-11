@@ -12,11 +12,20 @@ class Proveedor extends Model
     protected $table = 'proveedores';
 
     protected $fillable = [
-        'usuario_id', 'profesion', 'horario_inicio', 'horario_fin'
+        'usuario_id',
+        'profesion',
+        'horario_inicio',
+        'horario_fin'
     ];
 
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
+
+    public function servicios()
+    {
+        return $this->hasMany(Servicio::class);
+    }
+    
 }

@@ -114,11 +114,11 @@ class Servicios extends Component implements HasTable, HasForms
                         TextColumn::make('incio_turno')
                             ->label('Disponibilidad')
                             ->icon('heroicon-s-bookmark-square')
-                            ->getStateUsing(fn($record) => ('' .
-                                Carbon::parse($record->incio_turno)->format('H:i') .
-                                " a " .
-                                Carbon::parse($record->fin_turno)->format('H:i')))
-                            ->sortable(),
+                                ->getStateUsing(fn($record) => ('' .
+                                    Carbon::parse($record->incio_turno)->format('H:i') .
+                                    " a " .
+                                    Carbon::parse($record->fin_turno)->format('H:i')))
+                                ->sortable(),
                         TextColumn::make('duracion')
                             ->label('Duración')
                             ->tooltip('Duración del turno')

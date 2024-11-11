@@ -6,6 +6,7 @@ use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\DetalleNegocioController;
 use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\ProveedorController;
 use App\Mail\SolicitudMaileable;
 use App\Models\Horario;
 use App\Models\Reserva;
@@ -98,7 +99,8 @@ Route::group(['middleware' => ['role:administrador']], function () {
     Route::put('/administrador/detallenegocio/{id}', [DetalleNegocioController::class, 'update'])->name('administrador.detallenegocio.update');
     Route::get('/administrador/proveedores', [AdministradorController::class, 'usuariosall'])->name('administrador.proveedores');
     Route::put('/administrador/modificarProveedor/{id}', [AdministradorController::class, 'modificarProveedor'])->name('administrador.modificarProveedor');
-    Route::post('/administrador/crearProveedor', [AdministradorController::class, 'crearProveedor'])->name('administrador.crearProveedor');
+    Route::get('/administrador/crearProveedor', [ProveedorController::class, 'createProveedor'])->name('administrador.crearProveedor');
+    Route::post('/administrador/crearProveedor', [ProveedorController::class, 'store'])->name('administrador.crearProveedor');
     Route::get('/administrador/editarServicios/{id}', [AdministradorController::class, 'editarServicios'])->name('administrador.editarServicios');
 });
 

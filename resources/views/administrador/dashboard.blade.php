@@ -14,11 +14,4 @@
         <livewire:servicios />
     </div>
 
-    <ul>
-        <li><a href="{{ route('administrador.reservas') }}">Ver Reservas</a></li>
-        <li><a href="{{ route('administrador.servicios') }}">Ver Servicios</a></li>
-        <li><a href="{{ route('administrador.detallenegocio') }}">Editar Detalles de Negocio</a></li>
-        <li><a href="{{ route('administrador.proveedores') }}">Administrar Usuarios (Proveedores)</a></li>
-    </ul>
-
 </x-app-layout>
