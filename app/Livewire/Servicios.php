@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Component;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
-use Filament\Tables\Filters\SelectFilter;
 
 class Servicios extends Component implements HasTable, HasForms
 {

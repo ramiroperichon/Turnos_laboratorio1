@@ -25,13 +25,19 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="preview-list">
-                                @foreach ($servicios->take(5) as $servicio)
+                                @foreach ($servicios as $servicio)
                                     <div class="preview-item border-bottom">
                                         <div class="preview-item-content d-flex flex-grow justify-content-between">
                                             <!-- Icono y título -->
                                             <div class="display-flex">
                                                 <h6 class="preview-subject">{{ $servicio->nombre }}</h6>
-                                                <p class="text-muted mb-0">{{ $servicio->descripcion }}</p>
+                                                @if(strlen($servicio->descripcion) > 11)
+                                                <x-tooltip-arrow text="{{$servicio->descripcion}}" position="bottom">
+                                                <p class="text-muted mb-0 truncate w-20">{{ $servicio->descripcion }}</p>
+                                                </x-tooltip-arrow>
+                                                @else
+                                                <p class="text-muted mb-0 w-20">{{ $servicio->descripcion }}</p>
+                                                @endif
                                             </div>
                                             <!-- Detalles de duración y precio -->
                                             <div>
@@ -40,10 +46,7 @@
                                             </div>
                                             <!-- Botón de acción -->
                                             <div class="d-flex justify-content-end">
-                                                <form action="{{ route('horario.selected', $servicio->id) }}" method="POST">
-                                                    @csrf
-                                                    <button class="btn btn-info py-3" type="submit">Pedir turno</button>
-                                                </form>
+                                                    <a href="{{ route('reserva.create', $servicio->id) }}" class="btn btn-info py-3">Pedir turno</a>
                                             </div>
                                         </div>
                                     </div>

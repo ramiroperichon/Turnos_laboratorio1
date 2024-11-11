@@ -14,8 +14,8 @@
     </div>
     <div class="flex-row group/algo">
         <div class="relative">
-            <button type="button" @if(!$getRecord()->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() == 0) disabled @endif class="btn btn-danger w-100 py-1" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop{{ $getRecord()->id }}">
+            <button type="button" @if (!$getRecord()->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() == 0) disabled @endif class="btn btn-danger w-100 py-1"
+                data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $getRecord()->id }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -28,31 +28,24 @@
             Borrar
         </div>
         <!-- Modal Borrar -->
-        <div class="modal fade" id="staticBackdrop{{ $getRecord()->id }}"
-            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop{{ $getRecord()->id }}" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
                             Borrar servicio</h1>
-                        <button type="button" class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         ¿Esta seguro que quiere borrar este servicio?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Cerrar</button>
-                        <form
-                            action="{{ route('servicio.destroy', $getRecord()->id) }}"
-                            method="POST">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <form action="{{ route('servicio.destroy', $getRecord()->id) }}" method="POST">
                             @csrf
                             @method('delete')
-                            <button class="btn btn-danger"
-                                type="submit">Borrar</button>
+                            <button class="btn btn-danger" type="submit">Borrar</button>
                         </form>
                     </div>
                 </div>
@@ -91,7 +84,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            Editar servicio
+                            Editar servicio {{ $getRecord()->nombre }}
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -100,7 +93,8 @@
                             <div class="col mt-3">
                                 <label>Nombre del servicio</label>
                                 <input type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre"
-                                    value="{{ $getRecord()->nombre }}" required class="form-control" />
+                                    value="{{ $getRecord()->nombre }}" required
+                                    class="form-control @error('nombre') is-invalid @enderror" />
                                 <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                             </div>
                             <div class="col mt-3">
@@ -109,19 +103,22 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-success text-white">$</span>
                                     </div>
-                                    <input type="number" id="precio" name="precio" placeholder="Ej: 20000" required
-                                        value="{{ $getRecord()->precio }}" class="form-control number-input col-sm-5" />
+                                    <input type="number" id="precio" name="precio" placeholder="Ej: 20000"
+                                        required value="{{ $getRecord()->precio }}"
+                                        class="form-control number-input col-sm-5 @error('precio') is-invalid
+                                        @enderror" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">.00</span>
                                     </div>
-                                    <x-input-error :messages="$errors->get('precio')" class="mt-2" />
                                 </div>
+                                <x-input-error :messages="$errors->get('precio')" class="mt-2" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripcion</label>
-                            <textarea class="form-control" id="descripcion" placeholder="Ingrese la descripcion del servicio..." required
-                                name="descripcion" rows="2">{{ $getRecord()->descripcion }}</textarea>
+                            <textarea class="form-control @error('descripcion') is-invalid
+                            @enderror" id="descripcion"
+                                placeholder="Ingrese la descripcion del servicio..." required name="descripcion" rows="2">{{ $getRecord()->descripcion }}</textarea>
                             <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
                         @if ($getRecord()->reservas->count() > 0)
@@ -129,7 +126,9 @@
                                 <label>Inicio</label>
                                 <input type="time"
                                     value="{{ \Carbon\Carbon::parse($getRecord()->incio_turno)->format('H:i') }}"
-                                    max="00:00" disabled class="form-control" />
+                                    max="00:00" disabled
+                                    class="form-control @error('incio_turno') is-invalid
+                                    @enderror" />
                                 <x-tooltip :tip="$getRecord()->reservas->count()
                                     ? 'No puedes modificar los horarios si hay reservas pendientes o por completar'
                                     : ''" />
@@ -139,7 +138,9 @@
                                 <label>Fin</label>
                                 <input type="time" min="05:00"
                                     value="{{ \Carbon\Carbon::parse($getRecord()->fin_turno)->format('H:i') }}"
-                                    max="00:00" disabled class="form-control" />
+                                    max="00:00" disabled
+                                    class="form-control @error('fin_turno') is-invalid
+                                    @enderror" />
                                 <x-tooltip :tip="$getRecord()->reservas->count()
                                     ? 'No puedes modificar los horarios si hay reservas pendientes o por completar'
                                     : ''" />
@@ -167,8 +168,8 @@
                                 <div class="btn-group btn-group-sm flex-wrap mt-2 group" role="group"
                                     aria-label="Basic checkbox toggle button group">
                                     @foreach (['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'] as $day)
-                                        <input type="checkbox" disabled class="btn-check" value="{{ $day }}"
-                                            name="dias_disponible[]"
+                                        <input type="checkbox" disabled class="btn-check"
+                                            value="{{ $day }}" name="dias_disponible[]"
                                             id="btncheck{{ $getRecord()->id }}{{ $day }}"
                                             @if (in_array($day, explode(',', $getRecord()->dias_disponible))) checked @else @endif>
                                         <label class="btn btn-outline-info"
@@ -184,14 +185,15 @@
                                 <label>Inicio</label>
                                 <input type="time" id="shift_start_modal" name="incio_turno" min="05:00"
                                     value="{{ \Carbon\Carbon::parse($getRecord()->incio_turno)->format('H:i') }}"
-                                    max="00:00" required class="form-control" />
+                                    max="00:00" required
+                                    class="form-control @error('incio_turno') is-invalid @enderror" />
                                 <x-input-error :messages="$errors->get('incio_turno')" class="mt-2" />
                             </div>
                             <div class="mb-3">
                                 <label>Fin</label>
                                 <input type="time" id="shift_end_modal" name="fin_turno" min="05:00"
                                     value="{{ \Carbon\Carbon::parse($getRecord()->fin_turno)->format('H:i') }}"
-                                    max="00:00" required class="form-control" />
+                                    max="00:00" required class="form-control @error('fin_turno') is-invalid @enderror" />
                                 <x-input-error :messages="$errors->get('fin_turno')" class="mt-2" />
                             </div>
                             <div class="mb-3">
@@ -199,7 +201,8 @@
                                 <div class="input-group">
                                     <input type="number" min="0" value="{{ $getRecord()->duracion }}"
                                         max="240" maxlength="2" placeholder="Ej: 30" id="duracion"
-                                        name="duracion" required class="form-control number-input1 col-sm-5" />
+                                        name="duracion" required class="form-control number-input1 col-sm-5 @error('duracion') is-invalid
+                                        @enderror" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">Minutos</span>
                                     </div>
@@ -225,12 +228,12 @@
                         @endif
                     </div>
                     <div class="modal-footer">
-                        <div class="row">
-                            <div class="col">
+                        <div class="d-flex justify-content-end gap-2">
+                            <div class="flex">
                                 <button type="button" class="btn btn-outline-secondary"
                                     data-bs-dismiss="modal">Cerrar</button>
                             </div>
-                            <div class="col">
+                            <div class="flex">
                                 <button class="btn btn-warning" type="button" data-bs-toggle="modal"
                                     data-bs-target="#modalconfirmar{{ $getRecord()->id }}">Guardar
                                     cambios</button>

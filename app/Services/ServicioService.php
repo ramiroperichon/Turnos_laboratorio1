@@ -186,8 +186,8 @@ class ServicioService
                     ));
             }
         } catch (Exception $e) {
-            Toaster::error('Error al editar la reserva');
-            return redirect('/')->withErrors($e)->withInput();
+            Toaster::error('Error al editar la reserva' . $e->getMessage());
+            return redirect('/');
         }
     }
 
@@ -195,15 +195,24 @@ class ServicioService
     {
         try {
             $servicio = Servicio::find($idServicio);
-            if ($servicio->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0) {
-                Toaster::error('No se puede borrar el servicio porque tiene reservas asociadas');
+
+            if (!$servicio) {
+                Toaster::error('El servicio no existe o ya fue eliminado');
+                return redirect()->back();
             }
+
+            if (optional($servicio->reservas)->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0) {
+                Toaster::error('No se puede borrar el servicio porque tiene reservas activas');
+                return redirect()->back();
+            }
+
             $servicio->delete();
             Toaster::success('Servicio borrado correctamente');
+            return redirect()->back();
 
         } catch (Exception $e) {
-            Toaster::error('Error al borrar el servicio');
-            return redirect('/')->withErrors($e)->withInput();
+            Toaster::error('Error al borrar el servicio: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
 }

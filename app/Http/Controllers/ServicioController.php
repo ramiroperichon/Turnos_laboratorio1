@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\ServicioService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Masmerise\Toaster\Toast;
 use Masmerise\Toaster\Toaster;
 
 class ServicioController extends Controller
@@ -22,7 +21,7 @@ class ServicioController extends Controller
     public function index() //devuelve la vista de los servicios
     {
         $servicios = Servicio::get();
-        return view('dashboard', [
+        return view('cliente.servicios', [
             'servicios' => $servicios
         ]);
     }
@@ -48,14 +47,14 @@ class ServicioController extends Controller
         $differenceInMinutes = $inicio->diffInMinutes($fin);
         if ($differenceInMinutes < 0) {
             Toaster::error('La hora de inicio no puede ser mayor a la de fin');
-            return redirect('/servicio/create')->with('error', 'La hora de inicio no puede ser mayor a la de fin')->withInput();
+            return redirect()->back()->withInput();
         }
 
         $validated = $request->validate(
-            [ //valida los datos ingresados
+            [
                 'nombre' => 'required|min:3|max:30|unique:servicios,nombre',
                 'descripcion' => 'required|min:5|max:255',
-                'precio' => 'required|numeric',
+                'precio' => 'required|numeric|min:1',
                 'incio_turno' => 'required|date_format:H:i',
                 'fin_turno' => 'required|date_format:H:i|after:incio_turno',
                 'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
@@ -74,35 +73,27 @@ class ServicioController extends Controller
             try {
                 $user = User::findOrFail($request->userId);
             } catch (ModelNotFoundException $e) {
-                return redirect('/')->with('status', 'Usuario no encontrado');
+                Toaster::error('Usuario no encontrado');
+                return redirect()->back()->withInput();
             }
         }
 
         if ($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false) {
             Toaster::error('El turno no esta dentro de los horarios disponibles');
-            return redirect('/servicio/create')->with('error', 'El turno no esta dentro de los horarios disponibles'); //agregar status a formulario
+            return redirect()->back()->withInput();
         }
 
         if ($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno']) == false) {
             Toaster::error('No hay horarios disponibles para este servicio en los dias seleccionados');
-            return redirect('/servicio/create')->with(['error', 'No hay horarios disponibles para este servicio'])->withInput(); //agregar status a formulario
+            return redirect()->back()->withInput();
         }
 
         $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
 
-        $servicio = $this->servicioService->storeServicioWithHorarios($validated, $user->id);
+        $this->servicioService->storeServicioWithHorarios($validated, $user->id);
 
-        return redirect('/servicio/user')->with('status', 'Servicio se creo correctamente!');
-    }
-
-    public function show(string $id) //no implementado
-    {
-        return view('servicio.show');
-    }
-
-    public function edit(string $id) //no implementado
-    {
-        return view('servicio.edit');
+        Toaster::success('Servicio se creo correctamente!');
+        return redirect('/servicio/user');
     }
 
     public function update(Request $request, Servicio $servicio)
@@ -118,7 +109,7 @@ class ServicioController extends Controller
             [
                 'nombre' => 'required|min:3|max:30',
                 'descripcion' => 'required|min:5|max:255',
-                'precio' => 'required|numeric',
+                'precio' => 'required|numeric|min:1',
                 'incio_turno' => 'nullable|date_format:H:i',
                 'fin_turno' => 'nullable|date_format:H:i|after:incio_turno',
                 'duracion' => 'nullable|integer|min:10|max:' . $differenceInMinutes,
@@ -126,7 +117,7 @@ class ServicioController extends Controller
                 'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
             ],
             [
-                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!', //error si el usuario puso una horario de fin menor o igual al de inicio
+                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!'
             ]
         );
 
@@ -137,19 +128,20 @@ class ServicioController extends Controller
             try {
                 $user = User::findOrFail($request->userId);
             } catch (ModelNotFoundException $e) {
-                return redirect('/')->with('error', 'Usuario no encontrado');
+                Toaster::error('Usuario no encontrado');
+                return redirect('/');
             }
         }
 
         if ($request->has('incio_turno') && $request->has('fin_turno')) {
             if ($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false) {
                 Toaster::error('Horario invalido, esta fuera de los horarios de trabajo');
-                return redirect('/servicio/user')->with('error', 'Horario invalido, esta fuera de los horarios de trabajo');
+                return redirect('/servicio/user');
             }
             if ($request->has('dias_disponible')) {
                 if ($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno'], $servicio->id) == false) {
                     Toaster::error('Horario utilizado por otro servicio');
-                    return redirect('/servicio/user')->with('error', 'Horario utilizado por otro servicio');
+                    return redirect('/servicio/user');
                 }
                 $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
             }
@@ -157,12 +149,12 @@ class ServicioController extends Controller
 
         $servicio = $this->servicioService->removeOldServicioHorariosAndUpdate($validated, $servicio);
         Toaster::success('Servicio actualizado correctamente!');
-        return redirect('/servicio/user')->with('status', 'Servicio actualizado correctamente!');
+        return redirect('/servicio/user');
     }
 
-    public function destroy(Servicio $servicio)
+    public function destroy($servicio)
     {
-        $this->servicioService->DestroyServicio($servicio->id);
-        return redirect('/servicio/user')->with('status', 'Servicio borrado correctamente!');
+        $this->servicioService->DestroyServicio($servicio);
+        return redirect('/servicio/user');
     }
 }

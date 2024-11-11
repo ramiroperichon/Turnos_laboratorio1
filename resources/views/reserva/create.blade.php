@@ -9,6 +9,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('servicio.index') }}">Servicios</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Reservar</li>
             </ol>
         </nav>
@@ -32,18 +33,6 @@
                             <h6 class="text-muted fw-bold font-weight-normal border-bottom py-1">Horarios disponibles
                             </h6>
                                 <livewire:dynamicselectinput :servicio="$servicio" :reservas="$reservas" />
-                               {{--  @foreach ($horarios as $horario)
-                                    <div class="col-lg-2">
-                                        <input type="radio" required id="option{{ $horario->id }}" name="horario_id"
-                                            value="{{ $horario->id }}" class="btn-check"
-                                            @if ($horario->disponibilidad == 'Reservado') disabled @endif>
-                                        <label class="btn btn-primary btn-rounded w-100"
-                                            for="option{{ $horario->id }}">
-                                            {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }}
-                                        </label>
-                                    </div>
-                                @endforeach --}}
-
                             <x-input-error :messages="$errors->get('horario_id')" class="mt-2" />
                         </div>
                     </div>
@@ -58,7 +47,7 @@
                     <x-input-error :messages="$errors->get('fecha_reserva')" class="mt-2" />
                     <div class="text-center ">
                         <button class="btn btn-info" id="submit-button" type="submit">Crear reserva</button>
-                        <a class="btn btn-dark" type="button" href="/">Volver</a>
+                        <a class="btn btn-dark" href="{{ url()->previous() }}">Volver</a>
                     </div>
                 </div>
             </div>

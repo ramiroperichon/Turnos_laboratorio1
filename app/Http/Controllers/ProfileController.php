@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Masmerise\Toaster\Toast;
+use Masmerise\Toaster\Toaster;
 
 class ProfileController extends Controller
 {
@@ -48,7 +48,7 @@ class ProfileController extends Controller
             $user->cliente->save();
         }
 
-        Toast::success('Se actualizo correctamente el perfil');
+        Toaster::success('Se actualizo correctamente el perfil');
         return Redirect::route('profile.edit');
     }
 

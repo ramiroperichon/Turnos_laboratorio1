@@ -13,25 +13,8 @@
             </ol>
         </nav>
     </div>
-    <div class="content-wrapper py-2 px-3 text-center">
-        @session('status')
-            <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                class="alert alert-success alert-dismissible fade show">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endsession
-        @if ($errors->any())
-            <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                class="alert alert-danger alert-dismissible fade show">
-                <ul class="p-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <div class="col-lg-12 grid-margin stretch-card">
+    <div class="row">
+        <div class="col grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">

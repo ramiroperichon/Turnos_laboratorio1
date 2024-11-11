@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class HorarioController extends Controller
 {
 
-/*     protected $servicioService;
+    /*     protected $servicioService;
 
     public function __construct(ServicioService $servicioService)
     {
@@ -65,5 +65,6 @@ class HorarioController extends Controller
         $reservas = Reserva::where('servicio_id', $id)->get();
 
         return view('horario.todos', ['servicio' => $selected, 'reservas' => $reservas ]);
-    } */
+    }
+        */
 }

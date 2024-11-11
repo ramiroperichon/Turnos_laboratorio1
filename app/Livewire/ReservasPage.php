@@ -98,6 +98,7 @@ class ReservasPage extends Component implements HasTable, HasForms
         $servicioService = app(ServicioService::class);
 
         $servicioService->UpdateReserva($reserva, $estado);
+        Toaster::success('Reserva actualizada correctamente');
     }
 
     protected static function DeleteCompletados()
@@ -294,19 +295,19 @@ class ReservasPage extends Component implements HasTable, HasForms
             ActionGroup::make([
                 Action::make('Confirmar')
                     ->visible(fn($record) => $record->estado == 'Pendiente')
-                    ->action(fn($record) => static::ConfirmReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Confirmado'))
                     ->icon('heroicon-o-check')
                     ->label('Confirmar')
                     ->color('info'),
                 Action::make('Completada')
                     ->visible(fn($record) => $record->estado == 'Confirmado' && Carbon::Parse($record->fecha_reserva)->lte(Carbon::now()))
-                    ->action(fn($record) => static::CompleteReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Completado'))
                     ->icon('heroicon-o-check-circle')
                     ->label('Completada')
                     ->color('success'),
                 Action::make('Cancelar')
                     ->visible(fn($record) => $record->estado == 'Pendiente')
-                    ->action(fn($record) => static::RejectReservas($record))
+                    ->action(fn($record) => static::ConfirmReject($record, 'Cancelado'))
                     ->icon('heroicon-o-x-mark')
                     ->label('Cancelar')
                     ->color('warning'),
