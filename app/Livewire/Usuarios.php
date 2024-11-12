@@ -6,8 +6,11 @@ use App\Models\Proveedor;
 use App\Models\User;
 use App\Services\Validators\CheckServicioFinSchedule;
 use App\Services\Validators\CheckServicioInicioSchedule;
+use App\Services\Validators\CheckServicioFinSchedule;
+use App\Services\Validators\CheckServicioInicioSchedule;
 use Carbon\Carbon;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -66,6 +69,28 @@ class Usuarios extends Component implements HasForms, HasTable
                         Carbon::parse($record->horario_fin)->format('H:i')))
                     ->sortable()
                     ->label('Horarios'),
+                TextColumn::make('id')
+                    ->label('#')
+                    ->sortable(),
+                TextColumn::make('usuario.name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('servicios')
+                    ->getStateUsing(fn($record) => $record->servicios()->count())
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->withCount('servicios')
+                            ->orderBy('servicios_count', $direction);
+                    }),
+                TextColumn::make('profesion')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('horario_inicio')
+                    ->getStateUsing(fn($record) => ('' .
+                        Carbon::parse($record->horario_inicio)->format('H:i') .
+                        " a " .
+                        Carbon::parse($record->horario_fin)->format('H:i')))
+                    ->sortable()
+                    ->label('Horarios'),
             ])
             ->filters([
                 //
@@ -89,7 +114,7 @@ class Usuarios extends Component implements HasForms, HasTable
     {
         return [
             ActionGroup::make([
-                Action::make('crear')->icon('heroicon-o-plus-circle')->color('success'),
+                Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success'),
                 Action::make('dar de baja')->icon('heroicon-o-x-circle')->color('danger'),
                 Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url('/administrador/servicios'),
                 EditAction::make()

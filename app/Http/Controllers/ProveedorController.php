@@ -19,28 +19,6 @@ class ProveedorController extends Controller
 
     }
 
-    /*public function updateProveedor(ProfileUpdateRequest $request)
-    {
-
-        $user = $request->user();
-        $user->fill($request->only(['name', 'email']));
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        if ($user->proveedor) {
-            $user->proveedor->profesion = $request->input('profesion');
-            $user->proveedor->horario_inicio = $request->input('horario_inicio');
-            $user->proveedor->horario_fin = $request->input('horario_fin');
-            $user->proveedor->save();
-        }
-
-        return Redirect::route('administrador.proveedores');
-    }*/
-
     public function store(Request $request)
     {
 

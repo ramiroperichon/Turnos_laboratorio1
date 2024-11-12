@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Servicio;
 use App\Models\User;
 use App\Services\ServicioService;
+use App\Services\Validators\CheckAvailableDays;
+use App\Services\Validators\IsInRange;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Masmerise\Toaster\Toaster;
@@ -45,26 +47,6 @@ class ServicioController extends Controller
         $inicio = \Carbon\Carbon::createFromFormat('H:i', $request->incio_turno);
         $fin = \Carbon\Carbon::createFromFormat('H:i', $request->fin_turno);
         $differenceInMinutes = $inicio->diffInMinutes($fin);
-        if ($differenceInMinutes < 0) {
-            Toaster::error('La hora de inicio no puede ser mayor a la de fin');
-            return redirect()->back()->withInput();
-        }
-
-        $validated = $request->validate(
-            [
-                'nombre' => 'required|min:3|max:30|unique:servicios,nombre',
-                'descripcion' => 'required|min:5|max:255',
-                'precio' => 'required|numeric|min:1',
-                'incio_turno' => 'required|date_format:H:i',
-                'fin_turno' => 'required|date_format:H:i|after:incio_turno',
-                'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
-                'dias_disponible' => 'required|array|min:1',
-                'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
-            ],
-            [
-                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!',
-            ]
-        );
 
         $user = new User();
         if ($request->userId == null) {
@@ -78,15 +60,22 @@ class ServicioController extends Controller
             }
         }
 
-        if ($this->servicioService->IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin, $validated['incio_turno'], $validated['fin_turno']) == false) {
-            Toaster::error('El turno no esta dentro de los horarios disponibles');
-            return redirect()->back()->withInput();
-        }
-
-        if ($this->servicioService->getAvialableHours($user->id, $validated['dias_disponible'], $validated['incio_turno'], $validated['fin_turno']) == false) {
-            Toaster::error('No hay horarios disponibles para este servicio en los dias seleccionados');
-            return redirect()->back()->withInput();
-        }
+        $validated = $request->validate(
+            [
+                'nombre' => 'required|min:3|max:30|unique:servicios,nombre',
+                'descripcion' => 'required|min:5|max:255',
+                'precio' => 'required|numeric|min:1',
+                'incio_turno' => ['required', 'date_format:H:i', new IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin)],
+                'fin_turno' => 'required|date_format:H:i|after:incio_turno',
+                'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
+                'dias_disponible' => ['required', 'array', 'min:1', new CheckAvailableDays($user->id)],
+                'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
+            ],
+            [
+                'fin_turno.after' => 'La hora de fin no puede ser menor a la de inicio!',
+                'duracion.max' => 'La duracion no debe ser mayor al tiempo del servicio'
+            ]
+        );
 
         $validated['dias_disponible'] = implode(',', $validated['dias_disponible']);
 

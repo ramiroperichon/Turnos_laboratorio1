@@ -38,8 +38,8 @@
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripcion</label>
-                            <textarea class="form-control @error('descripcion') is-invalid @enderror col-lg-6" id="descripcion" placeholder="Ingrese la descripcion del servicio..." required
-                                name="descripcion" rows="4">{{ old('descripcion') }}</textarea>
+                            <textarea class="form-control @error('descripcion') is-invalid @enderror col-lg-6" id="descripcion"
+                                placeholder="Ingrese la descripcion del servicio..." required name="descripcion" rows="4">{{ old('descripcion') }}</textarea>
                             <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
                         <div class="form-group row gx-5">
@@ -99,7 +99,7 @@
 
     <script>
         document.querySelector(".number-input").addEventListener("keypress", function(
-        evt) { //evita poder colocar la e y los signos en los input de numeros
+            evt) { //evita poder colocar la e y los signos en los input de numeros
             if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
