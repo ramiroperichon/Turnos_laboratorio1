@@ -209,10 +209,24 @@ class ServicioService
             $servicio->delete();
             Toaster::success('Servicio borrado correctamente');
             return redirect()->back();
-
         } catch (Exception $e) {
             Toaster::error('Error al borrar el servicio: ' . $e->getMessage());
             return redirect()->back();
+        }
+    }
+
+    public function disableServicio(int $idServicio, string $observaciones)
+    {
+        try {
+            $servicio = Servicio::findOrFail($idServicio);
+            Servicio::where('id', $idServicio)->update(['habilitado' => false, 'observaciones' => $observaciones]);
+            if ($servicio->reservas) {
+                foreach (Reserva::where('servicio_id', $idServicio)->get() as $reserva) {
+                    $this->updateReserva($reserva, 'Cancelado');
+                }
+            }
+        } catch (Exception $e) {
+            Toaster::error('Error al deshabilitar el servicio: ' . $e->getMessage());
         }
     }
 }

@@ -4,10 +4,14 @@ namespace App\Livewire;
 
 use App\Forms\Components\DaysRadioSelector;
 use App\Models\Servicio;
+use App\Services\ServicioService;
 use App\Services\Validators\IsInRange;
 use Carbon\Carbon;
+use Doctrine\DBAL\Schema\View;
+use Faker\Provider\ar_EG\Text;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Grid as ComponentsGrid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Split as ComponentsSplit;
 use Filament\Forms\Components\Textarea;
@@ -38,6 +42,10 @@ use Filament\Tables\Columns\ViewColumn;
 use Masmerise\Toaster\Toaster;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Support\Enums\IconPosition;
+use Filament\Support\Enums\IconSize;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Enums\ActionsPosition;
 
 class Servicios extends Component implements HasTable, HasForms
 {
@@ -61,6 +69,7 @@ class Servicios extends Component implements HasTable, HasForms
             ->filters(static::getFilters())->filtersFormColumns(3)
             ->query($query)
             ->actions(static::getActions())
+            ->actionsAlignment('justify-center')
             ->columns([
                 Split::make([
                     Grid::make()
@@ -133,8 +142,9 @@ class Servicios extends Component implements HasTable, HasForms
                             })
                             ->getStateUsing(fn($record) => $record->habilitado ? 'Habilitado' : 'Deshabilitado')
                             ->color(function ($record) {
-                                return $record->habilitado ? 'success' : 'danger';
+                                return $record->habilitado ? 'success' : 'warning';
                             })
+                            ->tooltip(fn($record) => $record->habilitado ? 'El servicio esta habilitado' : $record->observaciones)
                             ->size('xl')
                     ])->space(1)->grow(false),
                 ])->from('sm'),
@@ -153,8 +163,8 @@ class Servicios extends Component implements HasTable, HasForms
     {
         return [
             EditAction::make()
+                ->extraAttributes(['class' => 'place-self-center'])
                 ->form(function ($record) {
-                    $day = explode(',', $record->dias_disponible);
                     return [
                         ComponentsSplit::make([
                             TextInput::make('nombre')
@@ -209,22 +219,23 @@ class Servicios extends Component implements HasTable, HasForms
                                     ->maxValue(240)
                                     ->label('Duracion')
                             ]),
-                            Select::make('dias_disponible')
-                                ->multiple()
-                                ->required()
-                                ->default(1)
-                                //->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
-                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
-                                ->options([
-                                    'Lunes' => 'Lunes',
-                                    'Martes' => 'Martes',
-                                    'Miercoles' => 'Miercoles',
-                                    'Jueves' => 'Jueves',
-                                    'Viernes' => 'Viernes',
-                                    'Sabado' => 'Sabado',
-                                    'Domingo' => 'Domingo',
-                                ])
-                                ->label('Dias Disponibles'),
+                        ViewField::make('dias_disponible')
+                            ->view('components.daysselected'),
+                        Select::make('dias_disponible')
+                            ->multiple()
+                            ->required()
+                            ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
+                            ->options([
+                                'Lunes' => 'Lunes',
+                                'Martes' => 'Martes',
+                                'Miercoles' => 'Miercoles',
+                                'Jueves' => 'Jueves',
+                                'Viernes' => 'Viernes',
+                                'Sabado' => 'Sabado',
+                                'Domingo' => 'Domingo',
+                            ])
+                            ->label('Dias Disponibles'),
                     ];
                 })
                 ->modalWidth(MaxWidth::ExtraLarge)
@@ -235,12 +246,95 @@ class Servicios extends Component implements HasTable, HasForms
                     Toaster::success('Servicio actualizado correctamente');
                 })
                 ->icon('heroicon-o-pencil-square')
+                ->iconSize(IconSize::Large)
+                ->iconPosition(IconPosition::After)
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Editar detalles del servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
                 ->color('success'),
-            Action::make('Crear')
-                ->visible(fn($record) => auth()->user()->hasRole('proveedor') || auth()->user()->hasRole('administrador'))
-                ->icon('heroicon-o-plus-circle')
+            Action::make('Reservas')
+                ->icon('heroicon-o-eye')
                 ->color('info')
-                ->view('components.servicioEditModal'),
+                ->iconSize(IconSize::Large)
+                ->iconPosition(IconPosition::After)
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Ver reservas del servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->badge(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count())
+                ->url(fn($record) => route('reserva.selected', $record->id))
+                ->iconSize(IconSize::Large)
+                ->openUrlInNewTab(false),
+            DeleteAction::make('Borrar')
+                ->icon('heroicon-o-trash')
+                ->iconSize(IconSize::Large)
+                ->iconPosition(IconPosition::After)
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Borrar servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->color('danger')
+                ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                ->action(function ($record) {
+                    $record->delete();
+                    Toaster::success('Servicio borrado correctamente');
+                })
+                ->requiresConfirmation(),
+            Action::make('Deshabilitar')
+                ->icon('heroicon-o-x-circle')
+                ->iconSize(IconSize::Large)
+                ->iconPosition(IconPosition::After)
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Deshabilitar el servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->color('warning')
+                ->visible(fn($record) => $record->habilitado == true)
+                ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                ->form(
+                    [
+                        Section::make('')
+                            ->description('Se cancelaran todas las reservas pendientes y confirmadas')
+                            ->schema(
+                                [
+                                    Textarea::make('observaciones')
+                                        ->label('Observaciones')
+                                        ->required()
+                                        ->minLength(5)
+                                        ->maxLength(255)
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Debe ingresar una observación para deshabilitar el servicio'),
+                                ]
+                            )
+                    ]
+                )
+                ->action(function ($record, $data) {
+                    $servicio = new ServicioService();
+                    $servicio->disableServicio($record->id, $data['observaciones']);
+                    Toaster::success('Servicio deshabilitado exitosamente');
+                })
+                ->modalHeading('Deshabilitar Servicio')
+                ->requiresConfirmation(),
+            Action::make('Habilitar')
+                ->icon('heroicon-o-check-circle')
+                ->iconSize(IconSize::Large)
+                ->iconPosition(IconPosition::After)
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Habilitar el servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->color('secondary')
+                ->visible(fn($record) => $record->habilitado == false)
+                ->action(function ($record) {
+                    $record->update(['habilitado' => true]);
+                    Toaster::success('Servicio habilitado correctamente');
+                })
+                ->requiresConfirmation(),
         ];
     }
 

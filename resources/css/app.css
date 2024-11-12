@@ -60,3 +60,7 @@
 .btn-group > .btn-check:checked + .btn {
     z-index: 0 !important;
 }
+
+.fi-ta-actions{
+    @apply justify-center !important;
+}
