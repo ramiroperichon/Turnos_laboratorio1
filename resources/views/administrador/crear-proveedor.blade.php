@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="m-2">
-        <form action="{{ route('administrador.crearProveedor') }}" method="POST">
+        <form action="{{ route('administrador.storeProveedor') }}" method="POST">
             @csrf
             @method('POST')
             <div class="card ml-25 mr-25 px-3 py-3">

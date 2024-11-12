@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Proveedor;
-use App\Models\User;
 use App\Services\Validators\CheckServicioFinSchedule;
 use App\Services\Validators\CheckServicioInicioSchedule;
 use Carbon\Carbon;
@@ -143,36 +142,5 @@ class Usuarios extends Component implements HasForms, HasTable
                     })
             ])->icon('heroicon-c-bars-4')->color('success')
         ];
-    }
-
-    protected static function updateProveedor(array $data, $user_id)
-    {
-
-        $user = User::find($user_id);
-
-        $user->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'profesion' => $data['profesion'],
-            'horario_inicio' => $data['horario_inicio'],
-            'horario_fin' => $data['horario_fin'],
-        ]);
-
-        /*if($user->isDirty('email')){
-
-            $user->email_verified_at= null;
-        }*/
-
-        $user->save();
-
-        if ($user->proveedor) {
-            $user->proveedor->update([
-                'profesion' => $data['profesion'],
-                'horario_inicio' => $data['horario_inicio'],
-                'horario_fin' => $data['horario_fin'],
-            ]);
-        }
-
-        return view('administrador.dashboard');
     }
 }

@@ -1,55 +1,53 @@
-Preguntar al editar turnos:
-Se cancelaran todas las reservas hechas a este servicio, Esta seguro que quiere continuar?
-Si, no, ver reservas;√√
-
-Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor √
-
-Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles √
-
-Hay que fijar bien las rutas y permisos crud de cada tipo de usuario
-
+RAMIRO{
 Datos de la empresa/servicios √
 Footers√
-Cambiar formulario de editar perfil
+dashboard de administrador√ (A MEJORAR);
+ver todas reservas√
+ver todos los servicios√
+ver todos los proveedores√ (A MEJORAR);
+editar detalles de negocio√ (A MEJORAR);
+crear nuevos (proveedores), √
+modificar datos de PROVEEDORES√
+formularios para crear proveedor√ (AGREGAR DATOS NUEVOS);
+el administrador puede cambiar las reservas√
+Administrador puede crear servicios(Cambiar ruta y datos que recibe)
+En la tabla de proveedores, al hacer click en servicios tendria que mostrar los servicios de ese proveedor
+}
 
-//----dashboard de administrador, ver todas reservas, ver todos los servicios, ver todos los proveedores
-editar detalles de negocio, crear nuevos (proveedores), modificar datos de PROVEEDORES
-QUE NO SE PUEDA editar LOS HORARIOS DE DISPONIBILIDAD
-formularios para crear (proveedor).
-
-listado de todos los servicios. con detalles de cada servicio, ver reservas, aceptar,rechazar turno
-el administrador puede cambiar las reservas, editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
-
-Vista publica (usuarios sin iniciar sesion)
-
+IGNACIO{
+Crear seeder de roles y permisos y un administrador √
+cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva) √ PROBAR
 arreglar migraciones de usuarios, falta telefono, apellido √
+AGREGAR UNA MIGRACION PARA EL ESTADO DE LOS usuarios, PONER observaciones√
+Arreglar formulario de registro de clientes
 Agregar datos nuevos al formulario de crear usuario
-
-Manejar el caso en el que no exista ningun detale de empresa
-
-
-Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad ?
-Cambiar los borrados de: Servicios desabilitaciones (observaciones y habilitado = false)
 Traer solo servicios habilidatos (para clientes)
-
-cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva)  √ PROBAR
-
-Para dar de baja o borrar un servicio se deben cancelar todas las reservas primero
+Manejar el caso en el que no exista ningun detale de empresa
+}
 
 
+THOMAS{
+Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor √
+Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles √
+Tabla de reservas, cambiar la visibilidad de actions a disabled
+editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
+Agregar boton de deshabilitar al servicio en tabla de servicios
+Al desabilitar se debe escribir una observacion
+Se debe mostrar la observacion como tooltip en desabilitado
+Cambiar formulario de editar perfil
 IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
-SIN ROL
-SIN ROL CLIENTE
-SIN ROL PROVEEDOR
-SIN ROL ADMINISTRADOR
-
-
-
-AGREGAR NOMBRE DE PROVEEDOR EN TABLA DE RESERVAS
-
-AGREGAR UNA MIGRACION PARA EL ESTADO DE LOS usuarios, PONER observaciones
-
+    SIN ROL
+    SIN ROL CLIENTE
+    SIN ROL PROVEEDOR
+    SIN ROL ADMINISTRADOR
 Mostrar reservas por marcar como completadas en dashboard de administrador y proveedor
-
 PAGINAS 400(Solicitud incorrecta), 403(No autorizado), 404(No encontrado), 500(Error del servidor)
+Traducir boludeces al español
+}
 
+
+
+
+Detalle de negocio agregar para poner logo
+Vista publica (usuarios sin iniciar sesion)
+Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad ?

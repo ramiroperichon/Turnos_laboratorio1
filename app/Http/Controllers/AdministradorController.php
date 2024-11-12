@@ -10,6 +10,7 @@ use App\Models\DetalleNegocio;
 use App\Models\Reserva;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Proveedor;
+use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 
 
@@ -26,7 +27,6 @@ class AdministradorController extends Controller
         $reservas = Reserva::all();
 
         return view('administrador.reservas', data: ['reservas' => $reservas]);
-
     }
     public function servicios()
     {
@@ -34,7 +34,6 @@ class AdministradorController extends Controller
         $servicios = Servicio::all();
 
         return view('administrador.servicios', compact('servicios'));
-
     }
     public function usuariosall()
     {
@@ -52,11 +51,13 @@ class AdministradorController extends Controller
 
     public function crearProveedor(Request $request)
     {
-        // drea un nuevo proveedor
         $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8'
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'profesion' => ['required', 'string', 'max:20'],
+            'horario_inicio' => ['required|date_format:H:i'],
+            'horario_fin' => ['required|date_format:H:i'],
         ]);
 
         $user = User::create([
@@ -73,8 +74,6 @@ class AdministradorController extends Controller
         ]);
 
         $user->assignRole('proveedor');
-
-        event(new Registered($user));
 
         return redirect()->route('administrador.proveedores')->with('success', 'Proveedor creado exitosamente');
     }
@@ -101,7 +100,6 @@ class AdministradorController extends Controller
         $detallenegocio = DetalleNegocio::first();
 
         return view('negocio.create', data: ['old' => $detallenegocio]);
-
     }
 
     public function editarServicios($idUsuario)
