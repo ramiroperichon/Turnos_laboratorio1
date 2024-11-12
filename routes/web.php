@@ -61,7 +61,7 @@ Route::group(['middleware' => ['role:administrador']], function () {
     Route::get('/administrador/proveedores', [AdministradorController::class, 'usuariosall'])->name('administrador.proveedores');
     Route::put('/administrador/modificarProveedor/{id}', [AdministradorController::class, 'modificarProveedor'])->name('administrador.modificarProveedor');
     Route::get('/administrador/crearProveedor', [ProveedorController::class, 'createProveedor'])->name('administrador.crearProveedor');
-    Route::post('/administrador/crearProveedor', [ProveedorController::class, 'store'])->name('administrador.crearProveedor');
+    Route::post('/administrador/crearProveedor', [ProveedorController::class, 'store'])->name('administrador.storeProveedor');
     Route::get('/administrador/editarServicios/{id}', [AdministradorController::class, 'editarServicios'])->name('administrador.editarServicios');
 });
 
