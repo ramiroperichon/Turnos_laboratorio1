@@ -45,16 +45,15 @@
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Inicio</label>
-                                <input type="time" id="incio_turno" name="incio_turno" min="05:00" value="08:00"
-                                    max="00:00" required
-                                    class="form-control @error('incio_turno') is-invalid @enderror"
+                                <input type="time" id="incio_turno" name="incio_turno" min="05:00" value="{{ old('incio_turno') }}"
+                                    max="00:00" required class="form-control @error('incio_turno') is-invalid @enderror"
                                     value="{{ old('incio_turno') }}" />
                                 <x-input-error :messages="$errors->get('incio_turno')" class="mt-2" />
                             </div>
                             <div class="col mt-3">
                                 <label>Fin</label>
-                                <input type="time" id="fin_turno" name="fin_turno" min="07:00" value="19:00"
-                                    required class="form-control @error('fin_turno') is-invalid @enderror"
+                                <input type="time" id="fin_turno" name="fin_turno" min="07:00" value="{{old('fin_turno')}}"
+                                 required class="form-control @error('fin_turno') is-invalid @enderror"
                                     value="{{ old('fin_turno') }}" />
                                 <x-input-error :messages="$errors->get('fin_turno')" class="mt-2" />
                             </div>

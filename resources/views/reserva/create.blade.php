@@ -9,7 +9,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('servicio.index') }}">Servicios</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('servicio.all') }}">Servicios</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Reservar</li>
             </ol>
         </nav>
