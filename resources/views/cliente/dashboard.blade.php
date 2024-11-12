@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                <a href="{{ route('servicio.index') }}" class="btn btn-info my-4">Ver todos</a>
+                                <a href="{{ route('servicio.all') }}" class="btn btn-info my-4">Ver todos</a>
                             </div>
                         </div>
                     </div>

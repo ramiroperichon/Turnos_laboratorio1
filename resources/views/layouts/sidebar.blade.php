@@ -54,7 +54,7 @@
                         </a>
                     </li>
                     <li class="nav-item menu-items">
-                        <a class="nav-link" href={{ route('servicio.index') }}>
+                        <a class="nav-link" href={{ route('servicio.all') }}>
                             <span class="menu-icon">
                                 <i class="mdi mdi-table-large"></i>
                             </span>
