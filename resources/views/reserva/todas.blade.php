@@ -19,10 +19,10 @@
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">
                         <div class="flex-col item-center">
-                        <div class="icon icon-box-info size-11 me-2">
-                            <span class="mdi mdi-calendar-multiple icon-item"></span>
+                            <div class="icon icon-box-info size-11 me-2">
+                                <span class="mdi mdi-calendar-multiple icon-item"></span>
+                            </div>
                         </div>
-                    </div>
                         <div class="flex-col">
                             @hasrole('proveedor')
                                 <h4 class="card-title text-start m-0"> Reservas
@@ -36,7 +36,7 @@
                             @endif
                         </div>
                     </div>
-                    <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+                        <livewire:reservas-page :id-servicio="$idServicio ?? null" />
                 </div>
             </div>
         </div>

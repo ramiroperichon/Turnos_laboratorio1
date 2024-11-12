@@ -88,7 +88,7 @@
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    {{-- <div class="modal-body">
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Nombre del servicio</label>
@@ -226,7 +226,7 @@
                                 </div>
                             </div>
                         @endif
-                    </div>
+                    </div> --}}
                     <div class="modal-footer">
                         <div class="d-flex justify-content-end gap-2">
                             <div class="flex">

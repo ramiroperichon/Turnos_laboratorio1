@@ -23,9 +23,4 @@ class Proveedor extends Model
         return $this->belongsTo(User::class, 'usuario_id');
     }
 
-    public function servicios()
-    {
-        return $this->hasMany(Servicio::class);
-    }
-    
 }

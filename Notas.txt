@@ -29,9 +29,10 @@ Manejar el caso en el que no exista ningun detale de empresa
 THOMAS{
 Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor √
 Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles √
-Tabla de reservas, cambiar la visibilidad de actions a disabled
+Tabla de reservas, cambiar la visibilidad de actions a disabled√
 editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
 Agregar boton de deshabilitar al servicio en tabla de servicios
+Calendario de reservas del proveedor solo debe traer reservas confirmadas
 Al desabilitar se debe escribir una observacion
 Se debe mostrar la observacion como tooltip en desabilitado
 Cambiar formulario de editar perfil

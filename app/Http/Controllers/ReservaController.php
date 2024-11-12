@@ -52,7 +52,7 @@ class ReservaController extends Controller
 
         $reservas = Reserva::where('servicio_id', $id)->get();
 
-        return view('reserva.create', ['servicio' => $selected, 'reservas' => $reservas ]);
+        return view('reserva.create', ['servicio' => $selected, 'reservas' => $reservas]);
     }
 
     /**
@@ -60,6 +60,12 @@ class ReservaController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->has('horario_id')) {
+            $horarioId = explode(',', $request->input('horario_id'));
+        } else {
+            Toaster::error('Debe seleccionar un horario!');
+            return redirect()->back()->withInput();
+        }
         $horarioId = explode(',', $request->input('horario_id'));
 
         $validator = Validator::make($request->all(), [
@@ -71,9 +77,10 @@ class ReservaController extends Controller
             'fecha_reserva.after_or_equal' => 'La hora de fin no puede ser menor a la de inicio!',
         ]);
         $reservina = Reserva::where('hora_inicio', '=', $horarioId[0])
-                    ->where('hora_fin', '=', $horarioId[1])
-                    ->where('servicio_id', '=', $request->input('servicio_id'))
-                    ->get();
+            ->where('hora_fin', '=', $horarioId[1])
+            ->where('servicio_id', '=', $request->input('servicio_id'))
+            ->where('fecha_reserva', '=', $request->input('fecha_reserva'))
+            ->get();
         if ($reservina->count() > 0) {
             Toaster::error('Ya existe una reserva con el mismo horario');
             return redirect()->route('reserva.create', $request->input('servicio_id'));

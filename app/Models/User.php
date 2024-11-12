@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     public function reserva()
     {
-        return $this->hasMany(Reserva::class);
+        return $this->hasMany(Reserva::class, 'cliente_id');
     }
 
     public function cliente()
@@ -61,9 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Proveedor::class, 'usuario_id');
     }
-    public function servicio()
+    public function servicios()
     {
-        return $this->hasMany(Servicio::class);
+        return $this->hasMany(Servicio::class, 'proveedor_id');
     }
 
 

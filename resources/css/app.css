@@ -44,3 +44,19 @@
 .fi-ta-header-cell-label{
     @apply text-[#6ea8fe] dark:text-[#6ea8fe] !important;
 }
+
+@media (min-width: 1278px) {
+    .fi-pagination:not(.fi-simple) > .fi-pagination-next-btn {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1278px) {
+    .fi-pagination:not(.fi-simple) > .fi-pagination-previous-btn {
+        display: none !important;
+    }
+}
+
+.btn-group > .btn-check:checked + .btn {
+    z-index: 0 !important;
+}

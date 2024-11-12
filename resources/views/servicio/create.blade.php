@@ -45,15 +45,17 @@
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Inicio</label>
-                                <input type="time" id="incio_turno" name="incio_turno" min="05:00" value="{{ old('incio_turno') }}"
-                                    max="00:00" required class="form-control @error('incio_turno') is-invalid @enderror"
+                                <input type="time" id="incio_turno" name="incio_turno" min="05:00"
+                                    value="{{ old('incio_turno') }}" max="00:00" required
+                                    class="form-control @error('incio_turno') is-invalid @enderror"
                                     value="{{ old('incio_turno') }}" />
                                 <x-input-error :messages="$errors->get('incio_turno')" class="mt-2" />
                             </div>
                             <div class="col mt-3">
                                 <label>Fin</label>
-                                <input type="time" id="fin_turno" name="fin_turno" min="07:00" value="{{old('fin_turno')}}"
-                                 required class="form-control @error('fin_turno') is-invalid @enderror"
+                                <input type="time" id="fin_turno" name="fin_turno" min="07:00"
+                                    value="{{ old('fin_turno') }}" required
+                                    class="form-control @error('fin_turno') is-invalid @enderror"
                                     value="{{ old('fin_turno') }}" />
                                 <x-input-error :messages="$errors->get('fin_turno')" class="mt-2" />
                             </div>
@@ -74,13 +76,14 @@
                             </div>
                             <div class="col">
                                 <label class="mb-2 px-2 row">Dias dispobible</label>
-                                <div class="btn-group flex-wrap mt-2" role="group"
-                                    aria-label="Basic checkbox toggle button group">
+                                <div class="btn-group flex-wrap mt-2 @error('dias_disponible')border-b-4 border-red-500 @enderror rounded-none"
+                                    role="group" aria-label="Basic checkbox toggle button group">
                                     @foreach (['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'] as $day)
-                                        <input type="checkbox" class="btn-check" value="{{ $day }}"
-                                            name="dias_disponible[]" id="btncheck{{ $day }}"
-                                            autocomplete="off">
-                                        <label class="btn btn-outline-info"
+                                        <input type="checkbox" class="btn-check"
+                                            {{ in_array($day, old('dias_disponible', [])) ? 'checked' : '' }}
+                                            value="{{ $day }}" name="dias_disponible[]"
+                                            id="btncheck{{ $day }}" autocomplete="off">
+                                        <label class="btn btn-outline-info mb-0"
                                             for="btncheck{{ $day }}">{{ $day }}</label>
                                     @endforeach
                                 </div>

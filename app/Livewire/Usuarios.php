@@ -21,6 +21,7 @@ use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Facades\DB;
 use Masmerise\Toaster\Toaster;
 
 class Usuarios extends Component implements HasForms, HasTable
@@ -49,34 +50,13 @@ class Usuarios extends Component implements HasForms, HasTable
                 TextColumn::make('usuario.name')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('servicios')
-                    ->getStateUsing(fn($record) => $record->servicios()->count())
+/*                     TextColumn::make('Servicios')
+                    ->getStateUsing(fn($record) => $record->usuario->servicios()->count())
                     ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->withCount('servicios')
-                            ->orderBy('servicios_count', $direction);
-                    }),
-                TextColumn::make('profesion')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('horario_inicio')
-                    ->getStateUsing(fn($record) => ('' .
-                        Carbon::parse($record->horario_inicio)->format('H:i') .
-                        " a " .
-                        Carbon::parse($record->horario_fin)->format('H:i')))
-                    ->sortable()
-                    ->label('Horarios'),
-                TextColumn::make('id')
-                    ->label('#')
-                    ->sortable(),
-                TextColumn::make('usuario.name')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('servicios')
-                    ->getStateUsing(fn($record) => $record->servicios()->count())
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->withCount('servicios')
-                            ->orderBy('servicios_count', $direction);
-                    }),
+                        return $query
+                            ->withCount('usuario.servicios')
+                            ->orderBy('usuario_servicios_count', $direction);
+                    }), */
                 TextColumn::make('profesion')
                     ->sortable()
                     ->searchable(),
