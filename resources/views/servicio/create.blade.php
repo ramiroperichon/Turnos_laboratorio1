@@ -38,22 +38,23 @@
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripcion</label>
-                            <textarea class="form-control @error('descripcion') is-invalid @enderror col-lg-6" id="descripcion" placeholder="Ingrese la descripcion del servicio..." required
-                                name="descripcion" rows="4">{{ old('descripcion') }}</textarea>
+                            <textarea class="form-control @error('descripcion') is-invalid @enderror col-lg-6" id="descripcion"
+                                placeholder="Ingrese la descripcion del servicio..." required name="descripcion" rows="4">{{ old('descripcion') }}</textarea>
                             <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
                         <div class="form-group row gx-5">
                             <div class="col mt-3">
                                 <label>Inicio</label>
                                 <input type="time" id="incio_turno" name="incio_turno" min="05:00" value="08:00"
-                                    max="00:00" required class="form-control @error('incio_turno') is-invalid @enderror"
+                                    max="00:00" required
+                                    class="form-control @error('incio_turno') is-invalid @enderror"
                                     value="{{ old('incio_turno') }}" />
                                 <x-input-error :messages="$errors->get('incio_turno')" class="mt-2" />
                             </div>
                             <div class="col mt-3">
                                 <label>Fin</label>
                                 <input type="time" id="fin_turno" name="fin_turno" min="07:00" value="19:00"
-                                    max="20:00" required class="form-control @error('fin_turno') is-invalid @enderror"
+                                    required class="form-control @error('fin_turno') is-invalid @enderror"
                                     value="{{ old('fin_turno') }}" />
                                 <x-input-error :messages="$errors->get('fin_turno')" class="mt-2" />
                             </div>
@@ -99,7 +100,7 @@
 
     <script>
         document.querySelector(".number-input").addEventListener("keypress", function(
-        evt) { //evita poder colocar la e y los signos en los input de numeros
+            evt) { //evita poder colocar la e y los signos en los input de numeros
             if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }

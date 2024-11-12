@@ -4,10 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Proveedor;
 use App\Models\User;
-use App\Models\Servicio;
+use App\Services\Validators\CheckServicioFinSchedule;
+use App\Services\Validators\CheckServicioInicioSchedule;
 use Carbon\Carbon;
-use Faker\Provider\ar_EG\Text;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables;
@@ -21,8 +22,6 @@ use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ViewColumn;
-use Filament\Tables\Filters\Filter;
 use Masmerise\Toaster\Toaster;
 
 class Usuarios extends Component implements HasForms, HasTable
@@ -45,15 +44,28 @@ class Usuarios extends Component implements HasForms, HasTable
         ])
             ->query($query)
             ->columns([
-                TextColumn::make('id')->label('#')->sortable(),
-                TextColumn::make('usuario.name')->sortable()->searchable(),
-                TextColumn::make('servicios')->getStateUsing(fn($record) => Servicio::where('proveedor_id', $record->usuario_id)->count()),
-                TextColumn::make('profesion')->sortable()->searchable(),
-                TextColumn::make('horario_inicio')->getStateUsing(fn($record) => ('' .
-                    Carbon::parse($record->horario_inicio)->format('H:i') .
-                    " a " .
-                    Carbon::parse($record->horario_fin)->format('H:i')))
-                    ->sortable()->label('Horarios'),
+                TextColumn::make('id')
+                    ->label('#')
+                    ->sortable(),
+                TextColumn::make('usuario.name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('servicios')
+                    ->getStateUsing(fn($record) => $record->servicios()->count())
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->withCount('servicios')
+                            ->orderBy('servicios_count', $direction);
+                    }),
+                TextColumn::make('profesion')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('horario_inicio')
+                    ->getStateUsing(fn($record) => ('' .
+                        Carbon::parse($record->horario_inicio)->format('H:i') .
+                        " a " .
+                        Carbon::parse($record->horario_fin)->format('H:i')))
+                    ->sortable()
+                    ->label('Horarios'),
             ])
             ->filters([
                 //
@@ -77,15 +89,30 @@ class Usuarios extends Component implements HasForms, HasTable
     {
         return [
             ActionGroup::make([
-                Action::make('crear')->icon('heroicon-o-plus-circle')->color('success'),
+                Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success'),
                 Action::make('dar de baja')->icon('heroicon-o-x-circle')->color('danger'),
                 Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url('/administrador/servicios'),
-                EditAction::make()
-                    ->form([
-                        TextInput::make('profesion')->required(),
-                        TextInput::make('horario_inicio')->required(),
-                        TextInput::make('horario_fin')->required()
-                    ])
+                EditAction::make()->color('warning')
+                    ->form(function ($record) {
+                        return [
+                            TextInput::make('profesion')
+                                ->required()
+                                ->maxLength(50),
+                            TimePicker::make('horario_inicio')
+                                ->required()
+                                ->rules([
+                                    new CheckServicioInicioSchedule($record)
+                                ])
+                                ->seconds(false),
+                            TimePicker::make('horario_fin')
+                                ->required()
+                                ->after('horario_inicio')
+                                ->rules([
+                                    new CheckServicioFinSchedule($record)
+                                ])
+                                ->seconds(false),
+                        ];
+                    })
                     ->action(function ($record, $data) {
 
                         $record->update($data);
@@ -96,35 +123,4 @@ class Usuarios extends Component implements HasForms, HasTable
         ];
     }
 
-    protected static function updateProveedor(array $data, $user_id)
-    {
-
-        $user = User::find($user_id);
-
-        $user->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'profesion' => $data['profesion'],
-            'horario_inicio' => $data['horario_inicio'],
-            'horario_fin' => $data['horario_fin'],
-        ]);
-
-        /*if($user->isDirty('email')){
-
-            $user->email_verified_at= null;
-        }*/
-
-        $user->save();
-
-        if ($user->proveedor) {
-            $user->proveedor->update([
-                'profesion' => $data['profesion'],
-                'horario_inicio' => $data['horario_inicio'],
-                'horario_fin' => $data['horario_fin'],
-            ]);
-        }
-
-        return view('administrador.dashboard');
-
-    }
 }
