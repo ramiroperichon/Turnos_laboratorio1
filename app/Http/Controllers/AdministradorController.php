@@ -10,6 +10,7 @@ use App\Models\DetalleNegocio;
 use App\Models\Reserva;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Proveedor;
+use Illuminate\Auth\Events\Registered;
 
 
 class AdministradorController extends Controller
@@ -72,6 +73,8 @@ class AdministradorController extends Controller
         ]);
 
         $user->assignRole('proveedor');
+
+        event(new Registered($user));
 
         return redirect()->route('administrador.proveedores')->with('success', 'Proveedor creado exitosamente');
     }
