@@ -6,11 +6,8 @@ use App\Models\Proveedor;
 use App\Models\User;
 use App\Services\Validators\CheckServicioFinSchedule;
 use App\Services\Validators\CheckServicioInicioSchedule;
-use App\Services\Validators\CheckServicioFinSchedule;
-use App\Services\Validators\CheckServicioInicioSchedule;
 use Carbon\Carbon;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -139,20 +136,6 @@ class Usuarios extends Component implements HasForms, HasTable
                         ];
                     })
                     ->action(function ($record, $data) {
-                        /*                         $nuevoInicio = Carbon::createFromTimeString($data['horario_inicio']);
-                        $nuevoFin = Carbon::createFromTimeString($data['horario_fin']);
-
-                        $serviciosOutside = Servicio::where('proveedor_id', $record->usuario_id)->where(function ($query) use ($nuevoInicio, $nuevoFin) {
-                            $query->whereTime('incio_turno', '<', $nuevoInicio->format('H:i:s'))
-                                ->orWhereTime('fin_turno', '>', $nuevoFin->format('H:i:s'));
-                        })
-                            ->exists();
-
-
-                        if ($serviciosOutside) {
-                            Toaster::error('Hay un servicio que esta fuera de este horario');
-                            return;
-                        } */
 
                         $record->update($data);
 
