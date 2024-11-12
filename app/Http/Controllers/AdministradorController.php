@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\DetalleNegocio;
 use App\Models\Reserva;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Proveedor;
+
 
 class AdministradorController extends Controller
 {
@@ -58,7 +61,14 @@ class AdministradorController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => Hash::make($request->password)
+        ]);
+
+        Proveedor::create([
+            'usuario_id' => $user->id,
+            'profesion' => $request->profesion,
+            'horario_inicio' => $request->horario_inicio,
+            'horario_fin' => $request->horario_fin
         ]);
 
         $user->assignRole('proveedor');
