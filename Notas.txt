@@ -30,12 +30,11 @@ THOMAS{
 Checkear que no existan servicios con el mismo horario los mismos dias del mismo proveedor √
 Checkear al modificar si se toco el horario, si no fue asi entonces no cambiar franjas disponibles √
 Tabla de reservas, cambiar la visibilidad de actions a disabled√
-editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)
-Agregar boton de deshabilitar al servicio en tabla de servicios
-Calendario de reservas del proveedor solo debe traer reservas confirmadas
-Al desabilitar se debe escribir una observacion
-Se debe mostrar la observacion como tooltip en desabilitado
-Cambiar formulario de editar perfil
+editar los servicios(dar de baja, modificar horarios, dar de baja el servicio)√
+Agregar boton de deshabilitar al servicio en tabla de servicios√
+Al desabilitar se debe escribir una observacion√
+Se debe mostrar la observacion como tooltip en desabilitado√
+Cambiar formulario de editar perfil√
 IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
     SIN ROL
     SIN ROL CLIENTE
@@ -43,7 +42,9 @@ IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
     SIN ROL ADMINISTRADOR
 Mostrar reservas por marcar como completadas en dashboard de administrador y proveedor
 PAGINAS 400(Solicitud incorrecta), 403(No autorizado), 404(No encontrado), 500(Error del servidor)
-Traducir boludeces al español
+Traducir boludeces al español:
+Login√
+Register
 }
 
 

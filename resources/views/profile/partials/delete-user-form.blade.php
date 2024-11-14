@@ -1,10 +1,10 @@
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+<section class="space-y-6 mt-4 border-top border-gray-200 dark:border-gray-700">
+    <header class="mt-3">
+        <h4 class="card-title">
             {{ __('Delete Account') }}
-        </h2>
+        </h4>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p class="card-description">
             {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
         </p>
     </header>

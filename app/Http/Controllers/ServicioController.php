@@ -67,7 +67,7 @@ class ServicioController extends Controller
                 'precio' => 'required|numeric|min:1',
                 'incio_turno' => ['required', 'date_format:H:i', new IsInRange($user->proveedor->horario_inicio, $user->proveedor->horario_fin)],
                 'fin_turno' => 'required|date_format:H:i|after:incio_turno',
-                'duracion' => 'required|integer|min:10|max:' . $differenceInMinutes,
+                'duracion' => 'required|integer|min:5|max:' . $differenceInMinutes,
                 'dias_disponible' => ['required', 'array', 'min:1', new CheckAvailableDays($user->id)],
                 'dias_disponible.*' => 'in:Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo',
             ],

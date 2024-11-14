@@ -4,7 +4,7 @@
 
 <div class="flex-row">
     <p class="group cursor-pointer font-weight-medium text-muted">
-        Dias seleccionados:
+        Dias actuales del servicio:
     </p>
     <div class="flex flex-wrap items-center justify-center">
         @foreach ($days as $day)

@@ -38,7 +38,7 @@
 }
 
 .fc-v-event{
-    @apply subpixel-antialiased hover:brightness-105 hover:scale-105 ease-in-out duration-100 transition-all
+    @apply subpixel-antialiased hover:brightness-105 ease-in-out duration-100 transition-all
 }
 
 .fi-ta-header-cell-label{

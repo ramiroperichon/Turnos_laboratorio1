@@ -11,11 +11,11 @@ use Carbon\Carbon;
 class CheckServicioInicioSchedule implements ValidationRule, DataAwareRule
 {
     protected $data = [];
-    protected $record;
+    protected $user_id;
 
-    public function __construct($record)
+    public function __construct($user_id)
     {
-        $this->record = $record;
+        $this->user_id = $user_id;
     }
 
     public function setData(array $data)
@@ -28,7 +28,7 @@ class CheckServicioInicioSchedule implements ValidationRule, DataAwareRule
     {
         $nuevoInicio = Carbon::createFromTimeString($value);
 
-        $serviciosOutside = Servicio::where('proveedor_id', $this->record->usuario_id)->where(function ($query) use ($nuevoInicio) {
+        $serviciosOutside = Servicio::where('proveedor_id', $this->user_id)->where(function ($query) use ($nuevoInicio) {
             $query->whereTime('incio_turno', '<', $nuevoInicio->format('H:i:s'));
         })
             ->exists();

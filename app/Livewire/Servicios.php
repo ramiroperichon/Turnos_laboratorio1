@@ -2,14 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Forms\Components\DaysRadioSelector;
+
 use App\Models\Servicio;
 use App\Services\ServicioService;
+use App\Services\Validators\CheckAvailableDays;
 use App\Services\Validators\IsInRange;
 use Carbon\Carbon;
-use Doctrine\DBAL\Schema\View;
-use Faker\Provider\ar_EG\Text;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Grid as ComponentsGrid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -41,11 +39,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Masmerise\Toaster\Toaster;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Enums\ActionsPosition;
 
 class Servicios extends Component implements HasTable, HasForms
 {
@@ -165,10 +161,15 @@ class Servicios extends Component implements HasTable, HasForms
             EditAction::make()
                 ->extraAttributes(['class' => 'place-self-center'])
                 ->form(function ($record) {
+                    $canEdit = true;
+                    if ($record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() == 0) {
+                        $canEdit = false;
+                    }
                     return [
                         ComponentsSplit::make([
                             TextInput::make('nombre')
                                 ->required()
+                                ->minLength(5)
                                 ->maxLength(30)
                                 ->label('Nombre'),
                             TextInput::make('precio')
@@ -182,25 +183,23 @@ class Servicios extends Component implements HasTable, HasForms
                         ]),
                         Textarea::make('descripcion')
                             ->required()
+                            ->minLength(5)
                             ->maxLength(255)
                             ->label('Descripcion'),
                         TimePicker::make('incio_turno')
-                            ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                            ->disabled($canEdit)
                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
                             ->required()
-                            /*                             ->rules([
-                                new IsInRange($record->proveedor->horario_inicio, $record->proveedor->horario_fin),
-                            ]) */
+                            ->rules([
+                                new IsInRange($record->proveedor->proveedor->horario_inicio, $record->proveedor->proveedor->horario_fin, true),
+                            ])
                             ->seconds(false)
                             ->label('Horario Inicio'),
                         TimePicker::make('fin_turno')
-                            ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                            ->disabled($canEdit)
                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
                             ->required()
                             ->after('incio_turno')
-                            /*                             ->rules([
-                                new IsInRange($record->proveedor->horario_inicio, $record->proveedor->horario_fin),
-                            ]) */
                             ->seconds(false)
                             ->label('Horario Fin'),
                         ComponentsGrid::make([
@@ -211,20 +210,24 @@ class Servicios extends Component implements HasTable, HasForms
                             ->schema([
                                 TextInput::make('duracion')
                                     ->required()
-                                    ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                                    ->disabled($canEdit)
                                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
                                     ->numeric()
                                     ->suffix('Minutos')
-                                    ->minValue(10)
-                                    ->maxValue(240)
+                                    ->minValue(5)
+                                    ->maxValue(function (Get $get) {
+                                        $inicio = \Carbon\Carbon::createFromFormat('H:i', $get('incio_turno'));
+                                        $fin = \Carbon\Carbon::createFromFormat('H:i', $get('fin_turno'));
+                                        $differenceInMinutes = $inicio->diffInMinutes($fin);
+                                        return $differenceInMinutes;
+                                    })
                                     ->label('Duracion')
                             ]),
                         ViewField::make('dias_disponible')
                             ->view('components.daysselected'),
                         Select::make('dias_disponible')
                             ->multiple()
-                            ->required()
-                            ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
+                            ->disabled($canEdit)
                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Solo puede ser editado si no hay reservas pendientes o confirmadas')
                             ->options([
                                 'Lunes' => 'Lunes',
@@ -235,13 +238,21 @@ class Servicios extends Component implements HasTable, HasForms
                                 'Sabado' => 'Sabado',
                                 'Domingo' => 'Domingo',
                             ])
+                            ->searchable(true)
+                            ->minItems(fn() => !$canEdit ? 1 : 0)
+                            ->required(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() < 0)
+                            ->rules([
+                                !$canEdit ? new CheckAvailableDays($record->proveedor_id, $record->id, true) : '',
+                            ])
                             ->label('Dias Disponibles'),
                     ];
                 })
                 ->modalWidth(MaxWidth::ExtraLarge)
                 ->slideOver()
                 ->action(function ($record, $data) {
-                    dd($data);
+                    if (isset($data['dias_disponible'])) {
+                        $data['dias_disponible'] = implode(',', $data['dias_disponible']);
+                    }
                     $record->update($data);
                     Toaster::success('Servicio actualizado correctamente');
                 })

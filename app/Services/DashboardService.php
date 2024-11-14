@@ -13,10 +13,10 @@ class DashboardService
         foreach ($events as $event) {
             switch ($event->estado) {
                 case 'Confirmado':
-                    $eventColor = '#02a147';
+                    $eventColor = '#00d25b';
                     break;
                 case 'Pendiente':
-                    $eventColor = '#00d25b';
+                    $eventColor = '#8f5fe8';
                     break;
                 case 'Cancelado':
                     $eventColor = '#fc424a';

@@ -29,8 +29,15 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+
+        $request->validate([
+            'name' => 'required|min:2|max:50',
+            'last_name' => 'required|min:2|max:50',
+            'phone' => 'required|min:10|max:15',
+        ]);
+
         $user = $request->user();
-        $user->fill($request->only(['name', 'email']));
+        $user->fill($request->only(['name', 'last_name', 'email', 'phone']));
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
@@ -42,9 +49,8 @@ class ProfileController extends Controller
             $request->validate(
                 [
                     'profesion' => 'required|max:50',
-                    'horario_inicio' => ['required', 'date_format:H:i', new CheckServicioInicioSchedule($user->id)],
-                    'horario_fin' => 'required|date_format:H:i|after:horario_inicio',
-                    new CheckServicioFinSchedule($user->id),
+                    'horario_inicio' => ['required', new CheckServicioInicioSchedule($user->id)],
+                    'horario_fin' => ['required', 'after:horario_inicio', new CheckServicioFinSchedule($user->id)],
                 ],
                 [
                     'horario_fin.after' => 'La hora de fin no puede ser menor a la de inicio!'
