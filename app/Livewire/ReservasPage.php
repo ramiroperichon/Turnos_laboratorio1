@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Livewire\Component;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Grouping\Group;
 use Masmerise\Toaster\Toaster;
 
 class ReservasPage extends Component implements HasTable, HasForms
@@ -79,8 +80,10 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->weight(FontWeight::Bold),
                 TextColumn::make('servicio.proveedor.name')
                     ->label('Proveedor')
-                    ->sortable()
+                    ->getStateUsing(fn($record) => $record->servicio->proveedor->name . ' ' . $record->servicio->proveedor->last_name)
+                    ->sortable(['servicio.proveedor.name', 'servicio.proveedor.last_name'])
                     ->searchable()
+                    ->visible(auth()->user()->hasRole('administrador'))
                     ->toggleable()
                     ->width('5%')
                     ->color(Color::hex('#6c7293')),
@@ -108,6 +111,11 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->extraAttributes(['class' => 'text-green-500'])
                     ->grow(false),
             ])
+            ->groups([
+                Group::make('estado')
+                    ->titlePrefixedWithLabel(false),
+            ])
+            ->groupingSettingsInDropdownOnDesktop(true)
             ->actions(static::getActions())->actionsColumnLabel("Acciones")
             ->bulkActions(static::getBulkActions())
             ->headerActions(static::getHeaderActions())
@@ -228,9 +236,10 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->deselectRecordsAfterCompletion(),
             ])
                 ->tooltip('Seleccion')
-                ->icon('heroicon-c-adjustments-horizontal')
-                ->iconButton()
+                ->icon('heroicon-c-ellipsis-vertical')
                 ->iconSize(IconSize::Large)
+                ->label('Seleccion')
+                ->iconButton()
                 ->color('secondary'),
         ];
     }
@@ -257,11 +266,12 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->modalDescription('Esta seguro que quiere borrar todas las reservas canceladas?
                          Esta accion no se puede deshacer')
                     ->modalSubmitActionLabel('Borrar'),
-            ])->color('primary')
+            ])
+                ->color('primary')
                 ->tooltip('Borrar reservas')
                 ->icon('heroicon-o-trash')
-                ->button()
-                ->iconButton()
+                ->link()
+                ->label('Limpieza')
         ];
     }
 

@@ -12,6 +12,7 @@ formularios para crear proveedor√ (AGREGAR DATOS NUEVOS);
 el administrador puede cambiar las reservas√
 Administrador puede crear servicios(Cambiar ruta y datos que recibe)
 En la tabla de proveedores, al hacer click en servicios tendria que mostrar los servicios de ese proveedor
+Tabla de clientes: Dar de baja/Alta, ver detalles
 }
 
 IGNACIO{
@@ -23,6 +24,12 @@ Arreglar formulario de registro de clientes
 Agregar datos nuevos al formulario de crear usuario
 Traer solo servicios habilidatos (para clientes)
 Manejar el caso en el que no exista ningun detale de empresa
+IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
+    SIN ROL
+    SIN ROL CLIENTE
+    SIN ROL PROVEEDOR
+    SIN ROL ADMINISTRADOR
+Pagina de detalles de cliente y proveedor
 }
 
 
@@ -35,12 +42,6 @@ Agregar boton de deshabilitar al servicio en tabla de servicios√
 Al desabilitar se debe escribir una observacion√
 Se debe mostrar la observacion como tooltip en desabilitado√
 Cambiar formulario de editar perfil√
-IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
-    SIN ROL
-    SIN ROL CLIENTE
-    SIN ROL PROVEEDOR
-    SIN ROL ADMINISTRADOR
-Mostrar reservas por marcar como completadas en dashboard de administrador y proveedor
 PAGINAS 400(Solicitud incorrecta), 403(No autorizado), 404(No encontrado), 500(Error del servidor)
 Traducir boludeces al español:
 Login√

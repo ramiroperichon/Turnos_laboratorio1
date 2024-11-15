@@ -229,4 +229,15 @@ class ServicioService
             Toaster::error('Error al deshabilitar el servicio: ' . $e->getMessage());
         }
     }
+
+    public function cancelAllReservas($idServicio)
+    {
+        try {
+            foreach (Reserva::where('servicio_id', $idServicio)->whereIn('estado', ['Pendiente', 'Confirmado'])->get() as $reserva) {
+                $this->updateReserva($reserva, 'Cancelado');
+            }
+        } catch (Exception $e) {
+            Toaster::error('Error al cancelar las reservas del servicio: ' . $e->getMessage());
+        }
+    }
 }

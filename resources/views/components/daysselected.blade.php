@@ -10,7 +10,7 @@
         @foreach ($days as $day)
                 @if (in_array($day, explode(',', $getRecord()->dias_disponible)))
                     <div
-                        class="m-0 py-0.5 bg-primary-400 bg-opacity-10 px-1.5 border-2 border-[#4db1ee]/30  text-sm text-primary">
+                        class="bg-primary-400 bg-opacity-10 px-2 py-1 mx-1 border-2 font-medium border-[#4db1ee]/30 rounded-md text-sm text-primary-400">
                         {{ $day }}
                     </div>
                 @endif
