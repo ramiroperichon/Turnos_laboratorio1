@@ -48,6 +48,6 @@ class DashboardController extends Controller
     }
 
     public function public(){
-        return view('welcome', ['servicios' => Servicio::all()]);
+        return view('dashboard');
     }
 }
