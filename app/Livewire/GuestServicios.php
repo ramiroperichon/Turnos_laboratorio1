@@ -25,13 +25,12 @@ class GuestServicios extends Component
     public function render()
     {
         $query = Servicio::query();
-
-            $query->where('nombre', 'like', '%' . $this->search . '%')
+        $query->where('habilitado', "=", true);
+        $query->where('nombre', 'like', '%' . $this->search . '%')
             ->orWhere('descripcion', 'like', '%' . $this->search . '%');
 
-
         return view('livewire.guest-servicios', [
-            'servicios' => $query->where('habilitado', true)->cursorPaginate($this->itemAmmount)
+            'servicios' => $query->where('habilitado', "=", true)->cursorPaginate($this->itemAmmount)
         ]);
     }
 }

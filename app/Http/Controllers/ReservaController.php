@@ -49,6 +49,10 @@ class ReservaController extends Controller
     public function create(int $id)
     {
         $selected = Servicio::firstWhere('id', $id);
+        if($selected->habilitado == false){
+            Toaster::error('Este servicio no está disponible');
+            return redirect()->back();
+        }
 
         $reservas = Reserva::where('servicio_id', $id)->get();
 
@@ -98,7 +102,7 @@ class ReservaController extends Controller
                 'hora_fin' => $horarioId[1]
             ]);
             Toaster::success('Se creo correctamente la reserva');
-            return redirect()->route('servicios.index');
+            return redirect()->route('servicios.all');
         } catch (Exception $e) {
             return redirect('/')->with('error', 'Error al crear la reserva');
         }
@@ -157,7 +161,6 @@ class ReservaController extends Controller
 
     public function destroy(Reserva $reserva)
     {
-        //$this->servicioService->updateFranjaStateOnDelete($reserva->horario_id);
         try {
             $reserva->delete();
             Toaster::success('Se borro correctamente la reserva');

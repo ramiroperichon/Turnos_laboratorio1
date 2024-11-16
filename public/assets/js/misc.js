@@ -35,11 +35,19 @@
       }
     }
 
-    var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
+    var pathSegments = location.pathname.split("/").filter(Boolean); // Remove empty segments
+    var current = pathSegments.slice(-1)[0]; // Get the last segment
+
+    // Check if the current segment is a number
+    if (!isNaN(current)) {
+      current = pathSegments.slice(-2, -1)[0] || ''; // Use the second-to-last segment if it exists
+    }
+
+    // Apply the active class logic
     $('.nav li a', sidebar).each(function() {
       var $this = $(this);
       addActiveClass($this);
-    })
+    });
 
     $('.horizontal-menu .nav li a').each(function() {
       var $this = $(this);

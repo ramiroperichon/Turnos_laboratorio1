@@ -33,6 +33,19 @@ class AppServiceProvider extends ServiceProvider
             'secondary' => Color::hex('#8f5fe8'),
         ]);
         $detallenegocioProviders = DetalleNegocio::first();
+        if(!$detallenegocioProviders){
+            $detallenegocioProviders = DetalleNegocio::create([
+                'nombre' => 'Corona',
+                'email' => 'corona@corona.com',
+                'telefono' => '3777332211',
+                'latitud' => '-29.147204842364836',
+                'logitud' => '-59.26232039075694',
+                'Iurl' => 'https://www.instagram.com/maruucorona/',
+                'Furl' => 'https://www.facebook.com/CoronaAustria/?locale=es_LA',
+                'Turl' => 'https://www.tiktok.com/@marvinmelgar145?lang=es',
+                'Xurl' => 'https://x.com/Corona_MX',
+            ]);
+        }
 
         View::share('detallenegocioProviders', $detallenegocioProviders);
     }

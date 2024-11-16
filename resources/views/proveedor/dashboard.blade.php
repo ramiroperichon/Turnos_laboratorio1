@@ -125,6 +125,7 @@
                 </div>
             </div>
         </div>
+        <livewire:reserva-detail-modal />
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -133,6 +134,26 @@
             console.log(eventsj);
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
+
+                eventClick: function(info) {
+                    var eventObj = info.event;
+
+                    if (eventObj.url) {
+                        alert(
+                            'Clicked ' + eventObj.title + '.\n' +
+                            'Will open ' + eventObj.url + ' in a new tab'
+                        );
+
+                        window.open(eventObj.url);
+
+                        info.jsEvent
+                            .preventDefault();
+                    } else {
+                        Livewire.dispatch('call-livewire-method', {
+                            id: eventObj.id
+                        });
+                    }
+                },
 
                 locale: 'es',
                 slotEventOverlap: false,
@@ -146,7 +167,7 @@
                 headerToolbar: {
                     left: 'prev,next',
                     center: 'title',
-                    right: 'timeGridWeek,timeGridDay' // user can switch between the two
+                    right: 'timeGridWeek,timeGridDay'
                 },
                 buttonText: {
                     today: 'Hoy',

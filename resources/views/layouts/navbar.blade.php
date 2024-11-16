@@ -26,6 +26,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                     aria-labelledby="profileDropdown">
+                    @hasanyrole(['cliente', 'proveedor'])
                     <h6 class="p-3 mb-0">{{__('Profile')}}</h6>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item" href="{{ route('profile.edit') }}">
@@ -38,6 +39,7 @@
                             <p class="preview-subject mb-1">{{__('Settings')}}</p>
                         </div>
                     </a>
+                    @endhasanyrole
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

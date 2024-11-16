@@ -12,7 +12,6 @@ formularios para crear proveedor√ (AGREGAR DATOS NUEVOS);
 el administrador puede cambiar las reservas√
 Administrador puede crear servicios(Cambiar ruta y datos que recibe)
 En la tabla de proveedores, al hacer click en servicios tendria que mostrar los servicios de ese proveedor
-Tabla de clientes: Dar de baja/Alta, ver detalles
 }
 
 IGNACIO{
@@ -20,16 +19,17 @@ Crear seeder de roles y permisos y un administrador √
 cuando se cambia la reserva(se tendria que mandar notificacion al cliente que se cambio la reserva) √ PROBAR
 arreglar migraciones de usuarios, falta telefono, apellido √
 AGREGAR UNA MIGRACION PARA EL ESTADO DE LOS usuarios, PONER observaciones√
+Vista publica (usuarios sin iniciar sesion)√
 Arreglar formulario de registro de clientes
 Agregar datos nuevos al formulario de crear usuario
-Traer solo servicios habilidatos (para clientes)
-Manejar el caso en el que no exista ningun detale de empresa
+Traer solo servicios habilidatos (para clientes)√
+Manejar el caso en el que no exista ningun detale de empresa√
+Mejorar vista de cliente(agregar tabla de reservas, mejorar lista de servicios)
 IMPLEMENTAR REDIRECCIONAMIENTO DE LAS RUTAS:
     SIN ROL
     SIN ROL CLIENTE
     SIN ROL PROVEEDOR
     SIN ROL ADMINISTRADOR
-Pagina de detalles de cliente y proveedor
 }
 
 
@@ -52,5 +52,3 @@ Register
 
 
 Detalle de negocio agregar para poner logo
-Vista publica (usuarios sin iniciar sesion)
-Detalles de la empresa deberia tener horarios de atencion y horarios de inactividad ?

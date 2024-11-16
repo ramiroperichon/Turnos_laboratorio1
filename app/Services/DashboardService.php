@@ -33,6 +33,7 @@ class DashboardService
                     'start' => $event->fecha_reserva . ' ' . $event->hora_inicio,
                     'end' => $event->fecha_reserva . ' ' . $event->hora_fin,
                     'backgroundColor' => $eventColor,
+                    'id' => $event->id,
                     'borderColor' => $eventColor
                 ];
             }
