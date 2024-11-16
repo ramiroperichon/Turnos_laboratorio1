@@ -36,24 +36,28 @@ class ServicioController extends Controller
         ]);
     }
 
-    public function create()
+    public function create($id = null)
     {
+        if (isset($id)){
+            return view('servicio.create', ['id'=>$id]);
+        }
 
         return view('servicio.create');
     }
 
     public function store(Request $request)
     {
+
         $inicio = \Carbon\Carbon::createFromFormat('H:i', $request->incio_turno);
         $fin = \Carbon\Carbon::createFromFormat('H:i', $request->fin_turno);
         $differenceInMinutes = $inicio->diffInMinutes($fin);
 
         $user = new User();
-        if ($request->userId == null) {
+        if ($request->id == null) {
             $user = auth()->user();
         } else {
             try {
-                $user = User::findOrFail($request->userId);
+                $user = User::findOrFail($request->id);
             } catch (ModelNotFoundException $e) {
                 Toaster::error('Usuario no encontrado');
                 return redirect()->back()->withInput();

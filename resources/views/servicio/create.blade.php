@@ -87,6 +87,10 @@
                                             for="btncheck{{ $day }}">{{ $day }}</label>
                                     @endforeach
                                 </div>
+
+                                <input type="number" id="id" hidden name="id"
+                                    value="{{ isset($id) ? $id : '' }}">
+
                                 <x-input-error :messages="$errors->get('dias_disponible')" />
                             </div>
                         </div>
@@ -94,6 +98,7 @@
                             <button class="btn btn-primary btn-fw" type="submit">Crear servicio</button>
                             <a class="btn btn-dark btn-fw" href="/">Volver</a>
                         </div>
+
                     </form>
                 </div>
             </div>
