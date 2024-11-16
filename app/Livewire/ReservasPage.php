@@ -69,6 +69,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->extraHeaderAttributes(['class' => 'dark:text-blue-500']),
                 TextColumn::make('user.name')
                     ->label('Cliente')
+                    ->getStateUsing(fn($record) => $record->user->name . ' ' . $record->user->last_name)
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
@@ -81,7 +82,7 @@ class ReservasPage extends Component implements HasTable, HasForms
                 TextColumn::make('servicio.proveedor.name')
                     ->label('Proveedor')
                     ->getStateUsing(fn($record) => $record->servicio->proveedor->name . ' ' . $record->servicio->proveedor->last_name)
-                    ->sortable(['servicio.proveedor.name', 'servicio.proveedor.last_name'])
+                    ->sortable()
                     ->searchable()
                     ->visible(auth()->user()->hasRole('administrador'))
                     ->toggleable()

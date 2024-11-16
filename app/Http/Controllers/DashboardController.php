@@ -34,7 +34,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $reservas = Reserva::where('cliente_id', '=', $user->id)->take(5)->get();
-        $servicios = Servicio::all()->take(5);
+        $servicios = Servicio::where('habilitado', '=', true)->get()->take(5);
 
         return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas]);
     }

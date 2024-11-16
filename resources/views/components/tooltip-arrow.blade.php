@@ -19,10 +19,10 @@
     ];
 @endphp
 
-<div class="relative inline-block group">
+<div class="relative inline-block group min-w-fit">
     {{ $slot }}
     <div role="tooltip" class="absolute scale-0 z-10 px-3 py-2 text-sm font-medium whitespace-normal break-words rounded-lg bg-body-secondary text-white opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 transition-all duration-200 {{ $positionClasses[$position] }}">
-        {{ $text }}
+        <p class="p-0 m-0 text-nowrap">{{ $text }}</p>
         <div class="absolute w-2 h-2 bg-body-secondary transform rotate-45 {{ $arrowClasses[$position] }}"></div>
     </div>
 </div>

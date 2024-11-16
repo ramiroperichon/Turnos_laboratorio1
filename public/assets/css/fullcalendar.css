@@ -1,7 +1,7 @@
 :root {
     --fc-small-font-size: .85em;
     --fc-page-bg-color: #fff;
-    --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+    --fc-neutral-bg-color: rgba(55, 136, 216, 0.3);
     --fc-neutral-text-color: #808080;
     --fc-border-color: #6c7293;
 
@@ -18,7 +18,7 @@
     --fc-event-text-color: #fff;
     --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
-    --fc-more-link-bg-color: #d0d0d0;
+    --fc-more-link-bg-color: #5a5353;
     --fc-more-link-text-color: inherit;
 
     --fc-event-resizer-thickness: 8px;
@@ -40,4 +40,8 @@
 
 .fc .fc-col-header-cell-cushion {
     color: #ffff;
+}
+
+.fc-theme-standard .fc-list-day-cushion {
+    background-color: #00568b;
 }
