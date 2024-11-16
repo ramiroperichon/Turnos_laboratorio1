@@ -6,10 +6,13 @@ use App\Models\Proveedor;
 use App\Services\Validators\CheckServicioFinSchedule;
 use App\Services\Validators\CheckServicioInicioSchedule;
 use Carbon\Carbon;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
@@ -67,6 +70,18 @@ class Usuarios extends Component implements HasForms, HasTable
                         Carbon::parse($record->horario_fin)->format('H:i')))
                     ->sortable()
                     ->label('Horarios'),
+                TextColumn::make('estado')
+                ->sortable()
+                ->getstateusing(fn($record) => ('' . ($record->usuario->estado ? 'Activo' : 'Inactivo')))
+                ->tooltip(function ($record) {
+
+                        if ($record->usuario->estado==false) {
+                            return $record->usuario->observacion;
+                        }
+                }),
+                TextColumn::make('usuario.phone')
+                ->sortable()
+                ->label('Telefono'),
             ])
             ->filters([
                 //
@@ -90,8 +105,38 @@ class Usuarios extends Component implements HasForms, HasTable
     {
         return [
             ActionGroup::make([
-                Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success'),
-                Action::make('dar de baja')->icon('heroicon-o-x-circle')->color('danger'),
+                Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success')->url(fn($record) => route('administrador.create', $record->usuario->id)),
+                 Action::make('Deshabilitar')
+                ->icon('heroicon-o-x-circle')
+                ->button()
+                ->label('')
+                ->outlined()
+                ->tooltip('Deshabilitar el servicio')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->color('warning')
+                ->visible(fn($record) => $record->usuario->estado == true)
+                ->form(
+                    [
+                        Section::make('')
+                            ->description('Se cancelaran todas las reservas pendientes y confirmadas')
+                            ->schema(
+                                [
+                                    Textarea::make('observacion')
+                                        ->label('Observaciones')
+                                        ->required()
+                                        ->minLength(5)
+                                        ->maxLength(255)
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Debe ingresar una observación para deshabilitar el servicio'),
+                                ]
+                            )
+                    ]
+                )
+                ->action(function ($record, $data) {
+                    $record->usuario->update(['estado' => false, 'observacion' => $data['observacion']]);
+                    Toaster::success('Servicio deshabilitado exitosamente');
+                })
+                ->modalHeading('Deshabilitar Servicio')
+                ->requiresConfirmation(),
                 Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url('/administrador/servicios'),
                 EditAction::make()
                     ->form(function ($record) {
