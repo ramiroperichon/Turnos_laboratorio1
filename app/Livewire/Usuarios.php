@@ -108,11 +108,8 @@ class Usuarios extends Component implements HasForms, HasTable
                 Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success')->url(fn($record) => route('administrador.create', $record->usuario->id)),
                 Action::make('Deshabilitar')
                 ->icon('heroicon-o-x-circle')
-                ->button()
-                ->label('')
-                ->outlined()
-                ->tooltip('Deshabilitar el servicio')
-                ->extraAttributes(['class' => 'pe-3.5'])
+                ->label('Deshabilitar')
+                ->tooltip('Deshabilitar el proveedor y sus servicios')
                 ->color('warning')
                 ->visible(fn($record) => $record->usuario->estado == true)
                 ->form(
@@ -135,8 +132,18 @@ class Usuarios extends Component implements HasForms, HasTable
                     $record->usuario->update(['estado' => false, 'observacion' => $data['observacion']]);
                     Toaster::success('Servicio deshabilitado exitosamente');
                 })
-                ->modalHeading('Deshabilitar Servicio')
+                ->modalHeading('Deshabilitar Usuario')
                 ->requiresConfirmation(),
+                Action::make('Habilitar')
+                ->icon('heroicon-o-check-circle')
+                ->label('Habilitar')
+                ->tooltip('Habilitar el proveedor y sus servicios')
+                ->color('secondary')
+                ->visible(fn($record) => $record->usuario->estado == false)
+                ->action(function ($record) {
+                    $record->usuario->update(['estado' => true]);
+                    Toaster::success('Servicio habilitado exitosamente');
+                }),
                 Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url(fn($record) => route('administrador.serviciosProveedor', $record->usuario->id)),
                 EditAction::make()
                     ->form(function ($record) {
