@@ -46,9 +46,17 @@ use Filament\Support\Enums\IconSize;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Grouping\Group;
 
+use function PHPUnit\Framework\isNull;
+
 class Servicios extends Component implements HasTable, HasForms
 {
     use InteractsWithTable, InteractsWithForms;
+    public $idProveedor;
+
+    public function mount($idProveedor = null)
+    {
+        $this->idProveedor = $idProveedor;
+    }
 
     public function render()
     {
@@ -58,9 +66,9 @@ class Servicios extends Component implements HasTable, HasForms
     public function table(TablesTable $table): TablesTable
     {
         $query = Servicio::query();
-        if (auth()->user()->hasRole('proveedor')) {
+        if (!empty($this->idProveedor)) {
             $query->whereHas('proveedor', function ($q) {
-                $q->where('id', auth()->user()->id);
+                $q->where('id', $this->idProveedor);
             });
         };
 
@@ -93,7 +101,7 @@ class Servicios extends Component implements HasTable, HasForms
                         TextColumn::make('proveedor.name')
                             ->label('Proveedor')
                             ->getStateUsing(fn($record) => $record->proveedor->name . ' ' . $record->proveedor->last_name)
-                            ->sortable(['proveedor.name', 'proveedor.last_name'])
+                            ->sortable()
                             ->limit(15)
                             ->tooltip(function (TextColumn $column): ?string {
                                 $state = $column->getState();

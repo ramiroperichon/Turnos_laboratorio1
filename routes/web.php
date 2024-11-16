@@ -64,7 +64,7 @@ Route::group(['middleware' => ['role:administrador']], function () {
     Route::post('/administrador/crearProveedor', [ProveedorController::class, 'store'])->name('administrador.storeProveedor');
     Route::get('/administrador/editarServicios/{id}', [AdministradorController::class, 'editarServicios'])->name('administrador.editarServicios');
     Route::get('/administrador/servicio/crear/{id}', [ServicioController::class, 'create'])->name('administrador.create');
-
+    Route::get('/administrador/servicios/proveedor/{id}', [AdministradorController::class, 'serviciosProveedor'])->name('administrador.serviciosProveedor');
 });
 
 

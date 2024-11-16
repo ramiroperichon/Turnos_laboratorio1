@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Proveedor;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
-
+use Masmerise\Toaster\Toaster;
 
 class AdministradorController extends Controller
 {
@@ -107,5 +107,16 @@ class AdministradorController extends Controller
         $servicio = Servicio::where('proveedor_id', $idUsuario)->get();
 
         return view('administrador.editarServicios', data: ['usuario' => $idUsuario, 'servicios' => $servicio]);
+    }
+
+    public function serviciosProveedor($idUsuario)
+    {
+        try {
+            $usuario = User::find($idUsuario);
+        } catch (\Exception $e) {
+            Toaster::error('Error al buscar al usuario' . $e->getMessage());
+            return redirect()->route('administrador.proveedores');
+        }
+        return view('proveedor.servicios', ['usuario' => $usuario]);
     }
 }

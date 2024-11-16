@@ -4,6 +4,15 @@
             {{ __('Ingresar datos de negocio') }}
         </h2>
     </x-slot>
+    <div class="page-header">
+        <h3 class="page-title">Servicios </h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Servicios</li>
+            </ol>
+        </nav>
+    </div>
     <div>
         <livewire:servicios />
     </div>

@@ -106,7 +106,7 @@ class Usuarios extends Component implements HasForms, HasTable
         return [
             ActionGroup::make([
                 Action::make('crear servicio')->icon('heroicon-o-plus-circle')->color('success')->url(fn($record) => route('administrador.create', $record->usuario->id)),
-                 Action::make('Deshabilitar')
+                Action::make('Deshabilitar')
                 ->icon('heroicon-o-x-circle')
                 ->button()
                 ->label('')
@@ -137,7 +137,7 @@ class Usuarios extends Component implements HasForms, HasTable
                 })
                 ->modalHeading('Deshabilitar Servicio')
                 ->requiresConfirmation(),
-                Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url('/administrador/servicios'),
+                Action::make('ver servicios')->icon('heroicon-o-eye')->color('info')->url(fn($record) => route('administrador.serviciosProveedor', $record->usuario->id)),
                 EditAction::make()
                     ->form(function ($record) {
                         return [
