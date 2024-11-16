@@ -15,6 +15,7 @@ use Filament\Forms\Components\Split as ComponentsSplit;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -39,9 +40,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Masmerise\Toaster\Toaster;
 use Filament\Forms\Get;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Grouping\Group;
 
 class Servicios extends Component implements HasTable, HasForms
 {
@@ -65,6 +68,10 @@ class Servicios extends Component implements HasTable, HasForms
             ->filters(static::getFilters())->filtersFormColumns(3)
             ->query($query)
             ->actions(static::getActions())
+            ->groups([
+                Group::make('proveedor.name')
+                    ->titlePrefixedWithLabel(false),
+            ])
             ->actionsAlignment('justify-center')
             ->columns([
                 Split::make([
@@ -74,8 +81,9 @@ class Servicios extends Component implements HasTable, HasForms
                             IconColumn::make('id')
                                 ->icon('heroicon-s-briefcase')
                                 ->size('2xl')
-                                ->alignCenter()
-                        ])->grow(false),
+                                ->alignCenter(),
+                        ])
+                        ->grow(false),
                     Stack::make([
                         TextColumn::make('nombre')
                             ->label('Nombre')
@@ -84,12 +92,12 @@ class Servicios extends Component implements HasTable, HasForms
                             ->weight('bold'),
                         TextColumn::make('proveedor.name')
                             ->label('Proveedor')
-                            ->sortable()
-                            ->extraAttributes(['class' => 'text-center'])
-                            ->limit(10)
+                            ->getStateUsing(fn($record) => $record->proveedor->name . ' ' . $record->proveedor->last_name)
+                            ->sortable(['proveedor.name', 'proveedor.last_name'])
+                            ->limit(15)
                             ->tooltip(function (TextColumn $column): ?string {
                                 $state = $column->getState();
-                                if (strlen($state) <= 10) {
+                                if (strlen($state) <= 15) {
                                     return null;
                                 }
                                 return $state;
@@ -107,7 +115,8 @@ class Servicios extends Component implements HasTable, HasForms
                                     return null;
                                 }
                                 return $state;
-                            }),
+                            })
+                            ->extraAttributes(['class' => 'text-elipsis overflow-hidden max-w-22']),
                     ])->space(2),
                     Stack::make([
                         TextColumn::make('precio')
@@ -142,7 +151,10 @@ class Servicios extends Component implements HasTable, HasForms
                             })
                             ->tooltip(fn($record) => $record->habilitado ? 'El servicio esta habilitado' : $record->observaciones)
                             ->size('xl')
-                    ])->space(1)->grow(false),
+                    ])
+                        ->alignment(Alignment::Center)
+                        ->space(1)
+                        ->grow(false),
                 ])->from('sm'),
                 Panel::make([
                     ViewColumn::make('status')->view('components.dayscolumn'),
@@ -151,7 +163,9 @@ class Servicios extends Component implements HasTable, HasForms
             ])
             ->contentGrid([
                 'md' => 2,
-                'xl' => 3,
+                'lg' => 2,
+                'xl' => 2,
+                '2xl' => 3
             ]);
     }
 
@@ -245,6 +259,20 @@ class Servicios extends Component implements HasTable, HasForms
                                 !$canEdit ? new CheckAvailableDays($record->proveedor_id, $record->id, true) : '',
                             ])
                             ->label('Dias Disponibles'),
+/*                         ToggleButtons::make('habilitado')
+                            ->label('Habilitado')
+                            ->multiple()
+                            ->default(['Lunes'])
+                            ->options([
+                                'Lunes' => 'Lunes',
+                                'Martes' => 'Martes',
+                                'Miercoles' => 'Miercoles',
+                                'Jueves' => 'Jueves',
+                                'Viernes' => 'Viernes',
+                                'Sabado' => 'Sabado',
+                                'Domingo' => 'Domingo',
+                            ])
+                            ->inline() */
                     ];
                 })
                 ->modalWidth(MaxWidth::ExtraLarge)
@@ -306,7 +334,6 @@ class Servicios extends Component implements HasTable, HasForms
                 ->extraAttributes(['class' => 'pe-3.5'])
                 ->color('warning')
                 ->visible(fn($record) => $record->habilitado == true)
-                ->disabled(fn($record) => $record->reservas->whereIn('estado', ['Pendiente', 'Confirmado'])->count() > 0)
                 ->form(
                     [
                         Section::make('')
@@ -319,14 +346,22 @@ class Servicios extends Component implements HasTable, HasForms
                                         ->minLength(5)
                                         ->maxLength(255)
                                         ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Debe ingresar una observación para deshabilitar el servicio'),
+                                    ToggleButtons::make('cancelar')
+                                    ->label('Cancelar reservas?')
+                                    ->boolean()
+                                    ->default(false)
+                                    ->inline()
                                 ]
                             )
                     ]
                 )
                 ->action(function ($record, $data) {
                     $servicio = new ServicioService();
+                    if($data['cancelar'] == true){
+                        $servicio->cancelAllReservas($record->id);
+                    }
                     $servicio->disableServicio($record->id, $data['observaciones']);
-                    Toaster::success('Servicio deshabilitado exitosamente');
+                    Toaster::success($data['cancelar'] ? 'Servicio cancelado exitosamente y canceladas las reservas pendientes' : 'Servicio cancelado exitosamente');
                 })
                 ->modalHeading('Deshabilitar Servicio')
                 ->requiresConfirmation(),

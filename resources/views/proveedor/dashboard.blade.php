@@ -13,7 +13,7 @@
         </nav>
     </div>
     <div class="row" style="min-height: calc(100vh - 100px);">
-        <div class="col-md-8 grid-margin stretch-card justify-content-center">
+        <div class="col-xl-8 grid-margin stretch-card justify-content-center">
             <div class="card">
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 grid-margin stretch-card">
+        <div class="col-xl-4 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="flex flex-row items-center pb-3">

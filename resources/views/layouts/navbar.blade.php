@@ -7,6 +7,7 @@
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-menu"></span>
         </button>
+        @if(Auth::check())
         <ul class="navbar-nav navbar-nav-right">
             @hasrole('proveedor')
                 <li class="nav-item dropdown d-none d-lg-block">
@@ -56,6 +57,7 @@
                 </div>
             </li>
         </ul>
+        @endif
         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
             data-toggle="offcanvas">
             <span class="mdi mdi-format-line-spacing"></span>

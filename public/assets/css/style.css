@@ -12958,7 +12958,7 @@ button.bg-dark:focus {
   border-bottom-left-radius: 0.25rem !important; }
 
 .rounded-lg {
-  border-radius: 0.3rem !important; }
+  border-radius: 0.3rem; }
 
 .rounded-circle {
   border-radius: 50% !important; }
