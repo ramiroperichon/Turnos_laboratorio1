@@ -56,8 +56,9 @@ Route::get('/reservas/user', [ReservaController::class, 'reservaUsuario'])->name
 Route::group(['middleware' => ['role:administrador']], function () {
     Route::get('/administrador/reservas', [ReservaController::class, 'index'])->name('administrador.reservas');
     Route::get('/administrador/servicios', [AdministradorController::class, 'servicios'])->name('administrador.servicios');
-    Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio'); //llamar al detalle de negocio controller
-    Route::put('/administrador/detallenegocio/{id}', [DetalleNegocioController::class, 'update'])->name('administrador.detallenegocio.update');
+    Route::get('/administrador/detallesnegocio', [AdministradorController::class, 'detallesnegocio'])->name('administrador.detallenegocio');
+    Route::patch('/administrador/detallenegocio/{id}', [DetalleNegocioController::class, 'update'])->name('administrador.detallenegocioupdate');
+    Route::patch('/administrador/detallenegocio/{id}/ubicacion', [DetalleNegocioController::class, 'updateUbicacion'])->name('administrador.detallenegocioupdateUbicacion');
     Route::get('/administrador/proveedores', [AdministradorController::class, 'usuariosall'])->name('administrador.proveedores');
     Route::put('/administrador/modificarProveedor/{id}', [AdministradorController::class, 'modificarProveedor'])->name('administrador.modificarProveedor');
     Route::get('/administrador/crearProveedor', [ProveedorController::class, 'createProveedor'])->name('administrador.crearProveedor');

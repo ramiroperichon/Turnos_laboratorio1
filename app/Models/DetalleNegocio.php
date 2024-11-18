@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetalleNegocio extends Model
 {
-    protected $fillable = ['nombre', 'email', 'telefono', 'latitud', 'logitud', 'Iurl', 'Furl', 'Turl', 'Xurl'];
+    protected $fillable = ['nombre', 'email', 'telefono', 'direccion', 'latitud', 'logitud', 'Iurl', 'Furl', 'Turl', 'Xurl'];
 }
