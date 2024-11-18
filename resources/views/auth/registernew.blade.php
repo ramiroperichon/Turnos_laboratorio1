@@ -1,22 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Corona Admin</title>
-    <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
 </head>
 
@@ -27,76 +18,75 @@
                 <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
                     <div class="card col-lg-4 mx-auto">
                         <div class="card-body px-5 py-5">
-                            <h3 class="card-title text-left mb-3">Register</h3>
+                            <h3 class="card-title text-left mb-3">{{ __('Register') }}</h3>
                             <form method="POST" action="{{ route('register') }}">
                                 @csrf
                                 <div class="form-group">
-                                    <label>Username</label>
-                                    <x-text-input id="name" type="text" class="form-control p_input" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                                    <label>{{ __('Name') }}</label>
+                                    <input id="name" type="text"
+                                        class="form-control @error('name') is-invalid @enderror" type="text"
+                                        name="name" value="{{ old('name') }}" placeholder="Ingrese su nombre"
+                                        required autofocus autocomplete="name" />
                                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
                                 <div class="form-group">
-                                    <label>Email</label>
-                                    <x-text-input id="email" type="email" class="form-control p_input" type="email" name="email" :value="old('email')" required autocomplete="username"/>
+                                    <label>{{ __('Apellido') }}</label>
+                                    <input id="last_name" type="text"
+                                        class="form-control @error('last_name') is-invalid @enderror" type="text"
+                                        name="last_name" value="{{ old('last_name') }}"
+                                        placeholder="Ingrese su apellido" required autofocus autocomplete="last_name" />
+                                    <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ __('Email') }}</label>
+                                    <input id="email" type="email"
+                                        class="form-control @error('email') is-invalid @enderror" type="email"
+                                        name="email" value="{{ old('email') }}" placeholder="Ingrese su email"
+                                        required autocomplete="username" />
                                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-danger" />
                                 </div>
                                 <div class="form-group">
-                                    <label>Password</label>
-                                    <x-text-input type="password" class="form-control p_input" type="password"
-                                        name="password"
-                                        required autocomplete="new-password" />
+                                    <label for="phone">{{ __('Numero de telefono') }}</label>
+                                    <input id="phone" name="phone" type="text"
+                                        class="form-control @error('phone') is-invalid @enderror"
+                                        value="{{ old('phone') }}" required required autocomplete="tel"
+                                        placeholder="Ingrese el numero de telefono"
+                                        pattern="[0-9]{10}" title="De 10 a 15 caracteres sin el (15) ej: 3777323313">
+                                    <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="documento">{{ __('Documento') }}</label>
+                                    <input id="documento" name="documento" type="text"
+                                        class="form-control @error('documento') is-invalid @enderror"
+                                        value="{{ old('documento') }}" required
+                                        placeholder="Ingrese su numero de documento"
+                                        autocomplete="documento">
+                                    <x-input-error class="mt-2" :messages="$errors->get('documento')" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('Password') }}</label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    placeholder="Ingrese su contraseña"
+                                        type="password" name="password" minlength="8" required autocomplete="new-password" />
                                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
                                 </div>
                                 <div class="form-group">
-                                    <label>Confirm password</label>
-                                    <x-text-input type="password" class="form-control p_input"
-                                        type="password"
-                                        name="password_confirmation" required autocomplete="new-password" />
-                                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-danger" />
+                                    <label>{{ __('Confirm Password') }}</label>
+                                    <input type="password"
+                                        class="form-control @error('new-password') is-invalid @enderror" type="password"
+                                        placeholder="Confirme su contraseña"
+                                        name="password_confirmation" minlength="8" required autocomplete="new-password" />
+                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-danger" />
                                 </div>
-                                <!-- Rol -->
-                                <div class="mt-4">
-                                    <x-input-label for="role" :value="__('Que usuario desea crear?')" />
-                                    <select id="role"
-                                            name="role"
-                                            onchange="toggleComponents(this.value)"
-                                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                        <option value="proveedor">Proveedor</option>
-                                        <option value="cliente">Cliente</option>
-                                    </select>
-                                    <x-input-error :messages="$errors->get('role')" class="mt-2" />
 
-                                    <!-- Components -->
-                                    <div id="proveedor-component" class="mt-4">
-                                        <div class="form-group">
-                                            <label>Profesion</label>
-                                            <x-text-input id="profesion" type="text" class="form-control p_input" name="profesion" :value="old('profesion')" />
-                                            <x-input-error :messages="$errors->get('profesion')" class="mt-2" />
-                                        </div>
-                                         <div class="form-group">
-                                             <label>Horario de inicio</label>
-                                            <x-text-input id="horario_inicio" type="time" class="form-control p_input" name="horario_inicio" :value="old('horario_inicio')" />
-                                            <x-input-error :messages="$errors->get('horario_inicio')" class="mt-2" />
-                                        </div>
-                                        <div class="form-group">
-                                             <label>Horario de fin</label>
-                                            <x-text-input id="horario_fin" type="time" class="form-control p_input" name="horario_fin" :value="old('horario_fin')" />
-                                            <x-input-error :messages="$errors->get('horario_fin')" class="mt-2" />
-                                        </div>
-                                    </div>
-
-                                    <div id="cliente-component" class="mt-4" style="display: none;">
-                                        <div class="form-group">
-                                            <label>Documento</label>
-                                            <x-text-input id="documento" type="text" class="form-control p_input" name="documento" :value="old('documento')" />
-                                            <x-input-error :messages="$errors->get('documento')" class="mt-2" />
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="text-center">
-                                    <x-primary-button class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
+                                    <x-primary-button
+                                        class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
                                 </div>
-                                <p class="sign-up text-center">Already have an Account?<a class="mx-1" href="{{ route('login') }}">Sign in</a></p>
+                                <p class="sign-up text-center">Already have an Account?<a class="mx-1"
+                                        href="{{ route('login') }}">Sign in</a></p>
                             </form>
                         </div>
                     </div>
@@ -119,19 +109,6 @@
     <script src="../../assets/js/misc.js"></script>
     <script src="../../assets/js/settings.js"></script>
     <script src="../../assets/js/todolist.js"></script>
-    <script>
-        function toggleComponents(value) {
-            const proveedorComponent = document.getElementById('proveedor-component');
-            const clienteComponent = document.getElementById('cliente-component');
-
-            if (value === 'proveedor') {
-                proveedorComponent.style.display = 'block';
-                clienteComponent.style.display = 'none';
-            } else {
-                proveedorComponent.style.display = 'none';
-                clienteComponent.style.display = 'block';
-            }
-        }
-        </script>
 </body>
+
 </html>
