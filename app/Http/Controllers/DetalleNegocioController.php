@@ -50,39 +50,57 @@ class DetalleNegocioController extends Controller
      */
     public function update(Request $request, DetalleNegocio $detalleNegocio)
     {
-
-        $detalleNegocioActualizado = DetalleNegocio::firstWhere('id', $detalleNegocio->id);
+        $detalleNegocioActualizado = DetalleNegocio::first();
 
         $validated = $request->validate(
             [
                 'nombre' => 'required|min:3|max:30',
                 'email' => 'required|email|max:50',
                 'telefono' => 'required|numeric',
-                'latitud' => 'required|numeric',
-                'logitud' => 'required|numeric',
                 'Iurl' => 'nullable|url',
                 'Furl' => 'nullable|url',
                 'Turl' => 'nullable|url',
                 'Xurl' => 'nullable|url',
             ]
         );
-        try{
 
+        try{
         $detalleNegocioActualizado->update($validated);
         View::share('detallenegocioProviders', $detalleNegocioActualizado);
         Toaster::success('Se actualizo correctamente los datos del negocio!');
-        return redirect('/');
+        return redirect()->route('administrador.detallenegocio', [$detalleNegocioActualizado->id]);
         }
         catch (Exception $e){
-            Toaster::error('Error al actualizar los datos del negocio');
-            return redirect(route('negocio.create'))->withErrors($e)->withInput();
+            Toaster::error('Error al actualizar los datos del negocio' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
+    public function updateUbicacion(Request $request, DetalleNegocio $detalleNegocio)
+    {
+        $detalleNegocioActualizado = DetalleNegocio::first();
+
+        $validated = $request->validate(
+            [
+                'direccion' => 'required|min:3|max:50',
+                'latitud' => 'required|numeric',
+                'logitud' => 'required|numeric',
+            ]
+        );
+        try{
+        $detalleNegocioActualizado->update($validated);
+        View::share('detallenegocioProviders', $detalleNegocioActualizado);
+        Toaster::success('Se actualizo correctamente la ubicacion del negocio!');
+        return redirect()->route('administrador.detallenegocio', [$detalleNegocioActualizado->id]);
+        }
+        catch (Exception $e){
+            Toaster::error('Error al actualizar la ubicacion del negocio' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
     public function destroy(DetalleNegocio $detalleNegocio)
     {
         //

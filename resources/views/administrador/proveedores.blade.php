@@ -3,39 +3,38 @@
         <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Administrar proveedores') }}
         </h1>
-            <tbody>
-
-                <div id="modalModificarUsuario"
-                    class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Modificar proveedor</h3>
-                        <form id="formModificarUsuario" method="POST">
-                            @method('PUT')
-                            @csrf
-                            <input type="hidden" name="user_id" id="user_id">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 dark:text-gray-300" for="name">Nombre</label>
-                                <input type="text" name="name" id="name"
-                                    class="w-full p-2 border border-gray-300 rounded">
+    </x-slot>
+    <div class="page-header">
+        <h3 class="page-title">Administrar Proveedores </h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Proveedores</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="flex flex-row items-center pb-3">
+                        <div class="flex-col item-center">
+                            <div class="icon icon-box-warning size-11 me-2">
+                                <span class="mdi mdi-bulletin-board icon-item"></span>
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 dark:text-gray-300" for="email">Email</label>
-                                <input type="email" name="email" id="email"
-                                    class="w-full p-2 border border-gray-300 rounded">
-                            </div>
-
-                            <div class="flex justify-end">
-                                <button type="button" onclick="cerrarModal()"
-                                    class="px-4 py-2 bg-gray-600 text-white rounded mr-2">Cancelar</button>
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="flex-col">
+                            <h4 class="card-title text-start m-0"> Todos los proveedores
+                            </h4>
+                        </div>
+                        <a class="btn btn-primary ml-auto me-2" href="{{ route('administrador.crearProveedor') }}">
+                            + Crear nuevo proveedor
+                        </a>
                     </div>
+                    <livewire:usuarios />
                 </div>
-
-            </tbody>
-
-        </table>
-        <livewire:usuarios></livewire:usuarios>
+            </div>
+        </div>
+    </div>
 
 </x-app-layout>
