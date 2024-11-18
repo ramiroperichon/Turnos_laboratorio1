@@ -36,8 +36,9 @@
                             @endif
                         </div>
                     </div>
-                        <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+                    <livewire:reservas-page :id-servicio="$idServicio ?? null" />
                 </div>
             </div>
         </div>
+    </div>
 </x-app-layout>

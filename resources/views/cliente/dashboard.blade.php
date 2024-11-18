@@ -18,9 +18,10 @@
         <!-- Primera columna -->
         <div class="col-md-5 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between">
-                        <h4 class="card-title mb-1">Servicios</h4>
+                <div class="card-body py-3">
+                    <div class="d-flex flex-row items-center justify-content-start ml-auto space-x-2">
+                        <i class="icon-md mdi mdi-wallet-travel text-primary"></i>
+                        <h4 class="card-title display-4 mb-1">Servicios</h4>
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -31,27 +32,35 @@
                                             <!-- Icono y título -->
                                             <div class="display-flex">
                                                 <h6 class="preview-subject">{{ $servicio->nombre }}</h6>
-                                                @if(strlen($servicio->descripcion) > 11)
-                                                <x-tooltip-arrow text="{{$servicio->descripcion}}" position="bottom">
-                                                <p class="text-muted mb-0 truncate w-20">{{ $servicio->descripcion }}</p>
-                                                </x-tooltip-arrow>
+                                                @if (strlen($servicio->descripcion) > 11)
+                                                    <x-tooltip-arrow text="{{ $servicio->descripcion }}"
+                                                        position="bottom">
+                                                        <p class="text-muted mb-0 truncate w-20">
+                                                            {{ $servicio->descripcion }}</p>
+                                                    </x-tooltip-arrow>
                                                 @else
-                                                <p class="text-muted mb-0 w-20">{{ $servicio->descripcion }}</p>
+                                                    <p class="text-muted mb-0 w-20 flex">{{ $servicio->descripcion }}</p>
                                                 @endif
                                             </div>
                                             <!-- Detalles de duración y precio -->
                                             <div>
-                                                <p class="text-muted">Duración: {{ $servicio->duracion }}</p>
-                                                <p class="text-muted mb-0">Precio: {{ $servicio->precio }}</p>
+                                                <p class="text-muted flex m-0 mb-2 p-0"><i class="mdi mdi-clock me-1"></i> {{ $servicio->duracion }} Min.</p>
+                                                <p class="flex text-success m-0 p-0"><i class="mdi mdi-currency-usd"></i> {{ $servicio->precio }}</p>
                                             </div>
                                             <!-- Botón de acción -->
                                             <div class="d-flex justify-content-end">
-                                                    <a href="{{ route('reserva.create', $servicio->id) }}" class="btn btn-info py-3">Pedir turno</a>
+                                                <a href="{{ route('reserva.create', $servicio->id) }}"
+                                                    class="btn btn-primary py-3 flex"><i class="mdi mdi-calendar-star"></i>Reservar</a>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
-                                <a href="{{ route('servicio.all') }}" class="btn btn-info my-4">Ver todos</a>
+                                <div class="d-flex flex-row justify-content-between items-center my-2">
+                                    <a class="btn btn-primary" href="{{ route('servicio.all') }}">Ver todos</a>
+                                    <p class="text-muted mb-1">Servicios disponibles: <span
+                                            class="font-weight-bold text-primary">{{ $servicioscount }}</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,26 +71,27 @@
         <!-- Segunda columna -->
         <div class="col-md-7 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between">
-                        <h4 class="card-title mb-1">Mis turnos</h4>
+                <div class="card-body py-3">
+                    <div class="d-flex flex-row items-center justify-content-start ml-auto space-x-2">
+                        <i class="icon-md mdi mdi-calendar-multiple text-info"></i>
+                        <h4 class="card-title display-4 mb-1">Mis turnos</h4>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped border-b border-gray-700/50">
                             <thead>
                                 <tr>
-                                    <th class="text-primary-emphasis">Servicio</th>
-                                    <th class="text-primary-emphasis">Fecha</th>
-                                    <th class="text-primary-emphasis">Horario</th>
-                                    <th class="text-primary-emphasis">Precio</th>
-                                    <th class="text-primary-emphasis">Estado</th>
+                                    <th class="text-primary-emphasis fs-6">Servicio</th>
+                                    <th class="text-primary-emphasis fs-6">Fecha</th>
+                                    <th class="text-primary-emphasis fs-6">Horario</th>
+                                    <th class="text-primary-emphasis fs-6">Precio</th>
+                                    <th class="text-primary-emphasis fs-6">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if ($reservas->count() == 0)
                                     <tr>
                                         <td colspan="5" class="text-center">
-                                            <h4 class="text-muted">No hay servicios</h4>
+                                            <h4 class="text-muted">No tienes ningun turno</h4>
                                         </td>
                                     </tr>
                                 @else
@@ -93,16 +103,20 @@
                                                 {{ \Carbon\Carbon::parse($reserva->hora_inicio)->format('H:i') }} a
                                                 {{ \Carbon\Carbon::parse($reserva->hora_fin)->format('H:i') }}
                                             </td>
-                                            <td class="text-success-emphasis fw-bold">${{ $reserva->servicio->precio }}</td>
+                                            <td class="text-success-emphasis fw-bold">${{ $reserva->servicio->precio }}
+                                            </td>
                                             <td>
                                                 @if ($reserva->estado == 'Pendiente')
-                                                    <span class="badge badge-outline-info">{{ $reserva->estado }}</span>
+                                                    <span
+                                                        class="badge bg-info-500/15 badge-outline-info">{{ $reserva->estado }}</span>
                                                 @elseif($reserva->estado == 'Cancelado')
-                                                    <span class="badge badge-outline-danger">{{ $reserva->estado }}</span>
+                                                    <span
+                                                        class="badge bg-danger-500/15 badge-outline-danger">{{ $reserva->estado }}</span>
                                                 @elseif ($reserva->estado == 'Confirmado')
-                                                    <span class="badge badge-outline-success">{{ $reserva->estado }}</span>
+                                                    <span
+                                                        class="badge bg-success-500/15 badge-outline-success">{{ $reserva->estado }}</span>
                                                 @else
-                                                    <span class="badge badge-success">{{ $reserva->estado }}</span>
+                                                    <span class="badge bg-success-500/15 badge-success">{{ $reserva->estado }}</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -110,6 +124,12 @@
                                 @endif
                             </tbody>
                         </table>
+                        <div class="d-flex flex-row justify-content-between items-center my-2">
+                            <p class="text-muted mb-1">Reservas: <span
+                                    class="font-weight-bold text-info">{{ $reservascount }}</span>
+                            </p>
+                            <a class="btn btn-info" href="{{ route('servicio.all') }}">Ver todas</a>
+                        </div>
                     </div>
                 </div>
             </div>

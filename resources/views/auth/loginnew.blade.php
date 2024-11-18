@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
@@ -34,6 +34,13 @@
                                         required autocomplete="current-password">
                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                 </div>
+                                @session('error')
+                                <div class="alert alert-danger" role="alert">
+                                    @if(session('error'))
+                                    {{ session('error') }}
+                                    @endif
+                                </div>
+                                @endsession
                                 <div class="form-group d-flex align-items-center justify-content-between">
                                     <div class="form-check">
                                         <label class="form-check-label">

@@ -4,12 +4,33 @@
             {{ __('Crear servicio') }}
         </h2>
     </x-slot>
+    <div class="page-header">
+        <h3 class="page-title">Crear servicio </h3>
+        @hasrole('proveedor')
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Crear servicio</li>
+            </ol>
+        </nav>
+        @endhasrole
+        @hasrole('administrador')
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('administrador.proveedores') }}">Proveedores</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Crear servicio</li>
+            </ol>
+        </nav>
+        @endhasrole
+    </div>
     <div class="row">
         <div class="col grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Agregar servicio
+                    <h4 class="card-title">Datos del nuevo servicio
                     </h4>
+                    <p class="card-description mt-1">Asegurese de que los horarios no esten en conflicto con el de otros servicios.</p>
                     <form action="{{ route('servicio.store') }}" method="POST">
                         @csrf
                         <div class="form-group row gx-5">
@@ -104,7 +125,6 @@
             </div>
         </div>
     </div>
-
     <script>
         document.querySelector(".number-input").addEventListener("keypress", function(
             evt) { //evita poder colocar la e y los signos en los input de numeros

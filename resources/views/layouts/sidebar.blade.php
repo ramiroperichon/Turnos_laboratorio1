@@ -50,7 +50,7 @@
                             <span class="menu-icon">
                                 <i class="mdi mdi-playlist-play"></i>
                             </span>
-                            <span class="menu-title">Mis turnos</span>
+                            <span class="menu-title">Mis reservas</span>
                         </a>
                     </li>
                     <li class="nav-item menu-items">

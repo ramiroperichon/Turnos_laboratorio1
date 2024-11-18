@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
             'success' => Color::Green,
             'warning' => Color::Amber,
             'secondary' => Color::hex('#8f5fe8'),
+            'muted' => Color::hex('#6c7293'),
         ]);
         $detallenegocioProviders = DetalleNegocio::first();
         if(!$detallenegocioProviders){

@@ -49,7 +49,7 @@
                         </span>
                     </p>
                     <div class="d-flex justify-content-between align-items-center self-end">
-                        <a href="{{ route('reserva.user', $servicio->id) }}" class="btn btn-primary btn-block">Reservar
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-block">Reservar
                             turno</a>
                     </div>
                 </div>

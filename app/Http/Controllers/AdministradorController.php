@@ -49,8 +49,9 @@ class AdministradorController extends Controller
         ]);
     }
 
-    public function crearProveedor(Request $request)
+/*     public function crearProveedor(Request $request)
     {
+        dd($request->all());
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
@@ -58,12 +59,16 @@ class AdministradorController extends Controller
             'profesion' => ['required', 'string', 'max:20'],
             'horario_inicio' => ['required|date_format:H:i'],
             'horario_fin' => ['required|date_format:H:i'],
+            'last_name' => 'required|min:2|max:50',
+            'phone' => 'required|min:10|max:15',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
         ]);
 
         Proveedor::create([
@@ -76,7 +81,7 @@ class AdministradorController extends Controller
         $user->assignRole('proveedor');
 
         return redirect()->route('administrador.proveedores')->with('success', 'Proveedor creado exitosamente');
-    }
+    } */
 
     public function modificarProveedor(Request $request, $id)
     {
@@ -100,13 +105,6 @@ class AdministradorController extends Controller
         $detallenegocio = DetalleNegocio::first();
 
         return view('negocio.create', data: ['old' => $detallenegocio]);
-    }
-
-    public function editarServicios($idUsuario)
-    {
-        $servicio = Servicio::where('proveedor_id', $idUsuario)->get();
-
-        return view('administrador.editarServicios', data: ['usuario' => $idUsuario, 'servicios' => $servicio]);
     }
 
     public function serviciosProveedor($idUsuario)

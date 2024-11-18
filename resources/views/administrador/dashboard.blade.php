@@ -131,7 +131,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             var eventsj = @json($events);
             var calendarEl = document.getElementById('calendar');
-            console.log(Livewire);
             var calendar = new FullCalendar.Calendar(calendarEl, {
 
 

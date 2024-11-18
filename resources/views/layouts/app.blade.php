@@ -67,7 +67,7 @@
     <script src="{{ asset('assets/js/calendario.js') }}"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ config('app.map_key') }}&callback=initMap&language=es&libraries=marker"
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('app.map_key') }}&callback=initMap&language=es&libraries=marker,places"
         async defer></script>
 </body>
 </html>
