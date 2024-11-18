@@ -53,13 +53,16 @@ class ReservasPage extends Component implements HasTable, HasForms
                 $q->where('proveedor_id', auth()->user()->id);
             });
         }
+        if (auth()->user()->hasRole('cliente')) {
+            $query->where('cliente_id', auth()->user()->id);
+        }
 
         if ($this->idServicio) {
             $query->where('servicio_id', $this->idServicio);
         }
         return $table
             ->query($query)
-            ->selectable()
+            ->selectable((auth()->user()->hasRole('cliente')) ? false : true)
             ->queryStringIdentifier('reservas')
             ->extremePaginationLinks(true)
             ->columns([
@@ -112,14 +115,13 @@ class ReservasPage extends Component implements HasTable, HasForms
                     ->extraAttributes(['class' => 'text-green-500'])
                     ->grow(false),
             ])
-            ->groups([
-                Group::make('estado')
-                    ->titlePrefixedWithLabel(false),
-            ])
+            ->groups(
+                static::getGrouping()
+            )
             ->groupingSettingsInDropdownOnDesktop(true)
-            ->actions(static::getActions())->actionsColumnLabel("Acciones")
-            ->bulkActions(static::getBulkActions())
-            ->headerActions(static::getHeaderActions())
+            ->actions((auth()->user()->hasRole('cliente')) ? static::getActionsCliente() : static::getActions())->actionsColumnLabel("Acciones")
+            ->bulkActions((auth()->user()->hasRole('cliente')) ? [] : static::getBulkActions())
+            ->headerActions((auth()->user()->hasRole('cliente')) ? [] : static::getHeaderActions())
             ->filters(static::getTableFilters())
             ->filtersLayout(static::getTableFiltersLayout());
     }
@@ -315,6 +317,18 @@ class ReservasPage extends Component implements HasTable, HasForms
         ];
     }
 
+    protected static function getActionsCliente(): array
+    {
+        return [
+            Action::make('Cancelar')
+                ->action(fn($record) => static::ConfirmReject($record, 'Cancelado'))
+                ->icon('mdi-cancel')
+                ->label('Cancelar')
+                ->disabled(fn($record) => $record->estado != 'Pendiente' && $record->estado != 'Confirmado')
+                ->color('danger'),
+        ];
+    }
+
     protected static function getTableFilters(): array
     {
         return [
@@ -386,6 +400,30 @@ class ReservasPage extends Component implements HasTable, HasForms
                     return empty($parts) ? null : implode(' ', $parts);
                 }),
         ];
+    }
+
+    public static function getGrouping(): array
+    {
+        $groups = [];
+        $estado =Group::make('estado')
+            ->titlePrefixedWithLabel(false);
+        $usuario = Group::make('user.name')
+        ->label('Cliente')
+            ->titlePrefixedWithLabel(false);
+        $servicio = Group::make('servicio.nombre')
+            ->titlePrefixedWithLabel(false);
+        $proveedor = Group::make('servicio.proveedor.name')
+            ->titlePrefixedWithLabel(false);
+
+            if(auth()->user()->hasRole(['administrador', 'proveedor'])){
+                $groups[] = $usuario;
+            }
+            if(auth()->user()->hasRole(['cliente', 'administrador'])){
+                $groups[] = $proveedor;
+            }
+            $groups[] = $servicio;
+            $groups[] = $estado;
+        return $groups;
     }
 
     public static function getTableFiltersLayout(): FiltersLayout

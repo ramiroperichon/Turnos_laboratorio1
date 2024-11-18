@@ -33,10 +33,11 @@ class DashboardController extends Controller
     public function cliente()
     {
         $user = auth()->user();
-        $reservas = Reserva::where('cliente_id', '=', $user->id)->take(5)->get();
+        $reservas = Reserva::where('cliente_id', '=', $user->id)->take(6)->get();
         $servicios = Servicio::where('habilitado', '=', true)->get()->take(5);
-
-        return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas]);
+        $servicioscount = Servicio::where('habilitado', '=', true)->count();
+        $reservascount = Reserva::where('cliente_id', '=', $user->id)->count();
+        return view('cliente.dashboard', ['servicios' => $servicios, 'reservas' => $reservas, 'servicioscount' => $servicioscount, 'reservascount' => $reservascount]);
     }
 
     public function administrador()

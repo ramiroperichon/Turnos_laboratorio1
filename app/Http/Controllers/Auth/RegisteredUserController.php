@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Masmerise\Toaster\Toaster;
 
 class RegisteredUserController extends Controller
 {
@@ -35,41 +36,18 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'last_name' => 'required|min:2|max:50',
+            'phone' => 'required|min:10|max:15',
+            'documento' => ['required', 'string', 'max:8, min:8'],
         ]);
 
-
-        if ($request->role == "proveedor") {
-
-
-            $request->validate([
-                'profesion' => ['required', 'string', 'max:50'],
-                'horario_inicio' => ['required'],
-                'horario_fin' => ['required'],
-            ]);
-
+        try {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-            ]);
-
-            Proveedor::create([
-                'usuario_id' => $user->id,
-                'profesion' => $request->profesion,
-                'horario_inicio' => $request->horario_inicio,
-                'horario_fin' => $request->horario_fin
-            ]);
-        }
-
-        if ($request->role == "cliente") {
-
-            $request->validate([
-                'documento' => ['required', 'string', 'max:8'],
-            ]);
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
             ]);
 
             Cliente::create([
@@ -77,19 +55,16 @@ class RegisteredUserController extends Controller
                 'documento' => $request->documento,
             ]);
 
-        }
+            $user->assignRole('cliente');
 
+            event(new Registered($user));
 
-        $user->assignRole($request->role);
+            Auth::login($user);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        if ($user->hasRole('proveedor')) {
             return redirect()->route('dashboard');
-        } else {
-            return redirect()->route('dashboard');
+
+        } catch (\Exception $e) {
+            Toaster::error('Error al crear el cliente ' . $e->getMessage());
         }
     }
 }

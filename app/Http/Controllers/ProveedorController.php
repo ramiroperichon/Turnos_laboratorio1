@@ -27,6 +27,8 @@ class ProveedorController extends Controller
             'profesion' => ['required', 'string', 'max:20'],
             'horario_inicio' => 'required|date_format:H:i',
             'horario_fin' => 'required|date_format:H:i',
+            'last_name' => 'required|min:2|max:50',
+            'phone' => 'required|min:10|max:15',
         ]);
 
         try {
@@ -34,7 +36,9 @@ class ProveedorController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
             ]);
 
             Proveedor::create([
@@ -43,13 +47,11 @@ class ProveedorController extends Controller
                 'horario_inicio' => $request->horario_inicio,
                 'horario_fin' => $request->horario_fin
             ]);
-
             $user->assignRole('proveedor');
+            Toaster::success('Proveedor ' . $user->name . ' creado exitosamente');
+            return redirect()->route('administrador.proveedores');
         } catch (\Exception $e) {
             Toaster::error('Error al crear el proveedor ' . $e->getMessage());
         }
-
-        Toaster::success('Proveedor' . $user->name . ' creado exitosamente');
-        return redirect()->route('administrador.proveedores');
     }
 }

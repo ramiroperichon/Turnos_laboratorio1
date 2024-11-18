@@ -13,80 +13,25 @@
             </ol>
         </nav>
     </div>
-    <div class="container text-center">
-        <div class="row bg-body-tertiary p-6 p-lg-3 rounded-4 align-items-lg-center">
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">#</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Proveedor</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Servicio</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Horario</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Fecha de reserva</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Estado</h6>
-            </div>
-            <div class="col">
-                <h6 class="text-secondary fw-bold font-weight-normal">Acciones</h6>
+    <div class="row">
+        <div class="col grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="flex flex-row items-center pb-3">
+                        <div class="flex-col item-center">
+                            <div class="icon icon-box-info size-11 me-2">
+                                <span class="mdi mdi-calendar-multiple icon-item"></span>
+                            </div>
+                        </div>
+                        <div class="flex-col">
+                            <h4 class="card-title text-start m-0"> Reservas
+                                <span class="font-weight-light">de {{ auth()->user()->name }}</span>
+                            </h4>
+                        </div>
+                    </div>
+                    <livewire:reservas-page :id-servicio="$idServicio ?? null" />
+                </div>
             </div>
         </div>
-        @foreach ($reservas as $reserva)
-            <div class="row p-6 my-3 rounded-4 align-items-lg-center" style="background-color: #191c24;">
-                <div class="col">
-                    <h6 class="text-muted font-weight-normal">{{ $reserva->id }}</h6>
-                </div>
-                <div class="col">
-                    <h6 class="text-muted font-weight-normal">Senior proveedor</h6>
-                    {{-- <h6 class="text-muted font-weight-normal">{{ $reserva->servicio->user->name }}</h6> Nos olvidamos de poner el id de usuario en servicio --}}
-                </div>
-                <div class="col">
-                    <h6 class="text-muted font-weight-normal">{{ $reserva->servicio->nombre }}</h6>
-                </div>
-                <div class="col">
-                    <h6 class="text-muted font-weight-normal">
-                        {{ \Carbon\Carbon::parse($reserva->hora_inicio)->format('H:i') }} a</h6>
-                    <h6 class="text-muted font-weight-normal">
-                        {{ \Carbon\Carbon::parse($reserva->hora_fin)->format('H:i') }}</h6>
-                </div>
-                <div class="col">
-                    <h6 class="text-muted font-weight-normal">{{ $reserva->fecha_reserva }}</h6>
-                </div>
-                <div class="col">
-                    @if ($reserva->estado == 'Pendiente')
-                        <span class="badge badge-outline-info">{{ $reserva->estado }}</span>
-                    @elseif($reserva->estado == 'Cancelado')
-                        <span class="badge badge-outline-danger">{{ $reserva->estado }}</span>
-                    @elseif ($reserva->estado == 'Confirmado')
-                        <span class="badge badge-outline-success">{{ $reserva->estado }}</span>
-                    @else
-                        <span class="badge badge-success">{{ $reserva->estado }}</span>
-                    @endif
-                </div>
-                <div class="col">
-                    @if ($reserva->estado == 'Pendiente' || $reserva->estado == 'Confirmado')
-                        <form action="{{ route('reserva.update', $reserva->id) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn btn-warning mx-2 my-1">
-                                Cancelar turno
-                            </button>
-                        </form>
-                    @else
-                        <x-tooltip-arrow text="Este turno no puede ser cancelado" position="bottom">
-                            <button type="button" disabled class="btn btn-warning mx-2 my-1">
-                                Cancelar turno
-                            </button>
-                        </x-tooltip-arrow>
-                    @endif
-                </div>
-            </div>
-        @endforeach
     </div>
 </x-app-layout>

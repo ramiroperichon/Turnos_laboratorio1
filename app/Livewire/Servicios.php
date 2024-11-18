@@ -71,15 +71,15 @@ class Servicios extends Component implements HasTable, HasForms
                 $q->where('id', $this->idProveedor);
             });
         };
+        if (auth()->user()->hasRole('cliente')) {
+            $query->where('habilitado', true);
+        }
 
         return $table
             ->filters(static::getFilters())->filtersFormColumns(3)
             ->query($query)
-            ->actions(static::getActions())
-            ->groups([
-                Group::make('proveedor.name')
-                    ->titlePrefixedWithLabel(false),
-            ])
+            ->actions(auth()->user()->hasRole('cliente') ? static::getClientActions() : static::getActions())
+            ->groups(static::getGrouping($this->idProveedor))
             ->actionsAlignment('justify-center')
             ->columns([
                 Split::make([
@@ -87,7 +87,7 @@ class Servicios extends Component implements HasTable, HasForms
                         ->columns(1)
                         ->schema([
                             IconColumn::make('id')
-                                ->icon('heroicon-s-briefcase')
+                                ->icon('mdi-briefcase')
                                 ->size('2xl')
                                 ->alignCenter(),
                         ])
@@ -175,6 +175,19 @@ class Servicios extends Component implements HasTable, HasForms
                 'xl' => 2,
                 '2xl' => 3
             ]);
+    }
+
+    public static function getGrouping($id): array
+    {
+        if (auth()->user()->hasRole(['administrador', 'cliente']) && empty($id)) {
+            return [
+                Group::make('proveedor.name')
+                    ->label('Proveedor')
+                    ->getTitleFromRecordUsing(fn($record) => $record->proveedor->name . ' ' . $record->proveedor->last_name)
+            ];
+        } else {
+            return [];
+        }
     }
 
     public static function getActions(): array
@@ -267,7 +280,7 @@ class Servicios extends Component implements HasTable, HasForms
                                 !$canEdit ? new CheckAvailableDays($record->proveedor_id, $record->id, true) : '',
                             ])
                             ->label('Dias Disponibles'),
-/*                         ToggleButtons::make('habilitado')
+                        /*                         ToggleButtons::make('habilitado')
                             ->label('Habilitado')
                             ->multiple()
                             ->default(['Lunes'])
@@ -355,17 +368,17 @@ class Servicios extends Component implements HasTable, HasForms
                                         ->maxLength(255)
                                         ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Debe ingresar una observación para deshabilitar el servicio'),
                                     ToggleButtons::make('cancelar')
-                                    ->label('Cancelar reservas?')
-                                    ->boolean()
-                                    ->default(false)
-                                    ->inline()
+                                        ->label('Cancelar reservas?')
+                                        ->boolean()
+                                        ->default(false)
+                                        ->inline()
                                 ]
                             )
                     ]
                 )
                 ->action(function ($record, $data) {
                     $servicio = new ServicioService();
-                    if($data['cancelar'] == true){
+                    if ($data['cancelar'] == true) {
                         $servicio->cancelAllReservas($record->id);
                     }
                     $servicio->disableServicio($record->id, $data['observaciones']);
@@ -388,7 +401,23 @@ class Servicios extends Component implements HasTable, HasForms
                     $record->update(['habilitado' => true]);
                     Toaster::success('Servicio habilitado correctamente');
                 })
-                ->requiresConfirmation(),
+        ];
+    }
+
+    public static function getClientActions(): array
+    {
+        return [
+            Action::make('Reservar')
+                ->icon('mdi-calendar-star-four-points')
+                ->iconSize(IconSize::Large)
+                ->label('Reservar')
+                ->button()
+                ->outlined()
+                ->tooltip('Reservar turno')
+                ->extraAttributes(['class' => 'pe-3.5'])
+                ->color('info')
+                ->url(fn($record) => route('reserva.create', $record->id))
+                ->openUrlInNewTab(false),
         ];
     }
 
@@ -410,61 +439,70 @@ class Servicios extends Component implements HasTable, HasForms
 
     public static function getFilters(): array
     {
-        return [
-            Filter::make('habilitado')
-                ->form([
-                    Select::make('habilitado')
-                        ->label('Habilitado')
-                        ->options([
-                            true => 'Habilitado',
-                            false => 'Deshabilitado',
-                        ]),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query->when(
-                        isset($data['habilitado']),
-                        fn(Builder $query): Builder => $query->where('habilitado', (bool) $data['habilitado'])
-                    );
-                })
-                ->indicateUsing(function (array $data): ?string {
-                    $states = [
+        $filters = [];
+
+        $habilitado = Filter::make('habilitado')
+            ->form([
+                Select::make('habilitado')
+                    ->label('Habilitado')
+                    ->options([
                         true => 'Habilitado',
                         false => 'Deshabilitado',
-                    ];
-                    return $states[$data['habilitado']] ?? null;
-                }),
-            Filter::make('dias_disponible')
-                ->form([
-                    Select::make('dias_disponible')
-                        ->multiple()
-                        ->label('Dias Disponibles')
-                        ->options([
-                            'Lunes' => 'Lunes',
-                            'Martes' => 'Martes',
-                            'Miercoles' => 'Miercoles',
-                            'Jueves' => 'Jueves',
-                            'Viernes' => 'Viernes',
-                            'Sabado' => 'Sabado',
-                            'Domingo' => 'Domingo',
-                        ]),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query->when(
-                        $data['dias_disponible'] ?? null,
-                        fn(Builder $query, $dias) => $query->where(function ($query) use ($dias) {
-                            foreach ($dias as $dia) {
-                                $query->where('dias_disponible', 'LIKE', "%$dia%");
-                            }
-                        })
-                    );
-                })
-                ->indicateUsing(function (array $data): ?string {
-                    $dias = $data['dias_disponible'] ?? null;
-                    if (is_array($dias)) {
-                        return implode(', ', $dias);
-                    }
-                    return $dias;
-                }),
-        ];
+                    ]),
+            ])
+            ->query(function (Builder $query, array $data): Builder {
+                return $query->when(
+                    isset($data['habilitado']),
+                    fn(Builder $query): Builder => $query->where('habilitado', (bool) $data['habilitado'])
+                );
+            })
+            ->indicateUsing(function (array $data): ?string {
+                $states = [
+                    true => 'Habilitado',
+                    false => 'Deshabilitado',
+                ];
+                return $states[$data['habilitado']] ?? null;
+            });
+
+        $dias = Filter::make('dias_disponible')
+            ->form([
+                Select::make('dias_disponible')
+                    ->multiple()
+                    ->label('Dias Disponibles')
+                    ->options([
+                        'Lunes' => 'Lunes',
+                        'Martes' => 'Martes',
+                        'Miercoles' => 'Miercoles',
+                        'Jueves' => 'Jueves',
+                        'Viernes' => 'Viernes',
+                        'Sabado' => 'Sabado',
+                        'Domingo' => 'Domingo',
+                    ]),
+            ])
+            ->query(function (Builder $query, array $data): Builder {
+                return $query->when(
+                    $data['dias_disponible'] ?? null,
+                    fn(Builder $query, $dias) => $query->where(function ($query) use ($dias) {
+                        foreach ($dias as $dia) {
+                            $query->where('dias_disponible', 'LIKE', "%$dia%");
+                        }
+                    })
+                );
+            })
+            ->indicateUsing(function (array $data): ?string {
+                $dias = $data['dias_disponible'] ?? null;
+                if (is_array($dias)) {
+                    return implode(', ', $dias);
+                }
+                return $dias;
+            });
+
+        if (auth()->user()->hasRole(['administrador', 'proveedor'])) {
+            $filters[] = $habilitado;
+        }
+
+        $filters[] = $dias;
+
+        return $filters;
     }
 }
