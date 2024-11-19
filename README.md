@@ -2,6 +2,12 @@
 
 Este es un proyecto de Laravel que permite gestionar turno (ej. Consultorio medico).
 
+# Estructura de la base de datos
+
+ - [MER](https://app.diagrams.net/#G1yrD6PBhljJ2zj71bvgZCZ2XpK46x7VTR#%7B%22pageId%22%3A%22TMvDeZPq3Egd9Cxy8RMZ%22%7D)
+ - [Relacion de tablas](https://imgur.com/a/SKiRb6u)
+
+
 # Requerimientos
 
 - PHP 8.1.X
