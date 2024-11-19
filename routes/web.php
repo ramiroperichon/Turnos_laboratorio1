@@ -39,7 +39,6 @@ Route::get('/', function () {
 Route::group(['middleware' => ['role:proveedor']], function () {
     Route::get('/servicio/user', [ServicioController::class, 'userServices'])->name('servicio.userServices'); //Require rol proveedor
     Route::get('/servicio/crear', [ServicioController::class, 'create'])->name('servicio.create'); //Requiere rol proveedor
-    Route::post('/servicio/store', [ServicioController::class, 'store'])->name('servicio.store'); //Requiere rol proveedor
     Route::get('/reservas/all', [ReservaController::class, 'index'])->name('reserva.index'); //Requiere rol proveedor
 });
 
@@ -49,6 +48,7 @@ Route::delete('/servicio/destroy/{id}', [ServicioController::class, 'destroy'])-
 Route::group(['middleware' => ['role:proveedor|administrador']], function () {
     Route::patch('/reserva/update/{reserva}/{estado}', [ReservaController::class, 'confirmReject'])->name('reserva.confirmreject'); //Requiere rol proveedor o admin
     Route::get('servicio/reservas/{idservicio}', [ReservaController::class, 'reservaServicio'])->name('reserva.selected'); //Requiere rol proveedor o admin
+    Route::post('/servicio/store', [ServicioController::class, 'store'])->name('servicio.store');
 });
 
 Route::group(['middleware' => ['role:cliente']], function () {

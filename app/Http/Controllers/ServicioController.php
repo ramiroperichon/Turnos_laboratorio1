@@ -38,8 +38,8 @@ class ServicioController extends Controller
 
     public function create($id = null)
     {
-        if (isset($id)){
-            return view('servicio.create', ['id'=>$id]);
+        if (isset($id)) {
+            return view('servicio.create', ['id' => $id]);
         }
 
         return view('servicio.create');
@@ -86,6 +86,9 @@ class ServicioController extends Controller
         $this->servicioService->storeServicioWithHorarios($validated, $user->id);
 
         Toaster::success('Servicio se creo correctamente!');
+        if (auth()->user()->hasrole('administrador')) {
+            return redirect('/administrador/servicios');
+        }
         return redirect('/servicio/user');
     }
 
