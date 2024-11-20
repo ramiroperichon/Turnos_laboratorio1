@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Corona Admin</title>
+    @vite(['resources/css/app.css'])
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
@@ -16,7 +17,7 @@
         <div class="container-fluid page-body-wrapper full-page-wrapper">
             <div class="row w-100 m-0">
                 <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
-                    <div class="card col-lg-4 mx-auto">
+                    <div class="card col-lg-4 mx-auto backdrop-blur-md bg-slate-600/30">
                         <div class="card-body px-5 py-5">
                             <h3 class="card-title text-left mb-3">{{ __('Register') }}</h3>
                             <form method="POST" action="{{ route('register') }}">
@@ -50,8 +51,8 @@
                                     <input id="phone" name="phone" type="text"
                                         class="form-control @error('phone') is-invalid @enderror"
                                         value="{{ old('phone') }}" required required autocomplete="tel"
-                                        placeholder="Ingrese el numero de telefono"
-                                        pattern="[0-9]{10}" title="De 10 a 15 caracteres sin el (15) ej: 3777323313">
+                                        placeholder="Ingrese el numero de telefono" pattern="[0-9]{10}"
+                                        title="De 10 a 15 caracteres sin el (15) ej: 3777323313">
                                     <x-input-error class="mt-2" :messages="$errors->get('phone')" />
                                 </div>
 
@@ -60,30 +61,28 @@
                                     <input id="documento" name="documento" type="text"
                                         class="form-control @error('documento') is-invalid @enderror"
                                         value="{{ old('documento') }}" required
-                                        placeholder="Ingrese su numero de documento"
-                                        autocomplete="documento">
+                                        placeholder="Ingrese su numero de documento" autocomplete="documento">
                                     <x-input-error class="mt-2" :messages="$errors->get('documento')" />
                                 </div>
 
                                 <div class="form-group">
                                     <label>{{ __('Password') }}</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    placeholder="Ingrese su contraseña"
-                                        type="password" name="password" minlength="8" required autocomplete="new-password" />
+                                        placeholder="Ingrese su contraseña" type="password" name="password"
+                                        minlength="8" required autocomplete="new-password" />
                                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
                                 </div>
                                 <div class="form-group">
                                     <label>{{ __('Confirm Password') }}</label>
                                     <input type="password"
                                         class="form-control @error('new-password') is-invalid @enderror" type="password"
-                                        placeholder="Confirme su contraseña"
-                                        name="password_confirmation" minlength="8" required autocomplete="new-password" />
+                                        placeholder="Confirme su contraseña" name="password_confirmation" minlength="8"
+                                        required autocomplete="new-password" />
                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-danger" />
                                 </div>
 
                                 <div class="text-center">
-                                    <x-primary-button
-                                        class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</x-primary-button>
+                                    <button class="btn btn-primary btn-block enter-btn">{{ __('Register') }}</button>
                                 </div>
                                 <p class="sign-up text-center">Already have an Account?<a class="mx-1"
                                         href="{{ route('login') }}">Sign in</a></p>

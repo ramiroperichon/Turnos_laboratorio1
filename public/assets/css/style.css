@@ -20197,12 +20197,16 @@ div.tagsinput {
 /* === Landing screens === */
 /* Auth */
 .auth.login-bg {
-  background: url("../images/auth/Login_bg.jpg");
-  background-size: cover; }
+  background: url("../images/logo.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 90%;
+ }
 
 .auth .login-half-bg {
   background: url("../images/auth/login-bg.jpg");
-  background-size: cover; }
+  background-size: cover;
+}
 
 .auth.register-half-bg {
   background: url("../images/auth/Login_bg2.jpg");
