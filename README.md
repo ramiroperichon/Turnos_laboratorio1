@@ -26,6 +26,13 @@ Este es un proyecto de Laravel que permite gestionar turno (ej. Consultorio medi
 - Composer
 - Node.js
 
+# Configuración
+
+1. Crear un archivo `.env` o utilizar el archivo `.env.example` en la carpeta raíz del proyecto
+2. Modificar los valores de la variable `VITE_MAP_KEY` y agregar las credenciales de google maps en el archivo `.env` o `.env.example`
+3. Ingresar a mailtrap y registrarse para obtener las credenciales de acceso SMTP y modificar los valores de la variable `MAIL_USERNAME` y `MAIL_PASSWORD` en el archivo `.env` o `.env.example`
+4. Modificar los valores de la variable `APP_NAME` y `APP_LOCALE` en el archivo `.env` o `.env.example`
+
 # Instalación
 
 1. Clonar el repositorio
@@ -36,14 +43,6 @@ Este es un proyecto de Laravel que permite gestionar turno (ej. Consultorio medi
 6. Ejecutar `php artisan db:seed` en la carpeta raíz del proyecto
 7. Ejecutar `php artisan optimize` en la carpeta raíz del proyecto
 8. Ejecutar `php artisan filament:optimize` en la carpeta raíz del proyecto
-
-# Configuración
-
-1. Crear un archivo `.env` o utilizar el archivo `.env.example` en la carpeta raíz del proyecto
-2. Modificar los valores de la variable `VITE_MAP_KEY` y agregar las credenciales de google maps en el archivo `.env` o `.env.example`
-3. Ingresar a mailtrap y registrarse para obtener las credenciales de acceso SMTP y modificar los valores de la variable `MAIL_USERNAME` y `MAIL_PASSWORD` en el archivo `.env` o `.env.example`
-4. Modificar los valores de la variable `APP_NAME` y `APP_LOCALE` en el archivo `.env` o `.env.example`
-
 
 # Ejecución
 1. Ejecutar `npm run dev` en la carpeta raíz del proyecto
