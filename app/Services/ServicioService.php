@@ -233,7 +233,9 @@ class ServicioService
     public function cancelAllReservas($idServicio)
     {
         try {
-            foreach (Reserva::where('servicio_id', $idServicio)->whereIn('estado', ['Pendiente', 'Confirmado'])->get() as $reserva) {
+            $reservas = Reserva::where('servicio_id', $idServicio)->whereIn('estado', ['Pendiente', 'Confirmado'])->get();
+            foreach ($reservas as $reserva) {
+                error_log($reserva);
                 $this->updateReserva($reserva, 'Cancelado');
             }
         } catch (Exception $e) {
